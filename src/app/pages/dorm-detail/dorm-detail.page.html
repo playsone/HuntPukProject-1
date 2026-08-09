@@ -206,7 +206,7 @@
 
       <div *ngIf="activeTab === 'reviews' && !isPopup" class="reviews-tab fade-in">
         
-        <div class="write-review-card" *ngIf="currentUserId > 0 && currentUserRole !== 2 && !hasReviewed">
+        <div class="write-review-card" *ngIf="currentUserId > 0 && currentUserRole !== 2 && currentUserRole !== 3 && !hasReviewed">
           <h3>ให้คะแนนหอพักนี้</h3>
           <div class="rating-input">
             <ion-icon *ngFor="let s of [1,2,3,4,5]" [name]="s <= newReview.score ? 'star' : 'star-outline'" [class.active]="s <= newReview.score" (click)="setRating(s)"></ion-icon>
@@ -216,7 +216,7 @@
         </div>
 
         <div *ngIf="hasReviewed" class="status-box success">✅ คุณได้รีวิวหอพักนี้ไปแล้ว</div>
-        <div *ngIf="currentUserId > 0 && currentUserRole === 2" class="status-box warning">⚠️ เจ้าของหอพักไม่สามารถรีวิวได้</div>
+        <div *ngIf="currentUserId > 0 && (currentUserRole === 2 || currentUserRole === 3)" class="status-box warning">⚠️ แอดมินและเจ้าของหอพักไม่สามารถรีวิวได้</div>
         <div *ngIf="currentUserId === 0" class="status-box normal">🔒 กรุณาเข้าสู่ระบบเพื่อเขียนรีวิว</div>
 
         <div class="review-list">

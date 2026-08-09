@@ -5,11 +5,11 @@ import { IonicModule, ToastController, AlertController, ModalController } from '
 import { Router } from '@angular/router'; 
 import { DormitoryService } from '../../services/dormitory'; 
 import { addIcons } from 'ionicons';
-import {  
+import { 
   arrowBack, star, trophy, bookmark, bookmarkOutline,
   call, callOutline, documentTextOutline, chatbubbleEllipsesOutline, 
   logoFacebook, locationOutline, checkmarkCircleOutline, alertCircleOutline, timeOutline, mapOutline
-, eye } from 'ionicons/icons';
+} from 'ionicons/icons';
 import { RequireLoginModalComponent } from '../../components/require-login-modal/require-login-modal.component';
 import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
 import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
@@ -46,7 +46,7 @@ export class DormPopularPage implements OnInit {
       'time-outline': timeOutline,
       'map-outline': mapOutline,
       eyeOutline: 'eye-outline' // For views
-    , eye});
+    });
   }
 
   ngOnInit() {
@@ -145,75 +145,90 @@ export class DormPopularPage implements OnInit {
     event.stopPropagation(); 
 
     if (!this.currentUserId || this.currentUserId === 0) {
-        const alert = await this.alertCtrl.create({
-            header: 'แจ้งเตือน',
-            message: 'กรุณาเข้าสู่ระบบหรือสมัครสมาชิกก่อน เพื่อเลือกหอพักที่คุณสนใจครับ',
-            buttons: [
-                { text: 'ยกเลิก', role: 'cancel' },
-                { text: 'เข้าสู่ระบบ', handler: () => { this.router.navigate(['/login']); } }
-            ]
+        const modal = await this.modalCtrl.create({
+            component: RequireLoginModalComponent,
+            cssClass: 'custom-alert-modal'
         });
-        await alert.present();
+        await modal.present();
+        
+        const { role } = await modal.onDidDismiss();
+        if (role === 'login') {
+            this.router.navigate(['/login']);
+        }
         return;
     }
 
     const userRole = this.currentUser?.role_id || this.currentUser?.ROLE_ID;
-    if (userRole === 2 || userRole === 3) {
-        this.showToast('แอดมินหรือเจ้าของหอพักไม่สามารถกดรายการโปรดได้', 'warning');
+    if (userRole == 2 || userRole == 3) {
+        const modal = await this.modalCtrl.create({
+            component: ActionConfirmModalComponent,
+            componentProps: {
+                title: 'ไม่สามารถใช้งานได้',
+                message: 'แอดมินหรือเจ้าของหอพัก ไม่สามารถกดรายการโปรดได้ครับ',
+                confirmText: 'ปิด',
+                type: 'warning',
+                showCancel: false
+            },
+            cssClass: 'custom-alert-modal'
+        });
+        await modal.present();
         return;
     }
 
     if (dorm.isChecked) {
-        const alert = await this.alertCtrl.create({
-            header: 'ยกเลิกการสนใจ',
-            message: 'ต้องการยกเลิกการสนใจหอพักนี้ใช่หรือไม่?',
-            buttons: [
-                { text: 'ไม่', role: 'cancel' },
-                { 
-                    text: 'ใช่, ยกเลิก', 
-                    handler: async () => {
-                        try {
-                            await this.dormService.removeFavorite(this.currentUserId, dorm.DORM_ID || dorm.id);
-                            dorm.isChecked = false;
-                            this.showToast('ยกเลิกการสนใจเรียบร้อย', 'medium');
-                            this.cdr.detectChanges();
-                        } catch (error) { 
-                            this.showToast('เกิดข้อผิดพลาดในการยกเลิก', 'danger'); 
-                        }
-                    } 
-                }
-            ]
+        const modal = await this.modalCtrl.create({
+            component: ActionConfirmModalComponent,
+            componentProps: {
+                title: 'ยกเลิกการสนใจ',
+                message: 'ต้องการยกเลิกการสนใจหอพักนี้ใช่หรือไม่?',
+                confirmText: 'ใช่, ยกเลิก',
+                cancelText: 'ไม่',
+                type: 'danger'
+            },
+            cssClass: 'custom-alert-modal'
         });
-        await alert.present();
+        await modal.present();
+        
+        const { role } = await modal.onDidDismiss();
+        if (role === 'confirm') {
+            try {
+                await this.dormService.removeFavorite(this.currentUserId, dorm.DORM_ID || dorm.id);
+                dorm.isChecked = false;
+                this.showToast('ยกเลิกการสนใจเรียบร้อย', 'medium');
+                this.cdr.detectChanges();
+            } catch (error) { this.showToast('เกิดข้อผิดพลาดในการยกเลิก', 'danger'); }
+        }
         return;
     }
 
-    const alert = await this.alertCtrl.create({
-        header: 'ยืนยัน',
-        message: 'คุณสนใจหอพักนี้ใช่หรือไม่?',
-        buttons: [
-            { text: 'ยกเลิก', role: 'cancel' },
-            { 
-                text: 'ใช่, สนใจ', 
-                handler: async () => {
-                    try {
-                        await this.dormService.addFavorite(this.currentUserId, dorm.DORM_ID || dorm.id);
-                        dorm.isChecked = true; 
-                        this.showToast(`เพิ่ม "${dorm.DORM_NAME}" ลงรายการสนใจเรียบร้อย!`, 'success');
-                        this.cdr.detectChanges();
-                    } catch (error: any) {
-                        if (error.status === 409 || (error.error && error.error.message === 'Duplicate')) {
-                            dorm.isChecked = true;
-                            this.showToast('หอพักนี้มีในรายการสนใจแล้วครับ', 'warning');
-                        } else { 
-                            this.showToast('เกิดข้อผิดพลาดในการบันทึก', 'danger'); 
-                        }
-                    }
-                } 
-            }
-        ]
+    const modal = await this.modalCtrl.create({
+        component: ActionConfirmModalComponent,
+        componentProps: {
+            title: 'ยืนยัน',
+            message: 'คุณสนใจหอพักนี้ใช่หรือไม่?',
+            confirmText: 'ใช่, สนใจ',
+            cancelText: 'ยกเลิก',
+            type: 'confirm'
+        },
+        cssClass: 'custom-alert-modal'
     });
-    await alert.present();
+    await modal.present();
+    
+    const { role } = await modal.onDidDismiss();
+    if (role === 'confirm') {
+        try {
+            await this.dormService.addFavorite(this.currentUserId, dorm.DORM_ID || dorm.id);
+            dorm.isChecked = true; 
+            this.cdr.detectChanges();
+            this.showToast(`เพิ่ม "${dorm.DORM_NAME}" ลงรายการสนใจเรียบร้อย!`, 'success');
+        } catch (error: any) {
+            if (error.status === 409 || (error.error && error.error.message === 'Duplicate')) {
+                dorm.isChecked = true;
+                this.cdr.detectChanges();
+                this.showToast('หอพักนี้มีในรายการสนใจแล้วครับ', 'warning');
+            } else { this.showToast('เกิดข้อผิดพลาดในการบันทึก', 'danger'); }
+        }
+    }
   }
 
   async showToast(msg: string, color: string) {

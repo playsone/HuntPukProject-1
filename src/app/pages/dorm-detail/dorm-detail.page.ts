@@ -16,13 +16,15 @@ import {
 import { DormitoryService } from '../../services/dormitory'; 
 
 import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
+import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
+import { RequireLoginModalComponent } from '../../components/require-login-modal/require-login-modal.component';
 
 @Component({
   selector: 'app-dorm-detail',
   templateUrl: './dorm-detail.page.html',
   styleUrls: ['./dorm-detail.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, ThaiDatePipe]
+  imports: [CommonModule, FormsModule, IonicModule, ThaiDatePipe, ActionConfirmModalComponent, RequireLoginModalComponent]
 })
 export class DormDetailPage implements OnInit, OnChanges {
 
@@ -248,23 +250,92 @@ export class DormDetailPage implements OnInit, OnChanges {
     }
     
     if (this.currentUserId <= 0) {
-       this.showToast('กรุณาเข้าสู่ระบบก่อนเพิ่มรายการสนใจ', 'warning');
+       const modal = await this.modalCtrl.create({
+           component: RequireLoginModalComponent,
+           cssClass: 'custom-alert-modal'
+       });
+       await modal.present();
+       
+       const { role } = await modal.onDidDismiss();
+       if (role === 'login') {
+           this.router.navigate(['/login']);
+       }
        return;
     }
 
-    try {
-        if (this.isFavorite) {
-            await this.dormService.removeFavorite(this.currentUserId, this.dormData.DORM_ID);
-            this.isFavorite = false;
-            this.showToast('ลบออกจากรายการสนใจแล้ว', 'success');
-        } else {
-            await this.dormService.addFavorite(this.currentUserId, this.dormData.DORM_ID);
-            this.isFavorite = true;
-            this.showToast('เพิ่มในรายการสนใจแล้ว', 'success');
+    if (this.currentUserRole == 2 || this.currentUserRole == 3) {
+        const modal = await this.modalCtrl.create({
+            component: ActionConfirmModalComponent,
+            componentProps: {
+                title: 'ไม่สามารถใช้งานได้',
+                message: 'แอดมินหรือเจ้าของหอพัก ไม่สามารถกดรายการโปรดได้ครับ',
+                confirmText: 'ปิด',
+                type: 'warning',
+                showCancel: false
+            },
+            cssClass: 'custom-alert-modal'
+        });
+        await modal.present();
+        return;
+    }
+
+    const dId = this.dormData.DORM_ID || this.dormData.id;
+
+    if (this.isFavorite) {
+        const modal = await this.modalCtrl.create({
+            component: ActionConfirmModalComponent,
+            componentProps: {
+                title: 'ยกเลิกการสนใจ',
+                message: 'ต้องการยกเลิกการสนใจหอพักนี้ใช่หรือไม่?',
+                confirmText: 'ใช่, ยกเลิก',
+                cancelText: 'ไม่',
+                type: 'danger'
+            },
+            cssClass: 'custom-alert-modal'
+        });
+        await modal.present();
+        
+        const { role } = await modal.onDidDismiss();
+        if (role === 'confirm') {
+            try {
+                await this.dormService.removeFavorite(this.currentUserId, dId);
+                this.isFavorite = false;
+                this.cdr.detectChanges();
+                this.showToast('ลบออกจากรายการสนใจแล้ว', 'success');
+            } catch (err) { this.showToast('เกิดข้อผิดพลาด กรุณาลองใหม่', 'danger'); }
         }
-    } catch (err) {
-        console.error(err);
-        this.showToast('เกิดข้อผิดพลาด กรุณาลองใหม่', 'danger');
+        return;
+    }
+
+    const modal = await this.modalCtrl.create({
+        component: ActionConfirmModalComponent,
+        componentProps: {
+            title: 'ยืนยัน',
+            message: 'คุณสนใจหอพักนี้ใช่หรือไม่?',
+            confirmText: 'ใช่, สนใจ',
+            cancelText: 'ยกเลิก',
+            type: 'confirm'
+        },
+        cssClass: 'custom-alert-modal'
+    });
+    await modal.present();
+    
+    const { role } = await modal.onDidDismiss();
+    if (role === 'confirm') {
+        try {
+            await this.dormService.addFavorite(this.currentUserId, dId);
+            this.isFavorite = true;
+            this.cdr.detectChanges();
+            this.showToast('เพิ่มในรายการสนใจแล้ว', 'success');
+        } catch (err: any) {
+            if (err.status === 409 || (err.error && err.error.message === 'Duplicate')) {
+                this.isFavorite = true;
+                this.cdr.detectChanges();
+                this.showToast('หอพักนี้อยู่ในรายการสนใจอยู่แล้วครับ', 'warning');
+            } else {
+                this.showToast('เกิดข้อผิดพลาด กรุณาลองใหม่', 'danger');
+            }
+        }
     }
   }
 

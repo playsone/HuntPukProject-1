@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController, LoadingController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
+import Swal from 'sweetalert2';
 import { addIcons } from 'ionicons';
 import { 
   people, folderOpenOutline, close, logoFacebook, chatbubbles, 
@@ -26,10 +27,7 @@ export class ManageRequestsDormOwnerPage implements OnInit {
   searchQuery: string = '';
 
   constructor(
-    private requestService: OwnerRequestService,
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private requestService: OwnerRequestService
   ) { 
     // เพิ่มไอคอนให้ครบ
     addIcons({ people, folderOpenOutline, close, logoFacebook, chatbubbles, checkmarkCircle, closeCircle, time, logoInstagram, logoTwitter, paperPlane });
@@ -108,68 +106,88 @@ export class ManageRequestsDormOwnerPage implements OnInit {
   }
 
   async showApproveAlert(req: OwnerRequest) {
-    const alert = await this.alertCtrl.create({
-      header: 'ยืนยันการอนุมัติ',
-      message: `คุณต้องการให้สิทธิ์คุณ ${req.first_name} เป็นเจ้าของหอพักใช่หรือไม่?`,
-      buttons: [
-        { text: 'ยกเลิก', role: 'cancel' },
-        { 
-          text: 'ยืนยันอนุมัติ', 
-          handler: () => { this.processUpdate(req.user_id, true, ''); }
-        }
-      ]
+    const result = await Swal.fire({
+      title: 'ยืนยันการอนุมัติ',
+      text: `คุณต้องการให้สิทธิ์คุณ ${req.first_name} เป็นเจ้าของหอพักใช่หรือไม่?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#111',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ยืนยันอนุมัติ',
+      cancelButtonText: 'ยกเลิก',
+      reverseButtons: true,
+      customClass: {
+        popup: 'swal-custom-popup',
+        title: 'swal-custom-title',
+        confirmButton: 'swal-custom-confirm'
+      }
     });
-    await alert.present();
+
+    if (result.isConfirmed) {
+      this.processUpdate(req.user_id, true, '');
+    }
   }
 
   async showRejectAlert(req: OwnerRequest) {
-    const alert = await this.alertCtrl.create({
-      header: 'ปฏิเสธคำขอ',
-      message: 'กรุณาระบุเหตุผล (ถ้ามี)',
-      inputs: [ { name: 'reason', type: 'textarea', placeholder: 'ระบุเหตุผล...' } ],
-      buttons: [
-        { text: 'ยกเลิก', role: 'cancel' },
-        { 
-          text: 'ยืนยันปฏิเสธ', cssClass: 'alert-btn-reject',
-          handler: (data) => {
-            const msg = data.reason || 'ไม่ผ่านการพิจารณา';
-            this.processUpdate(req.user_id, false, msg);
-          }
-        }
-      ]
+    const result = await Swal.fire({
+      title: 'ปฏิเสธคำขอ',
+      text: 'กรุณาระบุเหตุผลที่ไม่อนุมัติคำขอนี้ (ถ้ามี)',
+      icon: 'warning',
+      input: 'textarea',
+      inputPlaceholder: 'ระบุเหตุผล...',
+      showCancelButton: true,
+      confirmButtonColor: '#C62828',
+      cancelButtonColor: '#777',
+      confirmButtonText: 'ยืนยันปฏิเสธ',
+      cancelButtonText: 'ยกเลิก',
+      reverseButtons: true,
+      customClass: {
+        popup: 'swal-custom-popup',
+        title: 'swal-custom-title',
+        confirmButton: 'swal-custom-confirm-danger'
+      }
     });
-    await alert.present();
+
+    if (result.isConfirmed) {
+      const msg = result.value || 'ไม่ผ่านการพิจารณา';
+      this.processUpdate(req.user_id, false, msg);
+    }
   }
 
   async processUpdate(userId: number, approveStatus: boolean, msg: string) {
-    const loading = await this.loadingCtrl.create({
-      message: 'กำลังดำเนินการ...',
-      spinner: 'crescent'
+    Swal.fire({
+      title: 'กำลังดำเนินการ...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
     });
-    await loading.present();
 
     this.requestService.approveRequest(userId, approveStatus, msg).subscribe({
       next: async () => {
-        await loading.dismiss();
-        
         // ลบข้อมูลที่ดำเนินการแล้วออกจากหน้ารายการทันที
         this.requests = this.requests.filter(req => req.user_id !== userId);
         this.searchRequests(); // อัปเดต list ที่แสดงผล
-        
-        const toast = await this.toastCtrl.create({
-          message: approveStatus ? 'อนุมัติเรียบร้อย' : 'ปฏิเสธคำขอเรียบร้อย',
-          duration: 2000, color: approveStatus ? 'success' : 'warning'
-        });
-        await toast.present();
-        
         this.closeModal();
+
+        await Swal.fire({
+          icon: 'success',
+          title: approveStatus ? 'อนุมัติสำเร็จ!' : 'ปฏิเสธสำเร็จ!',
+          text: approveStatus 
+            ? 'คำขอถูกอนุมัติและอัปเดตสิทธิ์เรียบร้อยแล้ว' 
+            : 'คำขอถูกปฏิเสธเรียบร้อยแล้ว',
+          confirmButtonColor: '#111',
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: async (err) => {
-        await loading.dismiss();
-        const toast = await this.toastCtrl.create({
-          message: 'เกิดข้อผิดพลาดในการบันทึก กรุณาลองใหม่อีกครั้ง', duration: 3000, color: 'danger'
+        await Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+          confirmButtonColor: '#C62828'
         });
-        await toast.present();
       }
     });
   }

@@ -2,6 +2,40 @@
   --background: #121212; /* Black background */
 }
 
+.top-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 8px 16px 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  outline: none;
+
+  ion-icon {
+    font-size: 20px;
+    margin-right: 6px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-3px);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .download-container {
   display: flex;
   align-items: center;

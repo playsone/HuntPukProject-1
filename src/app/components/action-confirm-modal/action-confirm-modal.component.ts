@@ -26,7 +26,8 @@ export class ActionConfirmModalComponent implements OnInit {
   @Input() message: string = 'คุณต้องการดำเนินการต่อใช่หรือไม่?';
   @Input() confirmText: string = 'ตกลง';
   @Input() cancelText: string = 'ยกเลิก';
-  @Input() type: 'confirm' | 'danger' = 'confirm'; 
+  @Input() type: 'confirm' | 'danger' | 'warning' = 'confirm'; 
+  @Input() showCancel: boolean = true;
 
   iconColor: string = '#ffc409';
   iconBgColor: string = '#ffc40920';
@@ -37,6 +38,9 @@ export class ActionConfirmModalComponent implements OnInit {
       if (this.type === 'danger') {
           this.iconColor = '#f44336';
           this.iconBgColor = '#f4433620';
+      } else if (this.type === 'warning') {
+          this.iconColor = '#ff9800';
+          this.iconBgColor = '#ff980020';
       }
   }
 

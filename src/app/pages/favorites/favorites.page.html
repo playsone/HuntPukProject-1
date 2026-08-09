@@ -40,6 +40,12 @@
             <div class="card-image">
               <img [src]="dorm.image || 'assets/dorm-placeholder.jpg'" onerror="this.src='https://placehold.co/600x400?text=No+Image'" />
 
+              <!-- Rating Badge (Top Left) -->
+              <div class="rating-badge">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ dorm.SCORE ? (dorm.SCORE | number:'1.1-1') : '0.0' }}</span>
+              </div>
+
               <!-- Bookmark-style Delete Button -->
               <div class="bookmark-btn active" (click)="removeFavorite($event, dorm)" *ngIf="!isCompareMode">
                 <ion-icon name="bookmark"></ion-icon>
@@ -73,9 +79,12 @@
                 </div>
               </div>
 
-              <p class="zone">
-                <ion-icon name="location-outline"></ion-icon>
-                {{ dorm.zone || dorm.ZONE_NAME || 'ไม่ระบุโซน' }}
+              <p class="zone"><ion-icon name="location"></ion-icon> {{ dorm.zone || dorm.ZONE_NAME || 'ไม่ระบุโซน' }}</p>
+              <p class="address" *ngIf="dorm.ADDRESS"><ion-icon name="map-outline"></ion-icon> {{ dorm.ADDRESS }}</p>
+
+              <p class="update-date" *ngIf="dorm.UPDATED_AT || dorm.updated_at || dorm.CREATE_DATE || dorm.UPDATE_AT">
+                <ion-icon name="time-outline"></ion-icon>
+                อัปเดต: {{ (dorm.UPDATED_AT || dorm.updated_at || dorm.CREATE_DATE || dorm.UPDATE_AT) | thaiDate }}
               </p>
             </div>
 

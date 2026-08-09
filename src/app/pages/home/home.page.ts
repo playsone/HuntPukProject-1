@@ -28,7 +28,7 @@ import { RequireLoginModalComponent } from '../../components/require-login-modal
 import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
 import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
 
-import { 
+import {
   menuOutline, caretDownOutline, layersOutline, close,
   locationOutline, checkmarkCircle, chevronDownCircleOutline,
   call, chatbubbleEllipsesOutline, chatbubbleEllipses, logoFacebook,
@@ -39,7 +39,7 @@ import {
   listOutline, starOutline, arrowForwardOutline, gitBranchOutline, logoTwitter, chatbubblesOutline, location, closeCircle,
   personCircleOutline, alertCircleOutline, bookmark, bookmarkOutline, pinOutline, pin,
   arrowDownOutline, arrowUpOutline, chevronDownOutline
-, eye } from 'ionicons/icons';
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -229,7 +229,7 @@ export class HomePage implements OnInit, ViewDidEnter {
     addIcons({
       'menu-outline': menuOutline, 'caret-down-outline': caretDownOutline, 'layers-outline': layersOutline, 'close': close, 'close-circle': closeCircle, 'location': location, 'location-outline': locationOutline, 'location-sharp': locationSharp, 'checkmark-circle': checkmarkCircle, 'checkmark-circle-outline': checkmarkCircleOutline, 'chevron-down-circle-outline': chevronDownCircleOutline, 'chevron-forward-outline': chevronForwardOutline, 'call': call, 'chatbubbles-outline': chatbubblesOutline, 'chatbubble-ellipses-outline': chatbubbleEllipsesOutline, 'chatbubble-ellipses': chatbubbleEllipses, 'logo-facebook': logoFacebook, 'logo-instagram': logoInstagram, 'logo-twitter': logoTwitter, 'paper-plane-outline': paperPlaneOutline, 'paper-plane': paperPlane, 'options-outline': optionsOutline, 'navigate-circle-outline': navigateCircleOutline, 'time-outline': timeOutline, 'walk-outline': walkOutline, 'car-outline': carOutline, 'locate': locate, 'navigate': navigate, 'create-outline': createOutline, 'star': star, 'star-outline': starOutline, 'lock-closed-outline': lockClosedOutline, 'bed-outline': bedOutline, 'list-outline': listOutline, 'arrow-forward-outline': arrowForwardOutline, 'git-branch-outline': gitBranchOutline, 'person-circle-outline': personCircleOutline, 'alert-circle-outline': alertCircleOutline, 'bookmark': bookmark, 'bookmark-outline': bookmarkOutline, 'pin-outline': pinOutline, 'pin': pin,
       'arrow-down-outline': arrowDownOutline, 'arrow-up-outline': arrowUpOutline, 'chevron-down-outline': chevronDownOutline
-    , eye});
+    });
 
     if (typeof google === 'object' && typeof google.maps === 'object') {
       this.apiLoaded = of(true);
@@ -611,7 +611,8 @@ export class HomePage implements OnInit, ViewDidEnter {
           lng: Number(d.lng),
           isChecked: favoriteIds.includes(Number(d.DORM_ID || d.id))
         })) as any[];        
-        // ✅ Call performSearch to apply initial radius filter and populate this.dorms
+        this.dorms = [...this.allDorms];
+        // ✅ Call performSearch to apply initial radius filter
         this.performSearch();
       } else {
         this.showToast('ไม่พบข้อมูลหอพักในระบบขณะนี้', 'warning', 'alert-circle-outline');
@@ -660,10 +661,10 @@ export class HomePage implements OnInit, ViewDidEnter {
       this.dorms = this.allDorms.filter(d =>
         (d.DORM_NAME || '').toLowerCase().includes(searchValue.toLowerCase())
       ) as any[];
-      this.cdr.detectChanges();
     } else {
-      this.performSearch();
+      this.dorms = [...this.allDorms];
     }
+    this.cdr.detectChanges();
   }
 
   // กดเลือกหอพักจาก autocomplete dropdown
@@ -1173,8 +1174,19 @@ export class HomePage implements OnInit, ViewDidEnter {
     }
 
     const userRole = this.currentUser.role_id || this.currentUser.ROLE_ID;
-    if (userRole === 2 || userRole === 3) {
-        this.showToast('แอดมินหรือเจ้าของหอพักไม่สามารถกดรายการโปรดได้', 'warning', 'alert-circle-outline');
+    if (userRole == 2 || userRole == 3) {
+        const modal = await this.modalCtrl.create({
+            component: ActionConfirmModalComponent,
+            componentProps: {
+                title: 'ไม่สามารถใช้งานได้',
+                message: 'แอดมินหรือเจ้าของหอพัก ไม่สามารถกดรายการโปรดได้ครับ',
+                confirmText: 'ปิด',
+                type: 'warning',
+                showCancel: false
+            },
+            cssClass: 'custom-alert-modal'
+        });
+        await modal.present();
         return;
     }
 

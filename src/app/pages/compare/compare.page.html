@@ -49,7 +49,7 @@
         <div class="card-content">
           <h3>{{ dorm.DORM_NAME }}</h3>
           
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0; margin-bottom: 6px;">
             <div class="rating-row" style="margin: 0; display: flex; align-items: center; gap: 4px; color: #fbc02d; font-weight: bold;">
               <ion-icon name="star"></ion-icon>
               <span>{{ dorm.SCORE ? (dorm.SCORE | number:'1.1-1') : '0.0' }}</span>
@@ -60,8 +60,12 @@
             </div>
           </div>
 
-          <p class="zone" style="margin: 0; color: #888; font-size: 13px; display: flex; align-items: center; gap: 4px;">
-            <ion-icon name="location-outline"></ion-icon> {{ dorm.zone || 'ไม่ระบุโซน' }}
+          <p class="zone"><ion-icon name="location"></ion-icon> {{ dorm.zone || 'ไม่ระบุโซน' }}</p>
+          <p class="address" *ngIf="dorm.ADDRESS"><ion-icon name="map-outline"></ion-icon> {{ dorm.ADDRESS }}</p>
+
+          <p class="update-date" *ngIf="dorm.UPDATED_AT || dorm.updated_at || dorm.CREATE_DATE || dorm.UPDATE_AT">
+            <ion-icon name="time-outline"></ion-icon>
+            อัปเดต: {{ (dorm.UPDATED_AT || dorm.updated_at || dorm.CREATE_DATE || dorm.UPDATE_AT) | thaiDate }}
           </p>
         </div>
         
@@ -118,7 +122,7 @@
         <div class="scroll-container">
            <div class="column-data" *ngFor="let item of selectedDorms">
               
-              <div class="row-header dorm-header">
+              <div class="row-header dorm-header" (click)="goToDetail(item)" style="cursor: pointer;" title="คลิกเพื่อดูรายละเอียด">
                 <h3>{{ item.DORM_NAME }}</h3>
               </div>
 

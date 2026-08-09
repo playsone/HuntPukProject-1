@@ -14,9 +14,11 @@ import {
   checkmarkCircle, arrowBack, locationOutline, wifi, car, snow, 
   cashOutline, layersOutline, callOutline, checkmarkCircleOutline,
   logoFacebook, logoInstagram, logoTwitter, paperPlaneOutline, arrowForwardCircle, 
-  location, closeCircle, call, chatbubbleEllipsesOutline, trashOutline
-, eye } from 'ionicons/icons';
+  location, closeCircle, call, chatbubbleEllipsesOutline, trashOutline, eye,
+  mapOutline, timeOutline
+} from 'ionicons/icons';
 import { AlertModalComponent } from '../../components/alert-modal/alert-modal.component';
+import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
 
 @Component({
   selector: 'app-compare',
@@ -26,7 +28,7 @@ import { AlertModalComponent } from '../../components/alert-modal/alert-modal.co
   imports: [
     CommonModule, FormsModule, IonicModule, RouterModule,
     HttpClientModule, HttpClientJsonpModule, GoogleMapsModule, MapMarker, MapDirectionsRenderer,
-    AlertModalComponent
+    AlertModalComponent, ThaiDatePipe
   ]
 })
 export class ComparePage implements OnInit {
@@ -72,7 +74,7 @@ export class ComparePage implements OnInit {
       cashOutline, layersOutline, callOutline, checkmarkCircleOutline,
       logoFacebook, logoInstagram, logoTwitter, paperPlaneOutline, arrowForwardCircle, 
       location, closeCircle, call, chatbubbleEllipsesOutline, trashOutline
-    , eye});
+    , eye, mapOutline, timeOutline});
     // โหลด referencePoint จาก localStorage ถ้ามี
     try {
       const stored = localStorage.getItem('userLocation');
@@ -96,13 +98,18 @@ export class ComparePage implements OnInit {
 
   // คำนวณระยะทาง Haversine (กม.)
   calcDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    const R = 6371;
+    const R = 6371; // รัศมีโลก (กม.)
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
-              Math.sin(dLng/2) * Math.sin(dLng/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  goToDetail(dorm: any) {
+    this.router.navigate(['/dorm-detail', dorm.DORM_ID]);
   }
 
   ngOnInit() {

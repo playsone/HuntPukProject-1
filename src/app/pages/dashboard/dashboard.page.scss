@@ -606,3 +606,68 @@ $card-radius: 20px;
     background: #f97316; box-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
   }
 }
+
+/* =============================================
+   Responsive Adjustments for Mobile Screens
+   ============================================= */
+@media (max-width: 576px) {
+  .top-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .menu-btn {
+    justify-content: center;
+    width: 100%;
+  }
+  .welcome-banner {
+    width: 100%;
+    min-width: unset;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    
+    .welcome-left {
+      width: 100%;
+    }
+    
+    .admin-badge {
+      align-self: flex-start;
+    }
+  }
+
+  .stat-card.wide-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .views-mini-stats {
+    flex-wrap: wrap;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .stat-card {
+    padding: 14px 12px 12px;
+  }
+  
+  .card-value { font-size: 22px !important; }
+  .card-value.big-value { font-size: 26px !important; }
+
+  .card-dorm-views {
+    padding: 16px 12px;
+  }
+
+  .dorm-view-item {
+    gap: 8px;
+    padding: 8px 10px;
+    
+    .dorm-view-name {
+      max-width: 120px;
+    }
+    
+    .dorm-view-bar-wrap {
+      min-width: 60px;
+    }
+  }
+}

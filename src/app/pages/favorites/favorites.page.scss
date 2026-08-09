@@ -104,7 +104,7 @@ ion-content {
       position: absolute; top: 12px; left: 12px; 
       background: rgba(255,255,255,0.95); padding: 4px 10px; border-radius: 12px; 
       display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 900; color: #111; z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.08); backdrop-filter: blur(4px);
-      ion-icon { color: #fbc02d; font-size: 15px; }
+      ion-icon { color: #FF9800; font-size: 15px; }
     }
 
     .bookmark-btn {
@@ -152,11 +152,25 @@ ion-content {
     
     .rating-row {
       display: flex; align-items: center; gap: 4px; margin-bottom: 8px;
-      ion-icon { color: #fbc02d; font-size: 16px; }
-      span { font-size: 13px; font-weight: 800; color: #555; }
+      background: #fff8e1; padding: 4px 10px; border-radius: 12px; border: 1px solid #ffecb3;
+      ion-icon { color: #FF9800; font-size: 16px; }
+      span { font-size: 13px; font-weight: 900; color: #d84315; }
     }
 
-    .zone { font-size: 13px; color: #6c757d; margin: 0; display: flex; align-items: center; gap: 4px; font-weight: 500; ion-icon { font-size: 16px; color: #e74c3c; } }
+    .zone { font-size: 13px; color: #6c757d; margin: 0 0 6px 0; display: flex; align-items: center; gap: 4px; font-weight: 500; ion-icon { font-size: 16px; color: #e74c3c; } }
+
+    .address { 
+      font-size: 12px; color: #777; margin: 0 0 8px 0; 
+      display: flex; align-items: flex-start; gap: 4px; line-height: 1.4; 
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; 
+      ion-icon { font-size: 14px; color: #999; flex-shrink: 0; margin-top: 1px; } 
+    }
+    
+    .update-date { 
+      font-size: 11px; color: #aaa; margin: auto 0 0 0; 
+      display: flex; align-items: center; gap: 4px; 
+      ion-icon { font-size: 13px; } 
+    }
   }
 }
 
