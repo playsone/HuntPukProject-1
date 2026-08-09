@@ -329,7 +329,7 @@
       <!-- เอกสารยืนยันตัวตน -->
       <div class="section-card" *ngIf="!isApproved">
         <h3><ion-icon name="document-text-outline"></ion-icon> เอกสารยืนยันตัวตน <span class="req">*</span></h3>
-        <p class="hint-text">รูปใบอนุญาตประกอบกิจการหอพัก หรือรูปเจ้าของถ่ายคู่กับบัตรประชาชน <br> <span class="text-danger">(ถ้าแอดมินตรวจสอบเสร็จระบบจะทำการลบออกจากระบบทันที)</span></p>
+        <p class="hint-text">รูปใบอนุญาตประกอบกิจการหอพัก <br> <span class="text-danger">(ถ้าแอดมินตรวจสอบเสร็จระบบจะทำการลบออกจากระบบทันที)</span></p>
         <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'LICENSE_IMG')" (click)="isReadOnly ? null : licenseInput.click()" [class.has-image]="previews.LICENSE_IMG">
             <img [src]="previews.LICENSE_IMG || 'assets/placeholder-landscape.png'" class="preview-img">
             <div class="overlay">
