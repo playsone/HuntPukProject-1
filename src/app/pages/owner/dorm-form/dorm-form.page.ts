@@ -13,8 +13,7 @@ import {
   bedOutline, trashOutline, addCircleOutline, locationOutline, cloudUploadOutline, closeCircle,
   locateOutline, documentTextOutline, arrowBackOutline, arrowForwardOutline, imagesOutline,
   personOutline, personAddOutline, bulbOutline, checkmarkCircle, timeOutline, snowOutline, waterOutline, shirtOutline, shieldCheckmarkOutline, flashOutline, carOutline, pawOutline, barbellOutline, restaurantOutline, cubeOutline,
-  refreshOutline, listOutline, homeOutline as homeOutlineIcon, checkmarkCircleOutline, searchOutline
-} from 'ionicons/icons';
+  refreshOutline, listOutline, homeOutline as homeOutlineIcon, checkmarkCircleOutline, searchOutline, alertCircleOutline, eyeOutline, closeCircleOutline } from 'ionicons/icons';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { DormitoryService } from '../../../services/dormitory';
 import { lastValueFrom } from 'rxjs';
@@ -154,7 +153,8 @@ export class DormFormPage implements OnInit {
     private alertCtrl: AlertController,
     private actionSheetCtrl: ActionSheetController,
     private modalCtrl: ModalController
-  ) {}
+  ) {
+      addIcons({arrowBackOutline,personOutline,personAddOutline,homeOutline,locationOutline,locateOutline,wifi,bulbOutline,alertCircleOutline,closeCircle,cloudUploadOutline,bedOutline,addCircleOutline,trashOutline,documentTextOutline,imageOutline,imagesOutline,arrowForwardOutline,searchOutline,timeOutline,checkmarkCircleOutline,listOutline,eyeOutline,closeCircleOutline,refreshOutline});}
 
   async ngOnInit() {
     // ✅ FIX: รองรับทุก key ที่ backend อาจส่งกลับมาใน localStorage

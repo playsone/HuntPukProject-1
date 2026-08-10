@@ -21,6 +21,29 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="about-content">
+
+  <!-- Screenshot Warning Popup -->
+  <div class="screenshot-overlay" *ngIf="showWarningPopup" (click)="closeWarning()">
+    <div class="screenshot-popup" (click)="$event.stopPropagation()">
+      <div class="popup-icon-wrap">
+        <ion-icon name="shield-outline" class="popup-shield"></ion-icon>
+        <ion-icon name="warning-outline" class="popup-warning-icon"></ion-icon>
+      </div>
+      <h2 class="popup-title">⚠️ ตรวจพบการบันทึกหน้าจอ</h2>
+      <p class="popup-desc">
+        ไม่อนุญาตให้บันทึกภาพหน้าจอในหน้านี้<br />
+        ข้อมูลในหน้านี้เป็นทรัพย์สินของทีมพัฒนา HuntPuk<br />
+        การนำไปใช้โดยไม่ได้รับอนุญาตอาจมีผลทางกฎหมาย
+      </p>
+      <div class="popup-actions">
+        <button class="popup-btn" (click)="closeWarning()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          รับทราบ
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">

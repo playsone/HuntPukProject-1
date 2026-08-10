@@ -171,10 +171,52 @@
 }
 
 /* --- Image Upload --- */
+.grid-2-col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+}
+
+.grid-3-col {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+
+.img-mini-box {
+  text-align: center; cursor: pointer;
+  label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
+  img { 
+    width: 100%; height: 110px; object-fit: cover; 
+    border-radius: 8px; border: 2px solid #ddd;
+    transition: border-color 0.2s;
+    cursor: pointer;
+    &.uploaded { border-color: #28a745; }
+    &:hover { border-color: #ffc107; }
+  }
+}
+
+.upload-btn {
+  margin-top: 6px;
+  --border-radius: 8px;
+  font-size: 12px;
+  height: 32px;
+}
+
+.upload-status {
+  font-size: 12px;
+  color: #28a745;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #f0fff4;
+  border-radius: 6px;
+  border: 1px solid #c3e6cb;
+}
+
 .img-upload-box {
   position: relative; width: 100%; height: 200px;
   background: #eee; border-radius: 12px; overflow: hidden;
   cursor: pointer; border: 2px dashed #ddd;
+  transition: border-color 0.2s;
+
+  &.has-image { border-color: #28a745; border-style: solid; }
+  &:hover { border-color: #ffc107; }
 
   .preview-img { width: 100%; height: 100%; object-fit: cover; }
   
@@ -190,20 +232,7 @@
   &:hover .overlay { opacity: 1; }
 }
 
-.grid-2-col {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-}
-
-.img-mini-box {
-  text-align: center; cursor: pointer;
-  label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
-  img { 
-    width: 100%; height: 100px; object-fit: cover; 
-    border-radius: 8px; border: 1px solid #ddd;
-  }
-}
-
-/* 🌟 ปรับปรุง Gallery Grid และปุ่มลบรูป */
+/* 🌟 Gallery Grid */
 .gallery-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;
   
@@ -215,7 +244,6 @@
       border: 1px solid #ddd;
     }
     
-    /* ปุ่ม X ลบรูป */
     .del-btn {
       position: absolute; top: -10px; right: -10px;
       margin: 0; --padding-start: 0; --padding-end: 0;
@@ -227,7 +255,7 @@
 }
 
 /* =========================================
-   📱 Responsive Design (รองรับมือถือ)
+   📱 Responsive Design
    ========================================= */
 @media (max-width: 768px) {
   .row-2-col {
@@ -240,7 +268,11 @@
   }
   .grid-2-col {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 10px;
+  }
+  .grid-3-col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -249,11 +281,22 @@
     height: 160px;
   }
   .img-mini-box img {
-    height: 140px;
+    height: 100px;
   }
-  .facilities-grid {
-    grid-template-columns: 1fr !important; /* มือถือให้เรียง 1 แถว จะได้ไม่แคบเกินไป */
+  .facilities-checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (max-width: 480px) {
+  .section-card {
+    padding: 15px;
+  }
+  .nav-buttons-container {
+    flex-direction: column;
+    ion-button { width: 100%; }
+  }
+}
+
 .form-container.readonly { pointer-events: none; opacity: 0.8; }
 .form-container.readonly ion-input, .form-container.readonly ion-select, .form-container.readonly ion-textarea { --opacity: 0.7; }

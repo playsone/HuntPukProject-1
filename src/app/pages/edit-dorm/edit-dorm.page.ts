@@ -13,7 +13,8 @@ import { addIcons } from 'ionicons';
 import { 
   saveOutline, imageOutline, homeOutline, wifi, 
   bedOutline, trashOutline, addCircleOutline, locationOutline, cloudUploadOutline, closeCircle,
-  checkmarkCircle, checkmarkCircleOutline
+  checkmarkCircle, checkmarkCircleOutline, arrowBackOutline, arrowForwardOutline, sendOutline,
+  timeOutline, gridOutline, imagesOutline, documentTextOutline
 } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DormitoryService } from '../../services/dormitory';
@@ -22,6 +23,7 @@ import { HttpClientModule, HttpClient, HttpClientJsonpModule } from '@angular/co
 import { GoogleMapsModule, MapMarker, MapCircle, MapInfoWindow } from '@angular/google-maps';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { SuccessModalComponent } from '../../components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-edit-dorm',
@@ -35,7 +37,8 @@ import { environment } from '../../../environments/environment';
     IonItem, IonInput, IonTextarea, IonSelect, IonSelectOption,
     IonCheckbox, IonList, IonListHeader, IonImg, IonModal,
     CommonModule, FormsModule,
-    HttpClientModule, HttpClientJsonpModule, GoogleMapsModule, MapMarker, MapCircle, MapInfoWindow
+    HttpClientModule, HttpClientJsonpModule, GoogleMapsModule, MapMarker, MapCircle, MapInfoWindow,
+    SuccessModalComponent
   ]
 })
 export class EditDormPage implements OnInit {
@@ -129,6 +132,7 @@ export class EditDormPage implements OnInit {
   newFacilitySelectedIconPreview: string | ArrayBuffer | null = null;
   newFacilitySelectedIconFile: File | null = null;
   isSubmitting = false;
+  showSuccessModal = false;
 
   getIconPath(iconPath: string): string {
     if (!iconPath) return '';
@@ -153,7 +157,14 @@ export class EditDormPage implements OnInit {
       bedOutline, addCircleOutline, trashOutline, imageOutline, 
       cloudUploadOutline, closeCircle,
       'checkmark-circle': checkmarkCircle,
-      'checkmark-circle-outline': checkmarkCircleOutline
+      'checkmark-circle-outline': checkmarkCircleOutline,
+      'arrow-back-outline': arrowBackOutline,
+      'arrow-forward-outline': arrowForwardOutline,
+      'send-outline': sendOutline,
+      'time-outline': timeOutline,
+      'grid-outline': gridOutline,
+      'images-outline': imagesOutline,
+      'document-text-outline': documentTextOutline
     });
 
     if (typeof google === 'object' && typeof google.maps === 'object') {
@@ -409,8 +420,12 @@ export class EditDormPage implements OnInit {
     }
   }
 
-  segmentChanged(ev: any) {
-    this.activeSegment = ev.detail.value;
+  segmentChanged(event: any) {
+    this.activeSegment = event.detail.value;
+  }
+
+  goToNextSegment(segment: string) {
+    this.activeSegment = segment;
   }
 
   addRoomType() {
@@ -603,6 +618,33 @@ export class EditDormPage implements OnInit {
     }
   }
 
+  onMultiRoomSelect(event: any) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const slots = ['BED_IMG', 'WALL_IMG', 'CEILING_IMG', 'FLOOR_IMG', 'BATHROOM_IMG', 'BALCONY_IMG'];
+    let fileIndex = 0;
+
+    for (let i = 0; i < slots.length && fileIndex < files.length; i++) {
+      const field = slots[i];
+      const file = files[fileIndex];
+
+      if (file.size > 5 * 1024 * 1024) {
+        this.showToast(`ไฟล์ที่ ${fileIndex + 1} มีขนาดใหญ่เกินไป (สูงสุด 5MB)`, 'warning');
+        fileIndex++;
+        continue;
+      }
+
+      this.selectedFiles[field] = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previews[field] = reader.result;
+      };
+      reader.readAsDataURL(file);
+      fileIndex++;
+    }
+  }
+
   onGallerySelect(event: any) {
     const files = event.target.files;
     if (files) {
@@ -746,6 +788,42 @@ export class EditDormPage implements OnInit {
     this.formData.new_facilities.splice(index, 1);
   }
 
+  async confirmSave() {
+    if (this.isWaitingForAdmin && !this.isResubmitMode) {
+      this.showToast('กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้', 'warning');
+      return;
+    }
+    if (this.isViewOnly) {
+      this.showToast('โหมดดูข้อมูล ไม่สามารถบันทึกได้', 'warning');
+      return;
+    }
+    const alert = await this.alertCtrl.create({
+      header: 'ยืนยันการบันทึก',
+      message: this.isResubmitMode 
+        ? 'ต้องการส่งข้อมูลใหม่เพื่อขออนุมัติอีกครั้งใช่หรือไม่?'
+        : 'ต้องการบันทึกข้อมูลที่แก้ไขอยู่ใช่หรือไม่?',
+      buttons: [
+        { text: 'ยกเลิก', role: 'cancel', cssClass: 'alert-cancel-btn' },
+        {
+          text: this.isResubmitMode ? 'ส่งใหม่' : 'บันทึก',
+          cssClass: 'alert-confirm-btn',
+          handler: () => { this.onSubmit(); }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  onSuccessConfirmed() {
+    this.showSuccessModal = false;
+    const from = this.route.snapshot.queryParamMap.get('from');
+    if (from === 'manage-dorm') {
+      this.router.navigate(['/manage-dorm']);
+    } else {
+      this.router.navigate(['/my-dorms']);
+    }
+  }
+
   async onSubmit() {
     if (this.isWaitingForAdmin && !this.isResubmitMode) {
       this.showToast('กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้', 'warning');
@@ -798,7 +876,6 @@ export class EditDormPage implements OnInit {
       form.append('remaining_gallery', JSON.stringify(this.existingGallery || []));
 
       if (this.selectedFiles.FRONT_DORM_IMG) form.append('FRONT_DORM_IMG', this.selectedFiles.FRONT_DORM_IMG);
-      if (this.selectedFiles.LICENSE_IMG) form.append('LICENSE_IMG', this.selectedFiles.LICENSE_IMG);
       if (this.selectedFiles.BED_IMG) form.append('BED_IMG', this.selectedFiles.BED_IMG);
       if (this.selectedFiles.WALL_IMG) form.append('WALL_IMG', this.selectedFiles.WALL_IMG);
       if (this.selectedFiles.CEILING_IMG) form.append('CEILING_IMG', this.selectedFiles.CEILING_IMG);
@@ -814,17 +891,29 @@ export class EditDormPage implements OnInit {
 
       await this.dormService.updateDorm(this.dormId, form);
       
-      this.showToast('บันทึกข้อมูลสำเร็จ!', 'success');
+      // ✅ Immediately update previews from the files user selected (don't wait for reload)
+      // This ensures cover image and room images show instantly even if cache hasn't cleared yet
+      const tempPreviews: any = {};
+      if (this.selectedFiles.FRONT_DORM_IMG) {
+        tempPreviews.FRONT_DORM_IMG = this.previews.FRONT_DORM_IMG; // already set by onFileSelect
+      }
+
+      // ✅ Reload data เพื่อให้รูปหน้าปกและรูปอื่นๆ refresh เสมอ
+      await this.loadDormData(this.dormId);
+
+      // ✅ If preview was lost after reload (cache still old), restore from temp
+      // Always restore if user selected a new file — local base64 is correct; GCS URL comes on next reload
+      if (tempPreviews.FRONT_DORM_IMG) {
+        this.previews.FRONT_DORM_IMG = tempPreviews.FRONT_DORM_IMG;
+      }
       
-      // กลับไปหน้าที่เข้ามา
-      const from = this.route.snapshot.queryParamMap.get('from');
-      setTimeout(() => {
-        if (from === 'manage-dorm') {
-          this.router.navigate(['/manage-dorm']);
-        } else {
-          this.router.navigate(['/my-dorms']);
-        }
-      }, 800);
+      // ✅ Reset selected files (clear queued uploads)
+      this.selectedFiles = {
+        FRONT_DORM_IMG: null, BED_IMG: null, WALL_IMG: null, CEILING_IMG: null,
+        FLOOR_IMG: null, BATHROOM_IMG: null, BALCONY_IMG: null, OTHER_IMG: []
+      };
+
+      this.showSuccessModal = true;
 
     } catch (error: any) {
       console.error(error);
