@@ -86,6 +86,9 @@ export class EditDormPage implements OnInit {
   zones: any[] = [];
   facilities: any[] = []; 
   roomTypes: any[] = [];
+  existingGallery: any[] = [];
+  deletedRoomImages: string[] = []; // Track deleted room component images
+
   priceTypes: any[] = [];
   
   // ✅ สำหรับตัวเลือกจาก Database
@@ -602,6 +605,14 @@ export class EditDormPage implements OnInit {
     }
   }
 
+  removeRoomImage(field: string) {
+    this.previews[field] = null;
+    this.selectedFiles[field] = null;
+    if (!this.deletedRoomImages.includes(field)) {
+      this.deletedRoomImages.push(field);
+    }
+  }
+
   onFileSelect(event: any, field: string) {
     const file = event.target.files[0];
     if (file) {
@@ -838,6 +849,22 @@ export class EditDormPage implements OnInit {
       return;
     }
 
+    const requiredImages = [
+      { key: 'FRONT_DORM_IMG', name: 'รูปหน้าปกหอพัก' },
+      { key: 'BED_IMG', name: 'รูปเตียงนอน' },
+      { key: 'WALL_IMG', name: 'รูปผนังปลายเตียง' },
+      { key: 'CEILING_IMG', name: 'รูปเพดาน' },
+      { key: 'FLOOR_IMG', name: 'รูปฝั่งติดประตู' },
+      { key: 'BATHROOM_IMG', name: 'รูปห้องน้ำ' }
+    ];
+
+    for (const img of requiredImages) {
+      if (!this.previews[img.key]) {
+        this.showToast(`กรุณาใส่${img.name}ให้ครบถ้วน`, 'warning');
+        return;
+      }
+    }
+
     const loading = await this.loadingCtrl.create({ message: 'กำลังอัปเดตข้อมูล...' });
     await loading.present();
 
@@ -874,6 +901,7 @@ export class EditDormPage implements OnInit {
       
       form.append('roomTypes', JSON.stringify(this.roomTypes));
       form.append('remaining_gallery', JSON.stringify(this.existingGallery || []));
+      form.append('deleted_room_images', JSON.stringify(this.deletedRoomImages || []));
 
       if (this.selectedFiles.FRONT_DORM_IMG) form.append('FRONT_DORM_IMG', this.selectedFiles.FRONT_DORM_IMG);
       if (this.selectedFiles.BED_IMG) form.append('BED_IMG', this.selectedFiles.BED_IMG);
@@ -912,6 +940,7 @@ export class EditDormPage implements OnInit {
         FRONT_DORM_IMG: null, BED_IMG: null, WALL_IMG: null, CEILING_IMG: null,
         FLOOR_IMG: null, BATHROOM_IMG: null, BALCONY_IMG: null, OTHER_IMG: []
       };
+      this.deletedRoomImages = [];
 
       this.showSuccessModal = true;
 

@@ -311,13 +311,7 @@
             <ion-label position="stacked">ชื่อประเภทห้อง <span class="req">*</span></ion-label>
             <ion-select [(ngModel)]="room.selectedType" (ionChange)="onRoomTypeChange(room)" interface="popover" [disabled]="isWaitingForAdmin">
               <ion-select-option *ngFor="let rt of roomTypesDB" [value]="rt.name || rt.ROOM_TYPE_NAME">{{ rt.name || rt.ROOM_TYPE_NAME }}</ion-select-option>
-              <ion-select-option value="custom">อื่นๆ (พิมพ์ชื่อเอง)</ion-select-option>
             </ion-select>
-          </ion-item>
-
-          <ion-item class="custom-input fade-in" *ngIf="room.selectedType === 'custom'">
-            <ion-label position="stacked">พิมพ์ชื่อห้องของคุณ</ion-label>
-            <ion-input [(ngModel)]="room.roomType" placeholder="เช่น ห้อง VIP..." [disabled]="isWaitingForAdmin"></ion-input>
           </ion-item>
 
           <ion-item class="custom-input">
@@ -381,42 +375,72 @@
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BED_IMG')">
             <label>1. เตียงนอน</label>
-            <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'" (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'" (click)="!isWaitingForAdmin && bedInput.click()" [class.uploaded]="previews.BED_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'" (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'" (click)="!isWaitingForAdmin && bedInput.click()" [class.uploaded]="previews.BED_IMG">
+              <ion-button *ngIf="previews.BED_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BED_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && bedInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #bedInput type="file" (change)="onFileSelect($event, 'BED_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'WALL_IMG')">
             <label>2. ผนังปลายเตียง</label>
-            <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'" (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'" (click)="!isWaitingForAdmin && wallInput.click()" [class.uploaded]="previews.WALL_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'" (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'" (click)="!isWaitingForAdmin && wallInput.click()" [class.uploaded]="previews.WALL_IMG">
+              <ion-button *ngIf="previews.WALL_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('WALL_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && wallInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #wallInput type="file" (change)="onFileSelect($event, 'WALL_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'CEILING_IMG')">
             <label>3. เพดาน</label>
-            <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'" (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'" (click)="!isWaitingForAdmin && ceilingInput.click()" [class.uploaded]="previews.CEILING_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'" (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'" (click)="!isWaitingForAdmin && ceilingInput.click()" [class.uploaded]="previews.CEILING_IMG">
+              <ion-button *ngIf="previews.CEILING_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('CEILING_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && ceilingInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #ceilingInput type="file" (change)="onFileSelect($event, 'CEILING_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'FLOOR_IMG')">
             <label>4. ฝั่งติดประตู</label>
-            <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'" (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'" (click)="!isWaitingForAdmin && floorInput.click()" [class.uploaded]="previews.FLOOR_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'" (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'" (click)="!isWaitingForAdmin && floorInput.click()" [class.uploaded]="previews.FLOOR_IMG">
+              <ion-button *ngIf="previews.FLOOR_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('FLOOR_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && floorInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #floorInput type="file" (change)="onFileSelect($event, 'FLOOR_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BATHROOM_IMG')">
             <label>5. ห้องน้ำ</label>
-            <img [src]="previews.BATHROOM_IMG || 'assets/img/placeholder.png'" (error)="previews.BATHROOM_IMG = 'https://placehold.co/400x400?text=Bathroom'" (click)="!isWaitingForAdmin && bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.BATHROOM_IMG || 'assets/img/placeholder.png'" (error)="previews.BATHROOM_IMG = 'https://placehold.co/400x400?text=Bathroom'" (click)="!isWaitingForAdmin && bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG">
+              <ion-button *ngIf="previews.BATHROOM_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BATHROOM_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && bathInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #bathInput type="file" (change)="onFileSelect($event, 'BATHROOM_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BALCONY_IMG')">
             <label>6. ระเบียง (ถ้ามี)</label>
-            <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'" (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'" (click)="!isWaitingForAdmin && balconyInput.click()" [class.uploaded]="previews.BALCONY_IMG">
+            <div style="position: relative;">
+              <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'" (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'" (click)="!isWaitingForAdmin && balconyInput.click()" [class.uploaded]="previews.BALCONY_IMG">
+              <ion-button *ngIf="previews.BALCONY_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BALCONY_IMG')">
+                <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
             <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && balconyInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
             <input #balconyInput type="file" (change)="onFileSelect($event, 'BALCONY_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
