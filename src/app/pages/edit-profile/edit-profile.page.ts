@@ -202,15 +202,10 @@ export class EditProfilePage implements OnInit {
         window.dispatchEvent(new CustomEvent('user-profile-updated'));
       }
       
-      await Swal.fire({
-        icon: 'success',
-        title: 'สำเร็จ',
-        text: 'บันทึกข้อมูลเรียบร้อย',
-        confirmButtonColor: '#f1c40f',
-        confirmButtonText: 'ตกลง'
-      }).then(() => {
+      this.showToast('บันทึกข้อมูลเรียบร้อย', 'success');
+      setTimeout(() => {
         this.router.navigateByUrl(this.returnUrl);
-      });
+      }, 500);
 
     } catch (error: any) { 
       console.error('Update Error:', error);
@@ -223,13 +218,7 @@ export class EditProfilePage implements OnInit {
         msg = error.message;
       }
       
-      await Swal.fire({
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: msg,
-        confirmButtonColor: '#f1c40f',
-        confirmButtonText: 'ตกลง'
-      });
+      this.showToast(msg, 'danger');
     }
   }
 
@@ -241,14 +230,8 @@ export class EditProfilePage implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        Swal.fire({
-          icon: 'error',
-          title: 'ขนาดไฟล์เกิน',
-          text: 'กรุณาอัปโหลดรูปภาพขนาดไม่เกิน 2MB',
-          confirmButtonColor: '#f1c40f',
-          confirmButtonText: 'ตกลง'
-        });
+      if (file.size > 5 * 1024 * 1024) {
+        this.showToast('กรุณาอัปโหลดรูปภาพขนาดไม่เกิน 5MB', 'warning');
         event.target.value = null; // reset input
         return;
       }
