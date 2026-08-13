@@ -186,7 +186,6 @@ export class EditDormPage implements OnInit {
   selectedFiles: any = {
     FRONT_DORM_IMG: null,
     BED_IMG: null,
-    LICENSE_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
     FLOOR_IMG: null,
@@ -197,9 +196,7 @@ export class EditDormPage implements OnInit {
 
   previews: any = {
     FRONT_DORM_IMG: null,
-    LICENSE_IMG: null,
     FRONT_DORM_IMAGE: null,
-    DORM_LICENSE: null,
     BED_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
@@ -555,7 +552,6 @@ export class EditDormPage implements OnInit {
         this.previews.CEILING_IMG = d.ceiling_img || null;
         this.previews.FLOOR_IMG = d.floor_img || null;
         this.previews.FRONT_DORM_IMAGE = d.FRONT_DORM_IMAGE || null;
-        this.previews.DORM_LICENSE = d.DORM_LICENSE || null;
 
         // รูปส่วนต่างๆ
         this.previews.BATHROOM_IMG = d.bathroom_img || null;
