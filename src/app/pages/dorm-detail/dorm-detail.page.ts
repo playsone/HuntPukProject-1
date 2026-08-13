@@ -198,6 +198,12 @@ export class DormDetailPage implements OnInit, OnChanges {
         this.parseFacilities();
         this.loadReviews();
         this.checkFavoriteStatus();
+        
+        // 🌐 บันทึกยอดวิวหอพัก
+        if (id) {
+          this.dormService.recordDormView(Number(id));
+        }
+
       } else {
         this.isError = true;
         this.errorMessage = 'ไม่พบข้อมูลหอพัก';

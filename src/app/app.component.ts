@@ -1,3 +1,4 @@
+import { DormitoryService } from './services/dormitory';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonicModule } from "@ionic/angular";
 import { addIcons } from 'ionicons';
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private inactivityCheckInterval?: ReturnType<typeof setInterval>;
   private readonly boundUpdateActivity = () => this.updateLastActivity();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dormService: DormitoryService) {
     addIcons({
       alertCircleOutline,
       checkmarkCircleOutline,
@@ -39,6 +40,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // 🌐 บันทึกยอดวิวเว็บไซต์เมื่อเริ่มแอป
+    this.dormService.recordWebsiteView();
+
     // ✅ ฟัง sidebar state change จาก MenuComponent
     window.addEventListener('sidebar-state-changed', (e: Event) => {
       const detail = (e as CustomEvent).detail as { isOpen: boolean; isDesktop: boolean };

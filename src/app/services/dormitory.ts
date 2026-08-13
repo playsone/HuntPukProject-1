@@ -167,6 +167,30 @@ export class DormitoryService {
   }
 
   /**
+   * บันทึกยอดเข้าชมเว็บไซต์
+   */
+  public async recordWebsiteView(): Promise<void> {
+    const url = `${this.apiUrl}/views/website`;
+    try {
+      await lastValueFrom(this.http.post(url, {}));
+    } catch (error) {
+      console.warn('Failed to record website view', error);
+    }
+  }
+
+  /**
+   * บันทึกยอดเข้าชมหอพัก
+   */
+  public async recordDormView(dormId: number): Promise<void> {
+    const url = `${this.apiUrl}/views/dorm/${dormId}`;
+    try {
+      await lastValueFrom(this.http.post(url, {}));
+    } catch (error) {
+      console.warn('Failed to record dorm view', error);
+    }
+  }
+
+  /**
    * เพิ่มรายการโปรด
    */
   public async addFavorite(userId: number, dormId: number) {
