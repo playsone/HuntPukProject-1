@@ -843,6 +843,7 @@ export class DormFormPage implements OnInit {
   isAddFacilityModalOpen = false;  // controls overlay div (not ion-modal)
   newFacilityName = '';
   newFacilityCustomIcon: string | null = null; // store base64 string
+  newFacilityFile: any = null;
   
   availableIcons = [
     'air-conditioner.png', 'bed.png', 'business-fill.png', 'business-outline.png',
@@ -856,14 +857,15 @@ export class DormFormPage implements OnInit {
   ];
 
   suggestNewFacility() {
-    if (this.formData.new_facilities.length >= 4) {
-      this.showToast('คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 4 รายการ', 'warning');
+    if (this.formData.new_facilities.length > 3) {
+      this.showToast('คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 3 รายการ', 'warning');
       return;
     }
     
     // Reset state and open modal
     this.newFacilityName = '';
     this.newFacilityCustomIcon = null;
+    this.newFacilityFile = null;
     this.isAddFacilityModalOpen = true;
   }
 
@@ -885,6 +887,7 @@ export class DormFormPage implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.newFacilityCustomIcon = reader.result as string;
+        this.newFacilityFile = file;
       };
       reader.readAsDataURL(file);
     }
@@ -921,7 +924,8 @@ export class DormFormPage implements OnInit {
             // 3. Add to new facilities
             this.formData.new_facilities.push({
               name: trimmedName,
-              icon: this.newFacilityCustomIcon ? this.newFacilityCustomIcon : ''
+              icon: this.newFacilityCustomIcon ? this.newFacilityCustomIcon : '',
+              file: this.newFacilityFile
             });
             this.closeAddFacilityModal();
             this.showToast('เพิ่มสิ่งอำนวยความสะดวกสำเร็จ', 'success');
@@ -1080,7 +1084,18 @@ export class DormFormPage implements OnInit {
       form.append('facilities', JSON.stringify(selectedFacIds));
 
       if (this.formData.new_facilities && this.formData.new_facilities.length > 0) {
-        form.append('new_facilities', JSON.stringify(this.formData.new_facilities));
+        const newFacToSave = this.formData.new_facilities.map((nf: any) => ({
+          name: nf.name,
+          icon: nf.icon
+        }));
+        form.append('new_facilities', JSON.stringify(newFacToSave));
+
+        const facWithFiles = this.formData.new_facilities.filter((nf: any) => nf.file);
+        facWithFiles.forEach((nf: any, idx: number) => {
+          if (idx < 3) {
+            form.append(`FACILITY_IMG_${idx}`, nf.file);
+          }
+        });
       }
 
       // รูปภาพ
