@@ -1041,7 +1041,15 @@ export class DormFormPage implements OnInit {
         prices: r.prices
       })),
       image: this.previews.FRONT_DORM_IMG || 'assets/dorm-placeholder.jpg',
-      gallery: this.previews.OTHER_IMG || [],
+      gallery: [
+        this.previews.BED_IMG,
+        this.previews.WALL_IMG,
+        this.previews.CEILING_IMG,
+        this.previews.FLOOR_IMG,
+        this.previews.BATHROOM_IMG,
+        this.previews.BALCONY_IMG,
+        ...(this.previews.OTHER_IMG || [])
+      ].filter(img => img), // กรองเอาค่าว่างหรือ null ออก
       FIRST_NAME: ownerProfile?.FIRST_NAME || ownerProfile?.USER_FNAME || ownerProfile?.USER_FIRSTNAME || ownerProfile?.fname || 'เจ้าของหอพัก',
       LAST_NAME: ownerProfile?.LAST_NAME || ownerProfile?.USER_LNAME || ownerProfile?.USER_LASTNAME || ownerProfile?.lname || '',
       phone: ownerProfile?.PHONE || ownerProfile?.PHONE_NUMBER || '-',

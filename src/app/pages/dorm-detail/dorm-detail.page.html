@@ -136,16 +136,21 @@
           <h3><ion-icon name="checkmark-circle-outline"></ion-icon> สิ่งอำนวยความสะดวก</h3>
           <div class="amenities-grid" *ngIf="facilitiesList.length > 0">
             <div class="amenity-item" *ngFor="let fac of facilitiesList">
-              <div class="fac-icon-wrap">
-                <!-- แสดงรูปภาพถ้ามี URL, ซ่อนตอนโหลด, fade-in เมื่อโหลดเสร็จ -->
-                <img *ngIf="fac.icon"
-                     [src]="fac.icon"
-                     class="fac-icon"
-                     (load)="$event.target.classList.add('loaded')"
-                     (error)="$event.target.style.display='none'; fac.icon = ''">
-                <!-- ถ้าไม่มีรูป แสดง ion-icon แทน -->
-                <ion-icon *ngIf="!fac.icon" name="checkmark-circle-outline" class="fac-fallback-icon"></ion-icon>
-              </div>
+                <div class="fac-icon-wrap" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
+                  <!-- Font Awesome icon -->
+                  <i *ngIf="fac.isFontAwesome" [class]="fac.icon" class="fac-fa-icon" style="font-size: 24px; color: #ff9800;"></i>
+                  
+                  <!-- URL รูปภาพ -->
+                  <img *ngIf="!fac.isFontAwesome && fac.icon"
+                       [src]="fac.icon"
+                       class="fac-icon"
+                       style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                       (load)="$event.target.classList.add('loaded')"
+                       (error)="$event.target.style.display='none'; fac.icon = ''">
+                       
+                  <!-- ถ้าไม่มีรูป แสดง ion-icon แทน -->
+                  <ion-icon *ngIf="!fac.isFontAwesome && !fac.icon" name="checkmark-circle-outline" class="fac-fallback-icon" style="font-size: 24px; color: #999;"></ion-icon>
+                </div>
               <span>{{ fac.name }}</span>
             </div>
           </div>

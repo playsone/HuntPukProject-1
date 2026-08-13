@@ -1,13 +1,13 @@
-﻿<ion-header class="ion-no-border">
+<ion-header class="ion-no-border">
   <ion-toolbar color="warning">
     <ion-buttons slot="start">
       <ion-button (click)="goBack()" color="dark">
         <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-        เธขเนเธญเธเธเธฅเธฑเธ
+        ย้อนกลับ
       </ion-button>
     </ion-buttons>
     <ion-title class="ion-text-center" style="color: #000; font-weight: bold;">
-      {{ dormId ? 'เธเนเธญเธกเธนเธฅเธซเธญเธเธฑเธ' : 'เธฅเธเธ—เธฐเน€เธเธตเธขเธเธซเธญเธเธฑเธ' }}
+      {{ dormId ? 'ข้อมูลหอพัก' : 'ลงทะเบียนหอพัก' }}
     </ion-title>
   </ion-toolbar>
 
@@ -15,22 +15,22 @@
   <div class="step-indicator" *ngIf="formState === 'editing'">
     <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1" (click)="goToStep(1)" style="cursor: pointer;">
       <span class="step-num">1</span>
-      <span class="step-label">เธ—เธฑเนเธงเนเธ</span>
+      <span class="step-label">ทั่วไป</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 1"></div>
     <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2" (click)="goToStep(2)" style="cursor: pointer;">
       <span class="step-num">2</span>
-      <span class="step-label">เธชเธดเนเธเธญเธณเธเธงเธขเธฏ</span>
+      <span class="step-label">สิ่งอำนวยฯ</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 2"></div>
     <div class="step" [class.active]="currentStep >= 3" [class.done]="currentStep > 3" (click)="goToStep(3)" style="cursor: pointer;">
       <span class="step-num">3</span>
-      <span class="step-label">เธซเนเธญเธเธเธฑเธ</span>
+      <span class="step-label">ห้องพัก</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 3"></div>
     <div class="step" [class.active]="currentStep >= 4" (click)="goToStep(4)" style="cursor: pointer;">
       <span class="step-num">4</span>
-      <span class="step-label">เธฃเธนเธเธ เธฒเธ</span>
+      <span class="step-label">รูปภาพ</span>
     </div>
   </div>
 </ion-header>
@@ -40,23 +40,23 @@
     <fieldset [disabled]="isReadOnly" style="border: none; padding: 0; margin: 0; min-inline-size: auto;">
 
 
-    <!-- ==================== STEP 1: เธเนเธญเธกเธนเธฅเธเธทเนเธเธเธฒเธ ==================== -->
+    <!-- ==================== STEP 1: ข้อมูลพื้นฐาน ==================== -->
     <div *ngIf="currentStep === 1" class="fade-in">
 
       <!-- Admin Badge -->
       <div class="admin-badge" *ngIf="isAdmin">
         <ion-icon name="person-outline"></ion-icon>
-        <span>เธเธณเธฅเธฑเธเธฅเธเธ—เธฐเน€เธเธตเธขเธเนเธเธเธฒเธเธฐ <b>Admin</b></span>
+        <span>กำลังลงทะเบียนในฐานะ <b>Admin</b></span>
       </div>
 
-      <!-- เธชเธณเธซเธฃเธฑเธเนเธญเธ”เธกเธดเธ: เน€เธฅเธทเธญเธเน€เธเนเธฒเธเธญเธเธซเธญเธเธฑเธ -->
+      <!-- สำหรับแอดมิน: เลือกเจ้าของหอพัก -->
       <div class="section-card" *ngIf="isAdmin">
-        <h3><ion-icon name="person-add-outline"></ion-icon> เน€เธฅเธทเธญเธเน€เธเนเธฒเธเธญเธเธซเธญเธเธฑเธ</h3>
-        <p class="hint-text">เธเธฃเธ“เธตเธชเธฃเนเธฒเธเธซเธญเธเธฑเธเนเธ—เธเน€เธเนเธฒเธเธญเธเธซเธญ เนเธซเนเน€เธฅเธทเธญเธเธเธทเนเธญเน€เธเนเธฒเธเธญเธเธซเธญเธเธฒเธเธฃเธฒเธขเธเธทเนเธญ (เธ–เนเธฒเนเธกเนเธกเธตเนเธซเนเน€เธงเนเธเนเธงเน เธเนเธญเธกเธนเธฅเธเธฐเธเธนเธเธเธฑเธเธเธฑเธเธเธตเนเธญเธ”เธกเธดเธเนเธ—เธ)</p>
+        <h3><ion-icon name="person-add-outline"></ion-icon> เลือกเจ้าของหอพัก</h3>
+        <p class="hint-text">กรณีสร้างหอพักแทนเจ้าของหอ ให้เลือกชื่อเจ้าของหอจากรายชื่อ (ถ้าไม่มีให้เว้นไว้ ข้อมูลจะผูกกับบัญชีแอดมินแทน)</p>
         <ion-item class="custom-input">
-          <ion-label position="stacked">เน€เธเนเธฒเธเธญเธเธซเธญเธเธฑเธ</ion-label>
-          <ion-select [(ngModel)]="selectedOwnerId" interface="popover" placeholder="เน€เธฅเธทเธญเธเน€เธเนเธฒเธเธญเธเธซเธญเธเธฑเธ (เธซเธฃเธทเธญเธ•เธฑเธงเธเธธเธ“เน€เธญเธ)">
-            <ion-select-option [value]="ownerId">เธเธฑเธเน€เธญเธ (เนเธญเธ”เธกเธดเธ)</ion-select-option>
+          <ion-label position="stacked">เจ้าของหอพัก</ion-label>
+          <ion-select [(ngModel)]="selectedOwnerId" interface="popover" placeholder="เลือกเจ้าของหอพัก (หรือตัวคุณเอง)">
+            <ion-select-option [value]="ownerId">ฉันเอง (แอดมิน)</ion-select-option>
             <ion-select-option *ngFor="let owner of dormOwners" [value]="owner.USER_ID">
               {{ owner.FIRST_NAME }} {{ owner.LAST_NAME }} ({{ owner.USERNAME }})
             </ion-select-option>
@@ -65,15 +65,15 @@
       </div>
 
       <div class="section-card">
-        <h3><ion-icon name="home-outline"></ion-icon> เธเนเธญเธกเธนเธฅเธเธทเนเธเธเธฒเธ</h3>
+        <h3><ion-icon name="home-outline"></ion-icon> ข้อมูลพื้นฐาน</h3>
 
         <ion-item class="custom-input">
-          <ion-label position="stacked">เธเธทเนเธญเธซเธญเธเธฑเธ <span class="req">*</span></ion-label>
-          <ion-input [(ngModel)]="formData.name" placeholder="เธฃเธฐเธเธธเธเธทเนเธญเธซเธญเธเธฑเธ" [clearOnEdit]="false"></ion-input>
+          <ion-label position="stacked">ชื่อหอพัก <span class="req">*</span></ion-label>
+          <ion-input [(ngModel)]="formData.name" placeholder="ระบุชื่อหอพัก" [clearOnEdit]="false"></ion-input>
         </ion-item>
 
         <ion-item class="custom-input">
-          <ion-label position="stacked">เธเธฃเธฐเน€เธ เธ—เธซเธญเธเธฑเธ <span class="req">*</span></ion-label>
+          <ion-label position="stacked">ประเภทหอพัก <span class="req">*</span></ion-label>
           <ion-select [(ngModel)]="formData.type_id" interface="popover">
             <ion-select-option *ngFor="let dt of dormTypesDB" [value]="dt.id || dt.DORM_TYPE_ID">{{ dt.name || dt.DORM_TYPE_NAME }}</ion-select-option>
           </ion-select>
@@ -81,60 +81,60 @@
 
 
         <ion-item class="custom-input">
-          <ion-label position="stacked">เธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”เน€เธเธดเนเธกเน€เธ•เธดเธก</ion-label>
+          <ion-label position="stacked">รายละเอียดเพิ่มเติม</ion-label>
           <ion-textarea [(ngModel)]="formData.detail" rows="3"
-            placeholder="เน€เธเนเธ เนเธเธฅเนเธกเธญ, เธชเธเธ, เธกเธตเธฃเนเธฒเธเธญเธฒเธซเธฒเธฃเนเธเธฅเนเน..."></ion-textarea>
+            placeholder="เช่น ใกล้มอ, สงบ, มีร้านอาหารใกล้ๆ..."></ion-textarea>
         </ion-item>
       </div>
 
       <div class="section-card">
         <div class="header-row" style="margin-bottom: 10px;">
-          <h3 style="margin: 0;"><ion-icon name="location-outline"></ion-icon> เนเธเธเธ—เธตเน & เธเธดเธเธฑเธ”</h3>
+          <h3 style="margin: 0;"><ion-icon name="location-outline"></ion-icon> แผนที่ & พิกัด</h3>
           <ion-button *ngIf="!dormId" fill="outline" size="small" color="primary" (click)="getCurrentLocation()" [disabled]="isLocating">
             <ion-spinner *ngIf="isLocating" name="crescent" slot="start" style="width: 16px; height: 16px; margin-right: 8px;"></ion-spinner>
             <ion-icon *ngIf="!isLocating" name="locate-outline" slot="start"></ion-icon> 
-            {{ isLocating ? 'เธเธณเธฅเธฑเธเธ”เธถเธเธเธดเธเธฑเธ”...' : 'เธเธดเธเธฑเธ”เธเธฑเธเธเธธเธเธฑเธ' }}
+            {{ isLocating ? 'กำลังดึงพิกัด...' : 'พิกัดปัจจุบัน' }}
           </ion-button>
         </div>
 
         <ion-item class="custom-input">
-          <ion-label position="stacked">เนเธเธเธซเธญเธเธฑเธ <span class="req">*</span></ion-label>
-          <ion-input [value]="currentZoneName" readonly placeholder="เธเธฑเธเธซเธกเธธเธ”เธเธเนเธเธเธ—เธตเนเน€เธเธทเนเธญเน€เธฅเธทเธญเธเนเธเธ" [class.zone-selected]="formData.zone_id"></ion-input>
+          <ion-label position="stacked">โซนหอพัก <span class="req">*</span></ion-label>
+          <ion-input [value]="currentZoneName" readonly placeholder="ปักหมุดบนแผนที่เพื่อเลือกโซน" [class.zone-selected]="formData.zone_id"></ion-input>
         </ion-item>
 
         <ion-item class="custom-input">
-          <ion-label position="stacked">เธ—เธตเนเธญเธขเธนเน</ion-label>
+          <ion-label position="stacked">ที่อยู่</ion-label>
           <ion-textarea [(ngModel)]="formData.address" rows="2"
-            placeholder="เธเนเธฒเธเน€เธฅเธเธ—เธตเน, เธ–เธเธ, เธ•เธณเธเธฅ..."></ion-textarea>
+            placeholder="บ้านเลขที่, ถนน, ตำบล..."></ion-textarea>
         </ion-item>
 
         <div class="map-wrapper">
           <google-map height="100%" width="100%" [center]="center" [zoom]="zoom"
             [options]="mapOptions" (mapClick)="onMapClick($event)">
-            <!-- Marker เธ•เธณเนเธซเธเนเธเธซเธญเธเธฑเธเนเธซเธกเน -->
+            <!-- Marker ตำแหน่งหอพักใหม่ -->
             <map-marker #userMarker="mapMarker" [position]="markerPosition" [options]="markerOptions">
               <map-info-window #infoWindow="mapInfoWindow">
                 <div style="text-align: center; padding: 4px;">
-                  <h3 *ngIf="duplicateDormName" style="color: red; font-size: 14px; font-weight: bold; margin: 0;">โ ๏ธ เธ•เธณเนเธซเธเนเธเธเนเธณ</h3>
-                  <p *ngIf="duplicateDormName" style="font-size: 13px; margin: 4px 0 0;">เธกเธตเธซเธญเธเธฑเธเธเธทเนเธญ <b>{{ duplicateDormName }}</b> เธ•เธฑเนเธเธญเธขเธนเนเนเธฅเนเธงเธเธฃเธฑเธ เธเธธเธ“เนเธกเนเธชเธฒเธกเธฒเธฃเธ–เธเธฑเธเธซเธกเธธเธ”เธเนเธณเนเธ”เน</p>
+                  <h3 *ngIf="duplicateDormName" style="color: red; font-size: 14px; font-weight: bold; margin: 0;">⚠️ ตำแหน่งซ้ำ</h3>
+                  <p *ngIf="duplicateDormName" style="font-size: 13px; margin: 4px 0 0;">มีหอพักชื่อ <b>{{ duplicateDormName }}</b> ตั้งอยู่แล้วครับ คุณไม่สามารถปักหมุดซ้ำได้</p>
                   
-                  <h3 *ngIf="!duplicateDormName" style="font-size: 14px; margin: 0;">{{ currentZoneName || 'เนเธเธเธ—เธตเนเน€เธฅเธทเธญเธ' }}</h3>
+                  <h3 *ngIf="!duplicateDormName" style="font-size: 14px; margin: 0;">{{ currentZoneName || 'โซนที่เลือก' }}</h3>
                 </div>
               </map-info-window>
             </map-marker>
-            <!-- เธงเธเธเธฅเธกเธ—เธธเธเนเธเธ -->
+            <!-- วงกลมทุกโซน -->
             <map-circle *ngFor="let zone of zones"
               [center]="{lat: zone.lat, lng: zone.lng}"
               [radius]="zone.ZONE_RADIUS || 500"
               [options]="getZoneCircleOptions(zone)">
             </map-circle>
-            <!-- เธซเธกเธธเธ”เธจเธนเธเธขเนเธเธฅเธฒเธเนเธเธเธเธฃเนเธญเธกเธเธทเนเธญ -->
+            <!-- หมุดศูนย์กลางโซนพร้อมชื่อ -->
             <map-marker *ngFor="let zone of zones"
               [position]="{lat: zone.lat, lng: zone.lng}"
               [options]="getZoneMarkerOptions(zone)"
               (mapClick)="onZoneMarkerClick(zone)">
             </map-marker>
-            <!-- เธซเธกเธธเธ”เธซเธญเธเธฑเธเธ—เธตเนเธกเธตเธญเธขเธนเนเนเธฅเนเธงเนเธเธฃเธฐเธเธ -->
+            <!-- หมุดหอพักที่มีอยู่แล้วในระบบ -->
             <map-marker #dormMarker="mapMarker" *ngFor="let dorm of filteredDorms"
               [position]="{lat: dorm.lat, lng: dorm.lng}"
               [options]="getDormMarkerOptions(dorm)"
@@ -144,61 +144,61 @@
             <!-- Dorm Info Window -->
             <map-info-window #dormInfoWindow="mapInfoWindow">
               <div class="dorm-info-window" *ngIf="selectedDormForMap" style="text-align: center; padding: 4px;">
-                <h3 style="margin: 0; font-size: 14px; font-weight: bold; color: #1e293b;">{{ selectedDormForMap.DORM_NAME || selectedDormForMap.DORMNAME || 'เธซเธญเธเธฑเธ' }}</h3>
-                <p style="margin: 4px 0 0; font-size: 12px; color: red;">โ ๏ธ เนเธกเนเธชเธฒเธกเธฒเธฃเธ–เธเธฑเธเธซเธกเธธเธ”เธ—เธฑเธเนเธ”เน</p>
+                <h3 style="margin: 0; font-size: 14px; font-weight: bold; color: #1e293b;">{{ selectedDormForMap.DORM_NAME || selectedDormForMap.DORMNAME || 'หอพัก' }}</h3>
+                <p style="margin: 4px 0 0; font-size: 12px; color: red;">⚠️ ไม่สามารถปักหมุดทับได้</p>
               </div>
             </map-info-window>
           </google-map>
         </div>
-        <p class="hint-text text-danger">* เนเธ•เธฐเธเธเนเธเธเธ—เธตเนเน€เธเธทเนเธญเธเธฑเธเธซเธกเธธเธ”เธ•เธณเนเธซเธเนเธเธซเธญเธเธฑเธ (เธ—เธตเนเธญเธขเธนเนเธเธฐเธ–เธนเธเธ”เธถเธเธญเธฑเธ•เนเธเธกเธฑเธ•เธด)</p>
+        <p class="hint-text text-danger">* แตะบนแผนที่เพื่อปักหมุดตำแหน่งหอพัก (ที่อยู่จะถูกดึงอัตโนมัติ)</p>
         <div class="coord-display">
           <div style="font-size: 0.9em; color: var(--ion-color-medium);">
-            เธเธดเธเธฑเธ”: {{ formData.lat | number:'1.6-6' }}, {{ formData.lng | number:'1.6-6' }}
+            พิกัด: {{ formData.lat | number:'1.6-6' }}, {{ formData.lng | number:'1.6-6' }}
           </div>
         </div>
       </div>
 
       <div class="section-card">
-        <h3>๐’ก เธเนเธฒเธเนเธณ & เธเนเธฒเนเธ</h3>
+        <h3>💡 ค่าน้ำ & ค่าไฟ</h3>
         <div class="row-2-col">
           <ion-item class="custom-input">
-            <ion-label position="stacked">เธเนเธฒเธเนเธณ (เธเธฒเธ—/เธซเธเนเธงเธข) <span class="req">*</span></ion-label>
+            <ion-label position="stacked">ค่าน้ำ (บาท/หน่วย) <span class="req">*</span></ion-label>
             <ion-input type="number" [(ngModel)]="formData.water_unit"
-              placeholder="เน€เธเนเธ 15" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
+              placeholder="เช่น 15" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
           </ion-item>
           <ion-item class="custom-input">
-            <ion-label position="stacked">เธเนเธฒเธเนเธณเน€เธซเธกเธฒเธเนเธฒเธข (เธเธฒเธ—/เน€เธ”เธทเธญเธ)</ion-label>
+            <ion-label position="stacked">ค่าน้ำเหมาจ่าย (บาท/เดือน)</ion-label>
             <ion-input type="number" [(ngModel)]="formData.water_lump"
-              placeholder="เธ–เนเธฒเธกเธต" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
+              placeholder="ถ้ามี" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
           </ion-item>
         </div>
         <ion-item class="custom-input">
-          <ion-label position="stacked">เธเนเธฒเนเธ (เธเธฒเธ—/เธซเธเนเธงเธข) <span class="req">*</span></ion-label>
+          <ion-label position="stacked">ค่าไฟ (บาท/หน่วย) <span class="req">*</span></ion-label>
           <ion-input type="number" [(ngModel)]="formData.elect_unit"
-            placeholder="เน€เธเนเธ 8" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
+            placeholder="เช่น 8" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
         </ion-item>
       </div>
     </div>
 
-    <!-- ==================== STEP 2: เธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ ==================== -->
+    <!-- ==================== STEP 2: สิ่งอำนวยความสะดวก ==================== -->
     <div *ngIf="currentStep === 2" class="fade-in">
       <div class="section-card">
-        <h3><ion-icon name="wifi"></ion-icon> เธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ</h3>
-        <p class="hint-text">เธ•เธดเนเธเน€เธฅเธทเธญเธเธชเธดเนเธเธ—เธตเนเธซเธญเธเธฑเธเธเธญเธเธเธธเธ“เธกเธตเนเธซเนเธเธฃเธดเธเธฒเธฃ</p>
+        <h3><ion-icon name="wifi"></ion-icon> สิ่งอำนวยความสะดวก</h3>
+        <p class="hint-text">ติ๊กเลือกสิ่งที่หอพักของคุณมีให้บริการ</p>
 
         <ion-list lines="none" class="facilities-grid">
           <ion-item *ngFor="let fac of facilities" class="checkbox-item" [class.checked]="fac.checked">
             <ion-checkbox slot="start" [(ngModel)]="fac.checked"></ion-checkbox>
 
-            <!-- โ… FIX: เนเธชเธ”เธ Icon เธ•เธฒเธกเธเธฃเธฐเน€เธ เธ— (Font Awesome class เธซเธฃเธทเธญ URL) -->
+            <!-- ✅ FIX: แสดง Icon ตามประเภท (Font Awesome class หรือ URL) -->
             <div class="fac-icon-wrapper">
-              <!-- Font Awesome icon (เน€เธเนเธ "fas fa-snowflake") -->
+              <!-- Font Awesome icon (เช่น "fas fa-snowflake") -->
               <i *ngIf="fac.isFontAwesome" [class]="fac.icon" class="fac-fa-icon"></i>
-              <!-- URL เธฃเธนเธเธ เธฒเธ -->
+              <!-- URL รูปภาพ -->
               <img *ngIf="!fac.isFontAwesome && fac.icon"
                 [src]="fac.icon" class="fac-icon-img"
                 (error)="$any($event.target).src='assets/icon/favicon.png'">
-              <!-- Fallback เธ–เนเธฒเนเธกเนเธกเธตเนเธญเธเธญเธ -->
+              <!-- Fallback ถ้าไม่มีไอคอน -->
               <ion-icon *ngIf="!fac.icon" name="home-outline" class="fac-ion-icon"></ion-icon>
             </div>
 
@@ -206,25 +206,25 @@
           </ion-item>
         </ion-list>
 
-        <!-- เนเธชเธ”เธเธเธณเธเธงเธเธ—เธตเนเน€เธฅเธทเธญเธ -->
+        <!-- แสดงจำนวนที่เลือก -->
         <div class="selected-count" *ngIf="facilities.length > 0">
-          เน€เธฅเธทเธญเธเนเธฅเนเธง {{ getCheckedFacilitiesCount() }} / {{ facilities.length }} เธฃเธฒเธขเธเธฒเธฃ
+          เลือกแล้ว {{ getCheckedFacilitiesCount() }} / {{ facilities.length }} รายการ
         </div>
 
-        <!-- เน€เธชเธเธญเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ -->
+        <!-- เสนอสิ่งอำนวยความสะดวก -->
         <div class="suggest-fac-container" style="text-align: center; margin-top: 15px;">
           <ion-button fill="outline" shape="round" color="secondary" (click)="suggestNewFacility()" *ngIf="formData.new_facilities.length < 3">
             <ion-icon slot="start" name="bulb-outline"></ion-icon>
-            เน€เธชเธเธญเน€เธเธดเนเธกเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ (เน€เธชเธเธญเนเธ”เนเธญเธตเธ {{ 3 - formData.new_facilities.length }} เธญเธขเนเธฒเธ)
+            เสนอเพิ่มสิ่งอำนวยความสะดวก (เสนอได้อีก {{ 3 - formData.new_facilities.length }} อย่าง)
           </ion-button>
           <p class="hint-text text-danger" *ngIf="formData.new_facilities.length >= 3" style="margin-top: 10px;">
-            <ion-icon name="alert-circle-outline"></ion-icon> เธเธธเธ“เน€เธชเธเธญเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธเธเธฃเธเธเธณเธซเธเธ” 3 เธญเธขเนเธฒเธเนเธฅเนเธง
+            <ion-icon name="alert-circle-outline"></ion-icon> คุณเสนอสิ่งอำนวยความสะดวกครบกำหนด 3 อย่างแล้ว
           </p>
           
           <div *ngIf="formData.new_facilities.length > 0" class="new-fac-list">
             <div *ngFor="let newFac of formData.new_facilities; let i = index" class="new-fac-item" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;">
               <img [src]="newFac.icon.startsWith('data:') || newFac.icon.startsWith('http') ? newFac.icon : ('/assets/allIcons/' + newFac.icon)" alt="icon" style="width: 24px; height: 24px; object-fit: contain;">
-              <span style="color: #333;"> <strong>{{ newFac.name }}</strong> (เธฃเธญเธญเธเธธเธกเธฑเธ•เธด)</span>
+              <span style="color: #333;"> <strong>{{ newFac.name }}</strong> (รออนุมัติ)</span>
               <ion-button fill="clear" color="danger" size="small" (click)="removeNewFacility(i)" style="--padding-start: 0; --padding-end: 0; height: 24px;">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -234,27 +234,27 @@
       </div>
     </div>
 
-    <!-- Overlay Modal เธชเธณเธซเธฃเธฑเธเน€เธเธดเนเธกเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธเนเธซเธกเน (เนเธเน div เนเธ—เธ ion-modal เน€เธเธทเนเธญเธเนเธญเธเธเธฑเธเธซเธเนเธฒเธเธญเธ”เธณ) -->
+    <!-- Overlay Modal สำหรับเพิ่มสิ่งอำนวยความสะดวกใหม่ (ใช้ div แทน ion-modal เพื่อป้องกันหน้าจอดำ) -->
     <div class="fac-modal-overlay" *ngIf="isAddFacilityModalOpen" (click)="closeAddFacilityModal()">
       <div class="fac-modal-box" (click)="$event.stopPropagation()">
         <!-- Header -->
         <div class="fac-modal-header">
-          <span>โจ เน€เธเธดเนเธกเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ</span>
-          <button class="fac-modal-close" (click)="closeAddFacilityModal()">โ•</button>
+          <span>✨ เพิ่มสิ่งอำนวยความสะดวก</span>
+          <button class="fac-modal-close" (click)="closeAddFacilityModal()">✕</button>
         </div>
         <!-- Content -->
         <div class="fac-modal-content">
-          <!-- เธเนเธญเธเธเธฃเธญเธเธเธทเนเธญ -->
+          <!-- ช่องกรอกชื่อ -->
           <div class="fac-modal-input-group">
-            <label>เธเธทเนเธญเธชเธดเนเธเธญเธณเธเธงเธขเธเธงเธฒเธกเธชเธฐเธ”เธงเธ <span class="req">*</span></label>
-            <input type="text" [(ngModel)]="newFacilityName" placeholder="เน€เธเนเธ เน€เธเธฃเธทเนเธญเธเธเธฑเธเธเนเธฒเธชเนเธงเธเธ•เธฑเธง, เน€เธ•เธตเธขเธเธเธนเน" class="fac-name-input">
+            <label>ชื่อสิ่งอำนวยความสะดวก <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="newFacilityName" placeholder="เช่น เครื่องซักผ้าส่วนตัว, เตียงคู่" class="fac-name-input">
           </div>
-          <!-- เน€เธฅเธทเธญเธเนเธญเธเธญเธ -->
+          <!-- เลือกไอคอน -->
           <div class="fac-icon-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <p class="fac-icon-label" style="margin: 0;">เธญเธฑเธเนเธซเธฅเธ”เธฃเธนเธเธ เธฒเธ (เธ—เธฒเธเน€เธฅเธทเธญเธ)</p>
+              <p class="fac-icon-label" style="margin: 0;">อัปโหลดรูปภาพ (ทางเลือก)</p>
               <ion-button size="small" fill="outline" color="primary" (click)="customIconInput.click()">
-                <ion-icon name="cloud-upload-outline" slot="start"></ion-icon> เธญเธฑเธเนเธซเธฅเธ”เธฃเธนเธเธ เธฒเธ
+                <ion-icon name="cloud-upload-outline" slot="start"></ion-icon> อัปโหลดรูปภาพ
               </ion-button>
               <input type="file" (change)="onCustomIconSelect($event)" accept="image/jpeg, image/png" hidden #customIconInput>
             </div>
@@ -264,116 +264,119 @@
                 [class.fac-icon-selected]="true"
                 style="border-color: var(--ion-color-primary);">
                 <img [src]="newFacilityCustomIcon" alt="custom">
-                <span class="fac-icon-tick">โ“</span>
+                <span class="fac-icon-tick">✓</span>
               </div>
             </div>
           </div>
         </div>
         <!-- Footer -->
         <div class="fac-modal-footer">
-          <button class="fac-btn-cancel" (click)="closeAddFacilityModal()">เธขเธเน€เธฅเธดเธ</button>
+          <button class="fac-btn-cancel" (click)="closeAddFacilityModal()">ยกเลิก</button>
           <button class="fac-btn-confirm" (click)="confirmAddFacility()">
-            โ เธขเธทเธเธขเธฑเธเธเธฒเธฃเน€เธเธดเนเธก
+            ✚ ยืนยันการเพิ่ม
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ==================== STEP 3: เธเธฃเธฐเน€เธ เธ—เธซเนเธญเธเธเธฑเธ ==================== -->
+    <!-- ==================== STEP 3: ประเภทห้องพัก ==================== -->
     <div *ngIf="currentStep === 3" class="fade-in">
       <div class="section-card">
         <div class="header-row">
-          <h3><ion-icon name="bed-outline"></ion-icon> เธเธฃเธฐเน€เธ เธ—เธซเนเธญเธเธเธฑเธ</h3>
+          <h3><ion-icon name="bed-outline"></ion-icon> ประเภทห้องพัก</h3>
           <ion-button fill="outline" size="small" (click)="addRoomType()">
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon> เน€เธเธดเนเธกเธซเนเธญเธ
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon> เพิ่มห้อง
           </ion-button>
         </div>
 
         <div class="room-card" *ngFor="let room of roomTypes; let i = index">
           <div class="room-header">
-            <span class="room-badge">เธซเนเธญเธเนเธเธเธ—เธตเน {{ i + 1 }}</span>
+            <span class="room-badge">ห้องแบบที่ {{ i + 1 }}</span>
             <ion-button fill="clear" color="danger" (click)="removeRoomType(i)" *ngIf="roomTypes.length > 1">
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
 
           <ion-item class="custom-input">
-            <ion-label position="stacked">เธเธทเนเธญเธเธฃเธฐเน€เธ เธ—เธซเนเธญเธ <span class="req">*</span></ion-label>
+            <ion-label position="stacked">ชื่อประเภทห้อง <span class="req">*</span></ion-label>
               <ion-select [(ngModel)]="room.selectedType" (ionChange)="onRoomTypeChange(room)" interface="popover">
                 <ion-select-option *ngFor="let rt of roomTypesDB" [value]="rt.name || rt.ROOM_TYPE_NAME">{{ rt.name || rt.ROOM_TYPE_NAME }}</ion-select-option>
               </ion-select>
             </ion-item>
 
           <ion-item class="custom-input">
-            <ion-label position="stacked">เธเธฃเธฐเน€เธ เธ—เน€เธ•เธตเธขเธ <span class="req">*</span></ion-label>
+            <ion-label position="stacked">ประเภทเตียง <span class="req">*</span></ion-label>
             <ion-select [(ngModel)]="room.bedType" interface="popover">
               <ion-select-option *ngFor="let bt of bedTypesDB" [value]="(bt.id || bt.BED_TYPE_ID).toString()">{{ bt.name || bt.BED_TYPE_NAME }}</ion-select-option>
             </ion-select>
           </ion-item>
 
-                  <p class="hint-text" style="margin-top: 10px;">๐’ฐ เธฃเธฒเธเธฒ (เธเธฃเธญเธเธญเธขเนเธฒเธเธเนเธญเธข 1 เธเนเธญเธ) <span class="req">*</span></p>
+          <p class="hint-text" style="margin-top: 10px;">💰 ราคา (กรอกอย่างน้อย 1 ช่อง) <span class="req">*</span></p>
             <div class="price-grid">
               <ion-item class="custom-input" *ngFor="let p of room.prices">
-                <ion-label position="stacked">{{ p.name }} (เธเธฒเธ—)</ion-label>
+                <ion-label position="stacked">{{ p.name }} (บาท)</ion-label>
                 <ion-input type="number" [(ngModel)]="p.price"
-                  [placeholder]="p.name === 'เธฃเธฒเธขเธงเธฑเธ' ? 'เน€เธเนเธ 300' : (p.name === 'เธฃเธฒเธขเน€เธ”เธทเธญเธ' ? 'เน€เธเนเธ 3000' : 'เน€เธเนเธ 15000')" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
+                  [placeholder]="p.name === 'รายวัน' ? 'เช่น 300' : (p.name === 'รายเดือน' ? 'เช่น 3000' : 'เช่น 15000')" [clearOnEdit]="false" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) || $event.charCode == 46 ? true : $event.preventDefault()"></ion-input>
               </ion-item>
             </div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== STEP 4: เธฃเธนเธเธ เธฒเธ ==================== -->
+    <!-- ==================== STEP 4: รูปภาพ ==================== -->
     <div *ngIf="currentStep === 4" class="fade-in">
 
-      <!-- เน€เธญเธเธชเธฒเธฃเธขเธทเธเธขเธฑเธเธ•เธฑเธงเธ•เธ -->
+      <!-- เอกสารยืนยันตัวตน -->
       <div class="section-card" *ngIf="!isApproved">
-        <h3><ion-icon name="document-text-outline"></ion-icon> เน€เธญเธเธชเธฒเธฃเธขเธทเธเธขเธฑเธเธ•เธฑเธงเธ•เธ <span class="req">*</span></h3>
-        <p class="hint-text">เธฃเธนเธเนเธเธญเธเธธเธเธฒเธ•เธเธฃเธฐเธเธญเธเธเธดเธเธเธฒเธฃเธซเธญเธเธฑเธ <br> <span class="text-danger">(เธ–เนเธฒเนเธญเธ”เธกเธดเธเธ•เธฃเธงเธเธชเธญเธเน€เธชเธฃเนเธเธฃเธฐเธเธเธเธฐเธ—เธณเธเธฒเธฃเธฅเธเธญเธญเธเธเธฒเธเธฃเธฐเธเธเธ—เธฑเธเธ—เธต)</span></p>
+        <h3><ion-icon name="document-text-outline"></ion-icon> เอกสารยืนยันตัวตน <span class="req">*</span></h3>
+        <p class="hint-text">รูปใบอนุญาตประกอบกิจการหอพัก <br> <span class="text-danger">(ถ้าแอดมินตรวจสอบเสร็จระบบจะทำการลบออกจากระบบทันที)</span></p>
         <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'LICENSE_IMG')" (click)="isReadOnly ? null : licenseInput.click()" [class.has-image]="previews.LICENSE_IMG">
             <img [src]="previews.LICENSE_IMG || 'assets/placeholder-landscape.png'" class="preview-img">
             <div class="overlay">
               <ion-icon name="cloud-upload-outline"></ion-icon>
-              <span>{{ previews.LICENSE_IMG ? 'เน€เธเธฅเธตเนเธขเธเธฃเธนเธ' : 'เน€เธฅเธทเธญเธเนเธเธฅเน...' }}</span>
+              <span>{{ previews.LICENSE_IMG ? 'เปลี่ยนรูป' : 'เลือกไฟล์...' }}</span>
             </div>
           </div>
-          <input #licenseInput type="file" (change)="onFileSelect($event, 'LICENSE_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
+          <input #licenseInput type="file" (change)="onFileSelect($event, 'LICENSE_IMG')" accept="image/jpeg, image/png" hidden>
           <p class="upload-status" *ngIf="selectedFiles.LICENSE_IMG">
-            โ… {{ selectedFiles.LICENSE_IMG.name }}
+            ✅ {{ selectedFiles.LICENSE_IMG.name }}
           </p>
         </div>
 
-        <!-- เธฃเธนเธเธซเธเนเธฒเธเธ -->
+        <!-- รูปหน้าปก -->
         <div class="section-card">
-          <h3><ion-icon name="image-outline"></ion-icon> เธฃเธนเธเธซเธเนเธฒเธเธเธซเธญเธเธฑเธ <span class="req">*</span></h3>
-          <p class="hint-text">เธฃเธนเธเธ เธฒเธเธ”เนเธฒเธเธซเธเนเธฒเธญเธฒเธเธฒเธฃ เธซเธฃเธทเธญเธฃเธนเธเธ—เธตเนเธชเธงเธขเธ—เธตเนเธชเธธเธ”เธเธญเธเธซเธญเธเธฑเธ</p>
+          <h3><ion-icon name="image-outline"></ion-icon> รูปหน้าปกหอพัก <span class="req">*</span></h3>
+          <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
           <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'FRONT_DORM_IMG')" (click)="isReadOnly ? null : frontInput.click()" [class.has-image]="previews.FRONT_DORM_IMG">
             <img [src]="previews.FRONT_DORM_IMG || 'assets/placeholder-landscape.png'" class="preview-img">
             <div class="overlay">
               <ion-icon name="cloud-upload-outline"></ion-icon>
-              <span>{{ previews.FRONT_DORM_IMG ? 'เน€เธเธฅเธตเนเธขเธเธฃเธนเธ' : 'เน€เธฅเธทเธญเธเนเธเธฅเน...' }}</span>
+              <span>{{ previews.FRONT_DORM_IMG ? 'เปลี่ยนรูป' : 'เลือกไฟล์...' }}</span>
             </div>
           </div>
-          <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
+          <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png" hidden>
           <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">
-            โ… {{ selectedFiles.FRONT_DORM_IMG.name }}
+            ✅ {{ selectedFiles.FRONT_DORM_IMG.name }}
           </p>
         </div>
 
-        <!-- เธฃเธนเธเธ เธฒเธเธชเนเธงเธเธเธฃเธฐเธเธญเธเธซเนเธญเธ -->
+        <!-- รูปมุมต่างๆ ภายในห้อง -->
         <div class="section-card">
-          <h3><ion-icon name="grid-outline"></ion-icon> ๐“ธ เธฃเธนเธเธ เธฒเธเธชเนเธงเธเธเธฃเธฐเธเธญเธเธซเนเธญเธ</h3>
-          <p class="hint-text">เธญเธฑเธเนเธซเธฅเธ”เธ เธฒเธเธกเธธเธกเธ•เนเธฒเธเน เธ เธฒเธขเนเธเธซเนเธญเธ (เธเธ”เธ—เธตเนเธฃเธนเธเน€เธเธทเนเธญเน€เธฅเธทเธญเธเนเธเธฅเน)</p>
+          <h3>📸 รูปภาพส่วนประกอบห้อง <span class="req">*</span> บังคับ 5 รูป</h3>
+          <p class="hint-text">กดที่รูปหรือปุ่มด้านล่างเพื่ออัปโหลดภาพแต่ละมุม &bull; <span class="text-danger"><strong>1-5 จำเป็นต้องใส่</strong></span>, ระเบียงไม่บังคับ</p>
 
-          <input #multiRoomInput type="file" (change)="onMultiRoomSelect($event)" accept="image/jpeg, image/png, image/webp" multiple hidden [disabled]="isReadOnly">
-          <ion-button expand="block" fill="outline" color="primary" (click)="!isReadOnly && multiRoomInput.click()" *ngIf="!isReadOnly" style="margin-bottom: 15px;">
-            <ion-icon name="images-outline" slot="start"></ion-icon>
-            เน€เธฅเธทเธญเธเธฃเธนเธเธซเธฅเธฒเธขเธฃเธนเธเธเธฃเนเธญเธกเธเธฑเธ
-          </ion-button>
+          <div class="multi-upload-header">
+            <ion-button size="small" fill="outline" color="secondary"
+              (click)="isReadOnly ? null : multiRoomInput.click()" [disabled]="isReadOnly">
+              <ion-icon name="images-outline" slot="start"></ion-icon>
+              เลือกรูปหลายรูปพร้อมกัน
+            </ion-button>
+            <input #multiRoomInput type="file" (change)="onMultiRoomSelect($event)" accept="image/jpeg, image/png, image/webp" multiple hidden [disabled]="isReadOnly">
+          </div>
 
-          <div class="grid-2-col">
+          <div class="grid-3-col">
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BED_IMG')">
-              <label>1. เน€เธ•เธตเธขเธเธเธญเธ <span class="req">*</span></label>
+              <label>1. เตียงนอน <span class="req">*</span></label>
               <div style="position: relative;">
                 <img [src]="previews.BED_IMG || 'assets/placeholder-square.png'"
                   (click)="isReadOnly ? null : bedInput.click()" [class.uploaded]="previews.BED_IMG">
@@ -382,12 +385,12 @@
                 </ion-button>
               </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : bedInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : bedInput.click()">เลือกไฟล์</ion-button>
               <input #bedInput type="file" (change)="onFileSelect($event, 'BED_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
 
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'WALL_IMG')">
-              <label>2. เธเธเธฑเธเธเธฅเธฒเธขเน€เธ•เธตเธขเธ <span class="req">*</span></label>
+              <label>2. ผนังปลายเตียง <span class="req">*</span></label>
               <div style="position: relative;">
                 <img [src]="previews.WALL_IMG || 'assets/placeholder-square.png'"
                   (click)="isReadOnly ? null : wallInput.click()" [class.uploaded]="previews.WALL_IMG">
@@ -396,55 +399,75 @@
                 </ion-button>
               </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : wallInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : wallInput.click()">เลือกไฟล์</ion-button>
               <input #wallInput type="file" (change)="onFileSelect($event, 'WALL_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
 
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'CEILING_IMG')">
-              <label>3. เน€เธเธ”เธฒเธ <span class="req">*</span></label>
-              <div style="position: relative;"><img [src]="previews.CEILING_IMG || 'assets/placeholder-square.png'" 
-                 (click)="isReadOnly ? null : ceilingInput.click()" [class.uploaded]="previews.CEILING_IMG"><ion-button *ngIf="previews.CEILING_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('CEILING_IMG')"><ion-icon name="close-circle" slot="icon-only"></ion-icon></ion-button></div>
+              <label>3. เพดาน <span class="req">*</span></label>
+              <div style="position: relative;">
+                <img [src]="previews.CEILING_IMG || 'assets/placeholder-square.png'"
+                  (click)="isReadOnly ? null : ceilingInput.click()" [class.uploaded]="previews.CEILING_IMG">
+                <ion-button *ngIf="previews.CEILING_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('CEILING_IMG')">
+                  <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : ceilingInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : ceilingInput.click()">เลือกไฟล์</ion-button>
               <input #ceilingInput type="file" (change)="onFileSelect($event, 'CEILING_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
 
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'FLOOR_IMG')">
-              <label>4. เธเธฑเนเธเธ•เธดเธ”เธเธฃเธฐเธ•เธน <span class="req">*</span></label>
-              <div style="position: relative;"><img [src]="previews.FLOOR_IMG || 'assets/placeholder-square.png'" 
-                 (click)="isReadOnly ? null : floorInput.click()" [class.uploaded]="previews.FLOOR_IMG"><ion-button *ngIf="previews.FLOOR_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('FLOOR_IMG')"><ion-icon name="close-circle" slot="icon-only"></ion-icon></ion-button></div>
+              <label>4. ฝั่งติดประตู <span class="req">*</span></label>
+              <div style="position: relative;">
+                <img [src]="previews.FLOOR_IMG || 'assets/placeholder-square.png'"
+                  (click)="isReadOnly ? null : floorInput.click()" [class.uploaded]="previews.FLOOR_IMG">
+                <ion-button *ngIf="previews.FLOOR_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('FLOOR_IMG')">
+                  <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : floorInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : floorInput.click()">เลือกไฟล์</ion-button>
               <input #floorInput type="file" (change)="onFileSelect($event, 'FLOOR_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
 
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BATHROOM_IMG')">
-              <label>5. เธซเนเธญเธเธเนเธณ <span class="req">*</span></label>
-              <div style="position: relative;"><img [src]="previews.BATHROOM_IMG || 'assets/placeholder-square.png'" 
-                 (click)="isReadOnly ? null : bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG"><ion-button *ngIf="previews.BATHROOM_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BATHROOM_IMG')"><ion-icon name="close-circle" slot="icon-only"></ion-icon></ion-button></div>
+              <label>5. ห้องน้ำ <span class="req">*</span></label>
+              <div style="position: relative;">
+                <img [src]="previews.BATHROOM_IMG || 'assets/placeholder-square.png'"
+                  (click)="isReadOnly ? null : bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG">
+                <ion-button *ngIf="previews.BATHROOM_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BATHROOM_IMG')">
+                  <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : bathInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : bathInput.click()">เลือกไฟล์</ion-button>
               <input #bathInput type="file" (change)="onFileSelect($event, 'BATHROOM_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
 
             <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BALCONY_IMG')">
-              <label>6. เธฃเธฐเน€เธเธตเธขเธ (เธ–เนเธฒเธกเธต)</label>
-              <div style="position: relative;"><img [src]="previews.BALCONY_IMG || 'assets/placeholder-square.png'" 
-                 (click)="isReadOnly ? null : balconyInput.click()" [class.uploaded]="previews.BALCONY_IMG"><ion-button *ngIf="previews.BALCONY_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BALCONY_IMG')"><ion-icon name="close-circle" slot="icon-only"></ion-icon></ion-button></div>
+              <label>6. ระเบียง (ถ้ามี)</label>
+              <div style="position: relative;">
+                <img [src]="previews.BALCONY_IMG || 'assets/placeholder-square.png'"
+                  (click)="isReadOnly ? null : balconyInput.click()" [class.uploaded]="previews.BALCONY_IMG">
+                <ion-button *ngIf="previews.BALCONY_IMG && !isReadOnly" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BALCONY_IMG')">
+                  <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                </ion-button>
+              </div>
               <ion-button size="small" fill="outline" expand="block" color="primary"
-                class="upload-btn" (click)="isReadOnly ? null : balconyInput.click()">เน€เธฅเธทเธญเธเนเธเธฅเน</ion-button>
+                class="upload-btn" (click)="isReadOnly ? null : balconyInput.click()">เลือกไฟล์</ion-button>
               <input #balconyInput type="file" (change)="onFileSelect($event, 'BALCONY_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isReadOnly">
             </div>
           </div>
         </div>
 
-        <!-- เธญเธฑเธฅเธเธฑเนเธกเธฃเธนเธเธญเธทเนเธเน -->
+        <!-- อัลบั้มรูปอื่นๆ -->
         <div class="section-card">
-          <h3><ion-icon name="images-outline"></ion-icon> เธญเธฑเธฅเธเธฑเนเธกเธฃเธนเธเธ เธฒเธขเนเธเธซเนเธญเธเธเธฑเธ (เธญเธทเนเธเน)</h3>
-          <p class="hint-text">เน€เธฅเธทเธญเธเธ เธฒเธเธกเธธเธกเธญเธทเนเธเน เนเธ”เนเธเธฃเนเธญเธกเธเธฑเธเธซเธฅเธฒเธขเธฃเธนเธ (เธ–เนเธฒเธกเธตเธเธฐเธ”เธตเธเธงเนเธฒ) &bull; <strong>เธชเธนเธเธชเธธเธ” 5 เธ เธฒเธ</strong></p>
+          <h3><ion-icon name="images-outline"></ion-icon> อัลบั้มรูปภายในห้องพัก (อื่นๆ)</h3>
+          <p class="hint-text">เลือกภาพมุมอื่นๆ ได้พร้อมกันหลายรูป (ถ้ามีจะดีกว่า) &bull; <strong>สูงสุด 5 ภาพ</strong></p>
           <input #galleryInput type="file" (change)="onGallerySelect($event)" accept="image/jpeg, image/png" multiple hidden>
           <ion-button expand="block" fill="outline" color="primary" (click)="isReadOnly ? null : galleryInput.click()">
-            <ion-icon name="images-outline" slot="start"></ion-icon> เน€เธเธดเนเธกเธฃเธนเธเธ เธฒเธเธกเธธเธกเธญเธทเนเธเน
+            <ion-icon name="images-outline" slot="start"></ion-icon> เพิ่มรูปภาพมุมอื่นๆ
           </ion-button>
 
           <div class="gallery-grid" *ngIf="existingGallery.length > 0 || previews.OTHER_IMG.length > 0">
@@ -478,17 +501,17 @@
   <!-- Bottom Action Bar -->
   <div class="bottom-action-bar">
     <ion-button fill="outline" color="medium" class="nav-btn" (click)="prevStep()" *ngIf="currentStep > 1">
-      <ion-icon name="arrow-back-outline" slot="start"></ion-icon> เธขเนเธญเธเธเธฅเธฑเธ
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon> ย้อนกลับ
     </ion-button>
 
     <div class="spacer"></div>
 
     <ion-button color="warning" class="nav-btn" (click)="nextStep()" *ngIf="currentStep < 4">
-      เธ–เธฑเธ”เนเธ <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+      ถัดไป <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
     </ion-button>
 
     <ion-button color="success" class="nav-btn submit-btn" (click)="onSubmit()" *ngIf="currentStep === 4 && !isReadOnly">
-      <ion-icon name="search-outline" slot="start"></ion-icon> {{ dormId ? 'เธเธฃเธตเธงเธดเธงเธเนเธญเธกเธนเธฅเธเนเธญเธเธชเนเธเนเธเนเนเธ' : 'เธเธฃเธตเธงเธดเธงเธเนเธญเธกเธนเธฅเธเนเธญเธเธชเนเธ' }}
+      <ion-icon name="search-outline" slot="start"></ion-icon> {{ dormId ? 'พรีวิวข้อมูลก่อนส่งแก้ไข' : 'พรีวิวข้อมูลก่อนส่ง' }}
     </ion-button>
   </div>
 </div>
@@ -503,37 +526,37 @@
         <div class="status-ring"></div>
         <ion-icon name="time-outline" class="status-ion-icon"></ion-icon>
       </div>
-      <h1 class="status-title">เธชเนเธเธฃเธฒเธขเธเธฒเธฃเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง โจ</h1>
-      <p class="status-subtitle">เธเธนเนเธ”เธนเนเธฅเธฃเธฐเธเธเธเธณเธฅเธฑเธเธ•เธฃเธงเธเธชเธญเธเธเนเธญเธกเธนเธฅเธซเธญเธเธฑเธเธเธญเธเธเธธเธ“<br>เนเธเธฃเธ”เธฃเธญเธเธฒเธฃเธญเธเธธเธกเธฑเธ•เธดเน€เธเธทเนเธญเนเธชเธ”เธเธเธฅเธเธเน€เธงเนเธเนเธเธ•เน</p>
+      <h1 class="status-title">ส่งรายการเรียบร้อยแล้ว ✨</h1>
+      <p class="status-subtitle">ผู้ดูแลระบบกำลังตรวจสอบข้อมูลหอพักของคุณ<br>โปรดรอการอนุมัติเพื่อแสดงผลบนเว็บไซต์</p>
 
       <div class="status-steps">
         <div class="step-item done">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
-          <span>เธเธฃเธญเธเธเนเธญเธกเธนเธฅเน€เธฃเธตเธขเธเธฃเนเธญเธข</span>
+          <span>กรอกข้อมูลเรียบร้อย</span>
         </div>
         <div class="step-connector done"></div>
         <div class="step-item active">
           <ion-icon name="time-outline"></ion-icon>
-          <span>เธฃเธญเธ•เธฃเธงเธเธชเธญเธ</span>
+          <span>รอตรวจสอบ</span>
         </div>
         <div class="step-connector"></div>
         <div class="step-item">
           <ion-icon name="home-outline"></ion-icon>
-          <span>เน€เธเธขเนเธเธฃเนเธชเธนเนเน€เธงเนเธเนเธเธ•เน</span>
+          <span>เผยแพร่สู่เว็บไซต์</span>
         </div>
       </div>
 
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <ion-button expand="block" color="primary" fill="outline" style="flex: 1;" [routerLink]="['/my-dorms']">
-          <ion-icon name="list-outline" slot="start"></ion-icon> เธซเธญเธเธฑเธเธเธญเธเธเธฑเธ
+          <ion-icon name="list-outline" slot="start"></ion-icon> หอพักของฉัน
         </ion-button>
         <ion-button expand="block" color="primary" style="flex: 1;" (click)="viewPendingInfo()">
-          <ion-icon name="eye-outline" slot="start"></ion-icon> เธ”เธนเธเนเธญเธกเธนเธฅเธซเธญเธเธฑเธ
+          <ion-icon name="eye-outline" slot="start"></ion-icon> ดูข้อมูลหอพัก
         </ion-button>
       </div>
       <div style="margin-top: 10px;">
         <ion-button expand="block" color="danger" fill="clear" (click)="cancelRequest()">
-          <ion-icon name="close-circle-outline" slot="start"></ion-icon> เธขเธเน€เธฅเธดเธเธเธณเธเธญ
+          <ion-icon name="close-circle-outline" slot="start"></ion-icon> ยกเลิกคำขอ
         </ion-button>
       </div>
     </div>
@@ -543,17 +566,17 @@
       <div class="status-icon-wrap rejected">
         <ion-icon name="close-circle" class="status-ion-icon"></ion-icon>
       </div>
-      <h1 class="status-title">เธเธฒเธฃเธฅเธเธ—เธฐเน€เธเธตเธขเธเธ–เธนเธเธเธเธดเน€เธชเธ</h1>
-      <p class="status-subtitle text-danger">เน€เธซเธ•เธธเธเธฅ: <strong>{{ rejectReason || 'เธเนเธญเธกเธนเธฅเนเธกเนเธเธฃเธเธ–เนเธงเธเธซเธฃเธทเธญเนเธกเนเธ–เธนเธเธ•เนเธญเธ' }}</strong></p>
+      <h1 class="status-title">การลงทะเบียนถูกปฏิเสธ</h1>
+      <p class="status-subtitle text-danger">เหตุผล: <strong>{{ rejectReason || 'ข้อมูลไม่ครบถ้วนหรือไม่ถูกต้อง' }}</strong></p>
       <ion-button expand="block" color="warning" (click)="submitAgain()">
-        <ion-icon name="refresh-outline" slot="start"></ion-icon> เนเธเนเนเธเนเธฅเธฐเธชเนเธเธญเธตเธเธเธฃเธฑเนเธ
+        <ion-icon name="refresh-outline" slot="start"></ion-icon> แก้ไขและส่งอีกครั้ง
       </ion-button>
     </div>
 
   </div>
 </div>
 
-<!-- โ… Popup เธชเนเธเธเนเธญเธกเธนเธฅเธชเธณเน€เธฃเนเธ -->
+<!-- ✅ Popup ส่งข้อมูลสำเร็จ -->
 <app-success-modal
   *ngIf="showSuccessModal"
   (confirmed)="onSuccessConfirmed()">

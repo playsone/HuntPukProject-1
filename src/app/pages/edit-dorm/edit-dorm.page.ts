@@ -942,9 +942,9 @@ export class EditDormPage implements OnInit {
   }
 
   suggestNewFacility() {
-    if (this.formData.new_facilities.length >= 4) {
+    if (this.formData.new_facilities.length >= 3) {
       this.showToast(
-        'คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 4 รายการ',
+        'คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 3 รายการ',
         'warning',
       );
       return;
@@ -996,7 +996,7 @@ export class EditDormPage implements OnInit {
 
     const alert = await this.alertCtrl.create({
       header: 'ยืนยันการเพิ่ม',
-      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่?<br>สิทธิ์คงเหลือ: ${4 - this.formData.new_facilities.length - 1} รายการ`,
+      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่?<br>สิทธิ์คงเหลือ: ${3 - this.formData.new_facilities.length - 1} รายการ`,
       buttons: [
         { text: 'ยกเลิก', role: 'cancel' },
         {

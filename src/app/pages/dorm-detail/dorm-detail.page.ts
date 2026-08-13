@@ -30,7 +30,7 @@ export class DormDetailPage implements OnInit, OnChanges {
 
   @Input() dormData: any = null; 
   @Input() isPopup: boolean = false; 
-  facilitiesList: { name: string; icon: string }[] = [];
+  facilitiesList: { name: string; icon: string; isFontAwesome?: boolean }[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['dormData'] && changes['dormData'].currentValue) {
@@ -365,11 +365,13 @@ export class DormDetailPage implements OnInit, OnChanges {
 
     if (Array.isArray(facData)) {
       this.facilitiesList = facData.map((f: any) => {
-        if (typeof f === 'string') return { name: f, icon: '' };
-        return { name: f.name || f.FAC_TYPE_NAME || '', icon: f.icon || f.FAC_TYPE_ICON || '' };
+        if (typeof f === 'string') return { name: f, icon: '', isFontAwesome: false };
+        const iconSrc = f.icon || f.FAC_TYPE_ICON || '';
+        const isFontAwesome = iconSrc && !iconSrc.startsWith('http') && !iconSrc.startsWith('/') && !iconSrc.startsWith('assets');
+        return { name: f.name || f.FAC_TYPE_NAME || '', icon: iconSrc, isFontAwesome: isFontAwesome };
       });
     } else if (typeof facData === 'string') {
-      this.facilitiesList = facData.split(',').map((s: string) => ({ name: s.trim(), icon: '' }));
+      this.facilitiesList = facData.split(',').map((s: string) => ({ name: s.trim(), icon: '', isFontAwesome: false }));
     }
   }
 
