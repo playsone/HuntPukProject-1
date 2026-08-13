@@ -20,7 +20,7 @@
       <div class="avatar-wrapper">
         <div class="avatar-circle">
           <img *ngIf="user.profile_image && user.profile_image.startsWith('http')" 
-               [src]="user.profile_image" 
+               [src]="user.profile_image + '?t=' + timestamp" 
                alt="" 
                style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
           <ion-icon *ngIf="!user.profile_image || !user.profile_image.startsWith('http')" name="person"></ion-icon> 

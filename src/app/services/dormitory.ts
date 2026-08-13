@@ -85,14 +85,13 @@ export class DormitoryService {
    * 2. ดึงรายละเอียดหอพักตาม ID (🌟 อัปเกรดให้กันค้าง 100%)
    */
   public async getDormById(id: number): Promise<ApiResponse<any>> {
-    const url = `${this.apiUrl}/dorms/${id}`;
+    const url = `${this.apiUrl}/dorms/${id}?_t=${Date.now()}`;
     try {
-      // 🌟 ใช้ firstValueFrom จะจบงานได้เร็วกว่าและเสถียรกว่าในเคสแบบนี้
       const res = await firstValueFrom(this.http.get<ApiResponse<any>>(url));
       return res;
     } catch (error: any) {
       console.error("🔥 Error in Service getDormById:", error);
-      throw error; // 🌟 สำคัญมาก: โยน error ก้อนเดิมออกไปให้หน้า UI จัดการต่อ
+      throw error;
     }
   }
 

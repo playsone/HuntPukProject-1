@@ -242,7 +242,6 @@ export class HomePage implements OnInit, ViewDidEnter {
             console.error('Map Load Error:', err);
             return of(false);
           }),
-          shareReplay(1)
         );
     }
 
@@ -605,8 +604,14 @@ export class HomePage implements OnInit, ViewDidEnter {
       }
 
       if (res.success && res.data) {
+        const formatImg = (url: string | null | undefined): string | null => {
+            return url || null;
+        };
+
         this.allDorms = res.data.map((d: any) => ({ 
           ...d, 
+          image: formatImg(d.image),
+          FRONT_DORM_IMAGE: formatImg(d.FRONT_DORM_IMAGE),
           lat: Number(d.lat), 
           lng: Number(d.lng),
           isChecked: favoriteIds.includes(Number(d.DORM_ID || d.id))

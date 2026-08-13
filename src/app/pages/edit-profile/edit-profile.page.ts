@@ -10,6 +10,7 @@ import {
 } from 'ionicons/icons';
 import { Auth } from '../../services/auth'; 
 import { UserService } from '../../services/user';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-profile',
@@ -42,6 +43,8 @@ export class EditProfilePage implements OnInit {
   
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  
+  returnUrl: string = '/my-account';
 
   constructor(
     private router: Router,
@@ -65,6 +68,9 @@ export class EditProfilePage implements OnInit {
     const navState = this.router.getCurrentNavigation()?.extras.state;
     let userData = navState ? navState['user'] : null;
     let ownerData = navState ? navState['ownerData'] : null;
+    if (navState && navState['returnUrl']) {
+      this.returnUrl = navState['returnUrl'];
+    }
 
     if (!userData) {
       const stored = localStorage.getItem('loggedIn');
@@ -195,10 +201,16 @@ export class EditProfilePage implements OnInit {
         localStorage.setItem('loggedIn', JSON.stringify(parsed));
         window.dispatchEvent(new CustomEvent('user-profile-updated'));
       }
-      await this.showToast('บันทึกข้อมูลเรียบร้อย', 'success');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      
+      await Swal.fire({
+        icon: 'success',
+        title: 'สำเร็จ',
+        text: 'บันทึกข้อมูลเรียบร้อย',
+        confirmButtonColor: '#f1c40f',
+        confirmButtonText: 'ตกลง'
+      }).then(() => {
+        this.router.navigateByUrl(this.returnUrl);
+      });
 
     } catch (error: any) { 
       console.error('Update Error:', error);
@@ -211,7 +223,13 @@ export class EditProfilePage implements OnInit {
         msg = error.message;
       }
       
-      await this.showToast(msg, 'danger');
+      await Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: msg,
+        confirmButtonColor: '#f1c40f',
+        confirmButtonText: 'ตกลง'
+      });
     }
   }
 
@@ -223,6 +241,17 @@ export class EditProfilePage implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        Swal.fire({
+          icon: 'error',
+          title: 'ขนาดไฟล์เกิน',
+          text: 'กรุณาอัปโหลดรูปภาพขนาดไม่เกิน 2MB',
+          confirmButtonColor: '#f1c40f',
+          confirmButtonText: 'ตกลง'
+        });
+        event.target.value = null; // reset input
+        return;
+      }
       this.selectedFile = file;
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -237,6 +266,6 @@ export class EditProfilePage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/my-account']);
+    this.router.navigateByUrl(this.returnUrl);
   }
 }

@@ -135,6 +135,13 @@ export class RequestsPage implements OnInit, ViewWillEnter {
     const selectedId = event.detail.value;
     if (selectedId) {
        this.formData.user_id = selectedId;
+       // ดึงเบอร์โทรจากข้อมูลสมาชิกที่เลือก
+       const member = this.membersList.find(m => m.id === selectedId);
+       if (member && member.phone) {
+         this.formData.phone_number = member.phone;
+       } else {
+         this.formData.phone_number = '';
+       }
     }
   }
 
@@ -172,6 +179,13 @@ export class RequestsPage implements OnInit, ViewWillEnter {
     if (this.formData.user_id === 0) { this.forceLogout(); return; }
     if (!this.formData.first_name || !this.formData.last_name || !this.formData.phone_number) {
       this.errorMessage = 'กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน'; return;
+    }
+    const nameRe = /^[฀-๿a-zA-Z\s]+$/;
+    if (!nameRe.test(this.formData.first_name)) {
+      this.errorMessage = 'ชื่อต้องเป็นตัวอักษรเท่านั้น (ไม่อนุญาตให้ใช้ตัวเลข)'; return;
+    }
+    if (!nameRe.test(this.formData.last_name)) {
+      this.errorMessage = 'นามสกุลต้องเป็นตัวอักษรเท่านั้น (ไม่อนุญาตให้ใช้ตัวเลข)'; return;
     }
     
     const phoneRe = /^0[0-9]{9}$/;

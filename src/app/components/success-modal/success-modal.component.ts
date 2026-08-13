@@ -32,7 +32,7 @@ import { timeOutline, checkmarkCircle } from 'ionicons/icons';
 export class SuccessModalComponent implements OnInit {
   @Input() title: string = 'ส่งข้อมูลสำเร็จ!';
   @Input() subTitle: string = 'กำลังรอการอนุมัติ';
-  @Input() message: string = 'ระบบได้รับข้อมูลหอพักของคุณแล้ว<br>กรุณารอผู้ดูแลระบบตรวจสอบภายใน 24 ชั่วโมง';
+  @Input() message: string = 'ระบบได้รับข้อมูลหอพักของคุณแล้ว กรุณารอผู้ดูแลระบบตรวจสอบภายใน 24 ชั่วโมง';
   @Input() icon: string = 'time-outline';
   @Input() buttonText: string = 'ตกลงรับทราบ';
   @Input() showCancelButton: boolean = false;

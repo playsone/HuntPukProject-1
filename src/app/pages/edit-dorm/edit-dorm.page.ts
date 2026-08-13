@@ -14,8 +14,7 @@ import {
   saveOutline, imageOutline, homeOutline, wifi, 
   bedOutline, trashOutline, addCircleOutline, locationOutline, cloudUploadOutline, closeCircle,
   checkmarkCircle, checkmarkCircleOutline, arrowBackOutline, arrowForwardOutline, sendOutline,
-  timeOutline, gridOutline, imagesOutline, documentTextOutline
-} from 'ionicons/icons';
+  timeOutline, gridOutline, imagesOutline, documentTextOutline, eyeOutline, pencilOutline, alertCircleOutline, bulbOutline } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DormitoryService } from '../../services/dormitory';
 import { lastValueFrom, Observable, of } from 'rxjs'; 
@@ -86,7 +85,6 @@ export class EditDormPage implements OnInit {
   zones: any[] = [];
   facilities: any[] = []; 
   roomTypes: any[] = [];
-  existingGallery: any[] = [];
   deletedRoomImages: string[] = []; // Track deleted room component images
 
   priceTypes: any[] = [];
@@ -156,18 +154,29 @@ export class EditDormPage implements OnInit {
     private httpClient: HttpClient
   ) {
     addIcons({
-      saveOutline, homeOutline, locationOutline, wifi, 
-      bedOutline, addCircleOutline, trashOutline, imageOutline, 
-      cloudUploadOutline, closeCircle,
-      'checkmark-circle': checkmarkCircle,
-      'checkmark-circle-outline': checkmarkCircleOutline,
-      'arrow-back-outline': arrowBackOutline,
-      'arrow-forward-outline': arrowForwardOutline,
-      'send-outline': sendOutline,
-      'time-outline': timeOutline,
-      'grid-outline': gridOutline,
-      'images-outline': imagesOutline,
-      'document-text-outline': documentTextOutline
+      arrowBackOutline,
+      saveOutline,
+      sendOutline,
+      timeOutline,
+      eyeOutline,
+      pencilOutline,
+      alertCircleOutline,
+      homeOutline,
+      locationOutline,
+      checkmarkCircleOutline,
+      arrowForwardOutline,
+      wifi,
+      checkmarkCircle,
+      bulbOutline,
+      closeCircle,
+      imageOutline,
+      bedOutline,
+      addCircleOutline,
+      trashOutline,
+      cloudUploadOutline,
+      gridOutline,
+      imagesOutline,
+      documentTextOutline
     });
 
     if (typeof google === 'object' && typeof google.maps === 'object') {
@@ -391,9 +400,12 @@ export class EditDormPage implements OnInit {
           this.addRoomType();
         }
 
-        // ✅ Fix: Load cover image and license correctly
-        this.previews.FRONT_DORM_IMG = d.image || null;
-        this.previews.LICENSE_IMG = d.DORM_LICENSE || null;
+        let frontImage = res.data.FRONT_DORM_IMAGE || res.data.image;
+        if (frontImage) {
+            const timestamp = new Date().getTime();
+            const separator = frontImage.includes('?') ? '&' : '?';
+            this.previews.FRONT_DORM_IMG = `${frontImage}${separator}t=${timestamp}`;
+        }
         
         // ✅ Fix: Load room images correctly (backend returns them at root level)
         this.previews.BED_IMG = d.bed_img || null;
@@ -835,6 +847,7 @@ export class EditDormPage implements OnInit {
     }
   }
 
+
   async onSubmit() {
     if (this.isWaitingForAdmin && !this.isResubmitMode) {
       this.showToast('กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้', 'warning');
@@ -919,21 +932,19 @@ export class EditDormPage implements OnInit {
 
       await this.dormService.updateDorm(this.dormId, form);
       
-      // ✅ Immediately update previews from the files user selected (don't wait for reload)
-      // This ensures cover image and room images show instantly even if cache hasn't cleared yet
-      const tempPreviews: any = {};
+      // ✅ แสดงรูปที่ผู้ใช้เลือกทันทีก่อน reload
+      // เพราะ previews.FRONT_DORM_IMG ถูก set เป็น base64 ไว้แล้วตอน onFileSelect
+      // ป้องกันหน้าว่างระหว่างรอ GCS propagate + DB reload
       if (this.selectedFiles.FRONT_DORM_IMG) {
-        tempPreviews.FRONT_DORM_IMG = this.previews.FRONT_DORM_IMG; // already set by onFileSelect
+        // previews.FRONT_DORM_IMG ยังเป็น base64 ที่ user เลือก → ไม่ต้องทำอะไรเพิ่ม
+        // มันจะถูก reload ทับด้วย GCS URL ใหม่หลัง loadDormData()
       }
 
-      // ✅ Reload data เพื่อให้รูปหน้าปกและรูปอื่นๆ refresh เสมอ
+      // รอให้ GCS upload และ DB commit เสร็จสมบูรณ์
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Reload เพื่อดึง GCS URL ใหม่จาก DB
       await this.loadDormData(this.dormId);
-
-      // ✅ If preview was lost after reload (cache still old), restore from temp
-      // Always restore if user selected a new file — local base64 is correct; GCS URL comes on next reload
-      if (tempPreviews.FRONT_DORM_IMG) {
-        this.previews.FRONT_DORM_IMG = tempPreviews.FRONT_DORM_IMG;
-      }
       
       // ✅ Reset selected files (clear queued uploads)
       this.selectedFiles = {

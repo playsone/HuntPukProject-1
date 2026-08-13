@@ -175,6 +175,13 @@ export class DormDetailPage implements OnInit, OnChanges {
         const apiData = res.data;
         this.dormData = Array.isArray(apiData) ? apiData[0] : apiData;
 
+        const formatImageUrl = (url: string | null | undefined): string | null => {
+            return url || null;
+        };
+        
+        if (this.dormData.image) this.dormData.image = formatImageUrl(this.dormData.image);
+        if (this.dormData.FRONT_DORM_IMAGE) this.dormData.FRONT_DORM_IMAGE = formatImageUrl(this.dormData.FRONT_DORM_IMAGE);
+
         // ✅ รวมรูปส่วนต่างๆ ของห้องพักเข้าไปใน gallery เพื่อให้แสดงผลในหน้า detail
         const roomImages = [
           this.dormData.ceiling_img, 
@@ -182,10 +189,10 @@ export class DormDetailPage implements OnInit, OnChanges {
           this.dormData.floor_img, 
           this.dormData.bathroom_img, 
           this.dormData.balcony_img
-        ].filter(img => img);
+        ].filter(img => img).map(img => formatImageUrl(img));
         
         if (!this.dormData.gallery) this.dormData.gallery = [];
-        this.dormData.gallery = [...this.dormData.gallery, ...roomImages];
+        this.dormData.gallery = [...this.dormData.gallery.map((img: any) => formatImageUrl(img)), ...roomImages];
 
         this.prepareOwnerInfo();
         this.parseFacilities();

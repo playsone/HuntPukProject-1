@@ -344,21 +344,27 @@
 
     <div *ngIf="activeSegment === 'images'" class="fade-in">
       
-      <!-- รูปภาพหน้าปก -->
-      <div class="section-card">
-        <h3><ion-icon name="image-outline"></ion-icon> รูปภาพหลัก (หน้าปก)</h3>
-        <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
-        <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'FRONT_DORM_IMG')" (click)="!isWaitingForAdmin && frontInput.click()" [class.has-image]="previews.FRONT_DORM_IMG">
-          <img [src]="previews.FRONT_DORM_IMG || 'assets/img/placeholder.png'" (error)="previews.FRONT_DORM_IMG = 'https://placehold.co/600x400?text=Cover+Image'" class="preview-img">
-          <div class="overlay" *ngIf="!isWaitingForAdmin">
-            <ion-icon name="cloud-upload-outline"></ion-icon>
-            <span>{{ previews.FRONT_DORM_IMG ? 'เปลี่ยนรูป' : 'กดเพื่อเลือกรูป' }}</span>
-          </div>
-        </div>
-        <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png" hidden [disabled]="isWaitingForAdmin">
-        <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
-      </div>
-
+<!-- รูปภาพหน้าปก -->
+<div class="section-card">
+  <h3><ion-icon name="image-outline"></ion-icon> รูปภาพหลัก (หน้าปก)</h3>
+  <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
+  <div class="img-upload-box" tabindex="0" 
+       (paste)="onPaste($event, 'FRONT_DORM_IMG')" 
+       (click)="!isWaitingForAdmin && frontInput.click()" 
+       [class.has-image]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE">
+    
+    <!-- เช็กทั้ง FRONT_DORM_IMG และ FRONT_DORM_IMAGE เพื่อให้แสดงรูปเดิมจาก DB ได้ -->
+    <img [src]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE || 'assets/img/placeholder.png'" class="preview-img">
+    
+    <div class="overlay" *ngIf="!isWaitingForAdmin">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <span>{{ (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? 'เปลี่ยนรูป' : 'กดเพื่อเลือกรูป' }}</span>
+    </div>
+  </div>
+  
+  <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png" hidden [disabled]="isWaitingForAdmin">
+  <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
+</div>
 
 
       <div class="section-card">

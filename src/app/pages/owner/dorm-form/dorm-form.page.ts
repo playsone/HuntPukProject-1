@@ -412,7 +412,7 @@ export class DormFormPage implements OnInit {
           });
         }
 
-        this.previews.FRONT_DORM_IMG = d.image || null;
+        this.previews.FRONT_DORM_IMG = d.FRONT_DORM_IMAGE || d.image || null;
         this.previews.LICENSE_IMG = d.DORM_LICENSE || null;
         this.previews.BED_IMG = d.bed_img || null;
         this.previews.WALL_IMG = d.wall_img || null;
@@ -1064,10 +1064,10 @@ export class DormFormPage implements OnInit {
       // ✅ FIX: format roomTypes ให้ตรงกับที่ Backend ต้องการ
         const roomTypesFormatted = this.roomTypes.map(r => ({
           roomType: r.selectedType,
-        bedType: r.bedType || '1',
-        prices: r.prices
-      }));
-      form.append('roomTypes', JSON.stringify(roomTypesFormatted));
+          bedType: r.bedType || '1',
+          prices: r.prices
+        }));
+        form.append('roomTypes', JSON.stringify(roomTypesFormatted));
 
       const selectedFacIds = this.facilities
         .filter((f: any) => f.checked)

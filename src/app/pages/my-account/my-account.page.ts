@@ -27,6 +27,7 @@ export class MyAccountPage implements OnInit {
   isOwnProfile: boolean = true; 
   canEdit: boolean = false;
   
+  timestamp: number = Date.now();
   myDorms: any[] = [];
   isDormModalOpen: boolean = false;
   ownerData: any = null; // เก็บข้อมูลเจ้าของหอพัก (ชื่อ, โซเชียล) สำหรับส่งไป edit-profile
@@ -55,6 +56,7 @@ export class MyAccountPage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter() {
+    this.timestamp = Date.now();
     this.loadUserData();
   }
 
@@ -141,6 +143,20 @@ export class MyAccountPage implements OnInit {
               last_name: rawData.LAST_NAME || rawData.last_name || '',
               profile_image: rawData.PROFILE_IMAGE || rawData.profile_image || ''
             };
+
+            // ถ้าเป็นเจ้าของหอ (role 2) ให้เซ็ต ownerData จากข้อมูล API นี้เลย (REQ_STATUS != null คือมีข้อมูลใน DORM_OWNERS)
+            if (rawData.FIRST_NAME || rawData.first_name || rawData.REQ_STATUS !== undefined) {
+              this.ownerData = {
+                first_name: rawData.FIRST_NAME || rawData.first_name || '',
+                last_name: rawData.LAST_NAME || rawData.last_name || '',
+                facebook: rawData.FACEBOOK || rawData.facebook || '',
+                line: rawData.LINE || rawData.line || '',
+                instagram: rawData.INSTAGRAM || rawData.instagram || '',
+                x: rawData.X || rawData.x || '',
+                telegram: rawData.TELEGRAM || rawData.telegram || '',
+                PROFILE_IMAGE: rawData.PROFILE_IMAGE || rawData.profile_image || ''
+              };
+            }
         } else {
           // API ไม่คืนข้อมูล — แสดงว่าไม่พบผู้ใช้
           this.user.username = 'ไม่พบข้อมูลผู้ใช้';
@@ -221,7 +237,7 @@ export class MyAccountPage implements OnInit {
 
   goToEditProfile() {
     this.router.navigate(['/edit-profile'], {
-      state: { user: this.user, ownerData: this.ownerData }
+      state: { user: this.user, ownerData: this.ownerData, returnUrl: this.router.url }
     });
   }
 
