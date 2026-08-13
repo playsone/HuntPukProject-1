@@ -1,25 +1,74 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, IonFooter,
-  IonButtons, IonBackButton, IonButton, IonIcon, 
-  IonSegment, IonSegmentButton, IonLabel, 
-  IonItem, IonInput, IonTextarea, IonSelect, IonSelectOption,
-  IonCheckbox, IonList, IonListHeader, IonModal,
-  LoadingController, ToastController, AlertController, ActionSheetController, IonImg
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonFooter,
+  IonButtons,
+  IonBackButton,
+  IonButton,
+  IonIcon,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonSelect,
+  IonSelectOption,
+  IonCheckbox,
+  IonList,
+  IonListHeader,
+  IonModal,
+  LoadingController,
+  ToastController,
+  AlertController,
+  ActionSheetController,
+  IonImg,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { 
-  saveOutline, imageOutline, homeOutline, wifi, 
-  bedOutline, trashOutline, addCircleOutline, locationOutline, cloudUploadOutline, closeCircle,
-  checkmarkCircle, checkmarkCircleOutline, arrowBackOutline, arrowForwardOutline, sendOutline,
-  timeOutline, gridOutline, imagesOutline, documentTextOutline, eyeOutline, pencilOutline, alertCircleOutline, bulbOutline } from 'ionicons/icons';
+import {
+  saveOutline,
+  imageOutline,
+  homeOutline,
+  wifi,
+  bedOutline,
+  trashOutline,
+  addCircleOutline,
+  locationOutline,
+  cloudUploadOutline,
+  closeCircle,
+  checkmarkCircle,
+  checkmarkCircleOutline,
+  arrowBackOutline,
+  arrowForwardOutline,
+  sendOutline,
+  timeOutline,
+  gridOutline,
+  imagesOutline,
+  documentTextOutline,
+  eyeOutline,
+  pencilOutline,
+  alertCircleOutline,
+  bulbOutline,
+} from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DormitoryService } from '../../services/dormitory';
-import { lastValueFrom, Observable, of } from 'rxjs'; 
-import { HttpClientModule, HttpClient, HttpClientJsonpModule } from '@angular/common/http';
-import { GoogleMapsModule, MapMarker, MapCircle, MapInfoWindow } from '@angular/google-maps';
+import { lastValueFrom, Observable, of } from 'rxjs';
+import {
+  HttpClientModule,
+  HttpClient,
+  HttpClientJsonpModule,
+} from '@angular/common/http';
+import {
+  GoogleMapsModule,
+  MapMarker,
+  MapCircle,
+  MapInfoWindow,
+} from '@angular/google-maps';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SuccessModalComponent } from '../../components/success-modal/success-modal.component';
@@ -30,20 +79,43 @@ import { SuccessModalComponent } from '../../components/success-modal/success-mo
   styleUrls: ['./edit-dorm.page.scss'],
   standalone: true,
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonFooter,
-    IonButtons, IonBackButton, IonButton, IonIcon, 
-    IonSegment, IonSegmentButton, IonLabel,
-    IonItem, IonInput, IonTextarea, IonSelect, IonSelectOption,
-    IonCheckbox, IonList, IonListHeader, IonImg, IonModal,
-    CommonModule, FormsModule,
-    HttpClientModule, HttpClientJsonpModule, GoogleMapsModule, MapMarker, MapCircle, MapInfoWindow,
-    SuccessModalComponent
-  ]
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonFooter,
+    IonButtons,
+    IonBackButton,
+    IonButton,
+    IonIcon,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+    IonItem,
+    IonInput,
+    IonTextarea,
+    IonSelect,
+    IonSelectOption,
+    IonCheckbox,
+    IonList,
+    IonListHeader,
+    IonImg,
+    IonModal,
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
+    GoogleMapsModule,
+    MapMarker,
+    MapCircle,
+    MapInfoWindow,
+    SuccessModalComponent,
+  ],
 })
 export class EditDormPage implements OnInit {
   dormId: number = 0;
   activeSegment: string = 'general';
-  
+
   apiLoaded: Observable<boolean>;
   isMapModalOpen: boolean = false;
 
@@ -56,18 +128,24 @@ export class EditDormPage implements OnInit {
   center: google.maps.LatLngLiteral = { lat: 16.246, lng: 103.252 };
   markerPosition: google.maps.LatLngLiteral = { lat: 16.246, lng: 103.252 };
   zoom = 15;
-  mapOptions: google.maps.MapOptions = { streetViewControl: false, mapTypeControl: false };
+  mapOptions: google.maps.MapOptions = {
+    streetViewControl: false,
+    mapTypeControl: false,
+  };
   markerOptions: google.maps.MarkerOptions = { draggable: true };
   mapCenter: google.maps.LatLngLiteral | null = null;
   zoneCenter: google.maps.LatLngLiteral | null = null;
   zoneRadius: number = 500;
   circleOptions: google.maps.CircleOptions = {
-    fillColor: '#FFD600', fillOpacity: 0.2, // Yellow circle like dorm-form might have or we use blue
-    strokeColor: '#FFD600', strokeOpacity: 0.8, strokeWeight: 2,
-    clickable: false
+    fillColor: '#FFD600',
+    fillOpacity: 0.2, // Yellow circle like dorm-form might have or we use blue
+    strokeColor: '#FFD600',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    clickable: false,
   };
   tempPin: google.maps.LatLngLiteral | null = null;
-  
+
   formData: any = {
     name: '',
     address: '',
@@ -79,49 +157,56 @@ export class EditDormPage implements OnInit {
     water_lump: null,
     elect_unit: null,
     detail: '',
-    new_facilities: [] // { name: string, icon: string }
+    new_facilities: [], // { name: string, icon: string }
   };
 
   zones: any[] = [];
-  facilities: any[] = []; 
+  facilities: any[] = [];
   roomTypes: any[] = [];
   deletedRoomImages: string[] = []; // Track deleted room component images
 
   priceTypes: any[] = [];
-  
+
   // ✅ สำหรับตัวเลือกจาก Database
   dormTypesDB: any[] = [];
   roomTypesDB: any[] = [];
   bedTypesDB: any[] = [];
   currentZoneName: string = 'กำลังคำนวณ...';
-  
+
   reqStatus: number = 1;
   isWaitingForAdmin: boolean = false;
   pageMode: 'view' | 'edit' | 'resubmit' = 'edit'; // view=ดูอย่างเดียว, resubmit=แก้ไขและส่งใหม่, edit=ปกติ
-  get isViewOnly() { return this.pageMode === 'view'; }
-  get isResubmitMode() { return this.pageMode === 'resubmit'; }
+  get isViewOnly() {
+    return this.pageMode === 'view';
+  }
+  get isResubmitMode() {
+    return this.pageMode === 'resubmit';
+  }
 
   selectedFiles: any = {
     FRONT_DORM_IMG: null,
     BED_IMG: null,
+    LICENSE_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
     FLOOR_IMG: null,
     BATHROOM_IMG: null,
     BALCONY_IMG: null,
-    OTHER_IMG: []
+    OTHER_IMG: [],
   };
 
   previews: any = {
     FRONT_DORM_IMG: null,
+    LICENSE_IMG: null,
     FRONT_DORM_IMAGE: null,
+    DORM_LICENSE: null,
     BED_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
     FLOOR_IMG: null,
     BATHROOM_IMG: null,
     BALCONY_IMG: null,
-    OTHER_IMG: []
+    OTHER_IMG: [],
   };
 
   existingGallery: string[] = [];
@@ -151,7 +236,7 @@ export class EditDormPage implements OnInit {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
     private actionSheetCtrl: ActionSheetController,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
   ) {
     addIcons({
       arrowBackOutline,
@@ -176,17 +261,20 @@ export class EditDormPage implements OnInit {
       cloudUploadOutline,
       gridOutline,
       imagesOutline,
-      documentTextOutline
+      documentTextOutline,
     });
 
     if (typeof google === 'object' && typeof google.maps === 'object') {
       this.apiLoaded = of(true);
     } else {
       this.apiLoaded = this.httpClient
-        .jsonp(`https://maps.googleapis.com/maps/api/js?key=${environment.GGMAPI}`, 'callback')
+        .jsonp(
+          `https://maps.googleapis.com/maps/api/js?key=${environment.GGMAPI}`,
+          'callback',
+        )
         .pipe(
           map(() => true),
-          catchError(() => of(false))
+          catchError(() => of(false)),
         );
     }
   }
@@ -194,16 +282,16 @@ export class EditDormPage implements OnInit {
   async ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
       this.dormId = Number(params.get('id'));
-      
+
       this.route.queryParamMap.subscribe(async (queryParams) => {
         const mode = queryParams.get('mode');
         if (mode === 'view') this.pageMode = 'view';
         else if (mode === 'resubmit') this.pageMode = 'resubmit';
         else this.pageMode = 'edit';
-        
+
         if (this.dormId) {
           if (this.zones.length === 0) {
-            await this.loadInitialData(); 
+            await this.loadInitialData();
           }
           await this.loadDormData(this.dormId);
         }
@@ -230,34 +318,37 @@ export class EditDormPage implements OnInit {
 
       // ✅ โหลดตัวเลือกอื่นๆ จาก DB
       const dtRes: any = await lastValueFrom(this.dormService.getDormTypes());
-      this.dormTypesDB = Array.isArray(dtRes) ? dtRes : (dtRes?.data || []);
-      
+      this.dormTypesDB = Array.isArray(dtRes) ? dtRes : dtRes?.data || [];
+
       const rtRes: any = await lastValueFrom(this.dormService.getRoomTypes());
-      this.roomTypesDB = Array.isArray(rtRes) ? rtRes : (rtRes?.data || []);
+      this.roomTypesDB = Array.isArray(rtRes) ? rtRes : rtRes?.data || [];
 
       const btRes: any = await lastValueFrom(this.dormService.getBedTypes());
-      this.bedTypesDB = Array.isArray(btRes) ? btRes : (btRes?.data || []);
+      this.bedTypesDB = Array.isArray(btRes) ? btRes : btRes?.data || [];
 
       const facRes: any = await lastValueFrom(this.dormService.getFacilities());
-      const facArray = Array.isArray(facRes) ? facRes : (facRes?.data || []);
+      const facArray = Array.isArray(facRes) ? facRes : facRes?.data || [];
       if (facArray.length > 0) {
         this.facilities = facArray.map((f: any) => ({
           id: f.FAC_TYPE_ID,
           name: f.FAC_TYPE_NAME,
           icon: f.FAC_TYPE_ICON || '',
-          isFontAwesome: f.FAC_TYPE_ICON &&
+          isFontAwesome:
+            f.FAC_TYPE_ICON &&
             !f.FAC_TYPE_ICON.startsWith('http') &&
             !f.FAC_TYPE_ICON.startsWith('/') &&
             !f.FAC_TYPE_ICON.startsWith('assets'),
-          checked: false
+          checked: false,
         }));
       }
 
-      const priceRes: any = await lastValueFrom(this.dormService.getPriceTypes());
+      const priceRes: any = await lastValueFrom(
+        this.dormService.getPriceTypes(),
+      );
       if (priceRes && priceRes.success && priceRes.data) {
         this.priceTypes = priceRes.data;
       }
-      
+
       const dormsRes: any = await this.dormService.getAllDorms();
       if (dormsRes && dormsRes.data) {
         this.allDorms = dormsRes.data;
@@ -270,7 +361,9 @@ export class EditDormPage implements OnInit {
   allDorms: any[] = [];
   get filteredDorms(): any[] {
     if (!this.formData.zone_id) return [];
-    return this.allDorms.filter(dorm => dorm.ZONE_ID === this.formData.zone_id);
+    return this.allDorms.filter(
+      (dorm) => dorm.ZONE_ID === this.formData.zone_id,
+    );
   }
 
   // ========== Map zone/dorm display helpers ==========
@@ -278,11 +371,11 @@ export class EditDormPage implements OnInit {
     const isSelected = this.formData.zone_id === zone.ZONE_ID;
     return {
       fillColor: isSelected ? '#f59e0b' : '#4285F4',
-      fillOpacity: isSelected ? 0.18 : 0.10,
+      fillOpacity: isSelected ? 0.18 : 0.1,
       strokeColor: isSelected ? '#f59e0b' : '#4285F4',
       strokeOpacity: isSelected ? 0.8 : 0.5,
       strokeWeight: isSelected ? 2.5 : 1.5,
-      clickable: false
+      clickable: false,
     };
   }
 
@@ -302,8 +395,8 @@ export class EditDormPage implements OnInit {
         text: zone.ZONE_NAME || '',
         color: '#333',
         fontSize: '11px',
-        fontWeight: '600'
-      }
+        fontWeight: '600',
+      },
     };
   }
 
@@ -319,21 +412,23 @@ export class EditDormPage implements OnInit {
         scaledSize: new google.maps.Size(22, 22),
       },
       title: dorm.DORM_NAME || dorm.DORMNAME || 'หอพัก',
-      zIndex: 5
+      zIndex: 5,
     };
   }
 
   async loadDormData(id: number) {
-    const loading = await this.loadingCtrl.create({ message: 'กำลังโหลดข้อมูล...' });
+    const loading = await this.loadingCtrl.create({
+      message: 'กำลังโหลดข้อมูล...',
+    });
     await loading.present();
 
     try {
       const res = await this.dormService.getDormById(id);
       if (res.success) {
         const d = res.data;
-        
+
         this.reqStatus = Number(d.REQ_STATUS) || 0;
-        this.isWaitingForAdmin = (this.reqStatus === 0 || this.reqStatus === 3);
+        this.isWaitingForAdmin = this.reqStatus === 0 || this.reqStatus === 3;
         // ถ้าไม่ได้ระบุ mode มาจาก URL ให้ auto-detect จาก REQ_STATUS
         if (!this.route.snapshot.queryParamMap.get('mode')) {
           if (this.reqStatus === 4) this.pageMode = 'resubmit';
@@ -351,14 +446,19 @@ export class EditDormPage implements OnInit {
           water_unit: d.WATER_UNIT || 0,
           water_lump: d.WATER_LUMP || 0,
           elect_unit: d.ELECT_UNIT || 0,
-          detail: d.ADD_DORM_DATA || ''
+          detail: d.ADD_DORM_DATA || '',
         };
 
         this.center = { lat: this.formData.lat, lng: this.formData.lng };
-        this.markerPosition = { lat: this.formData.lat, lng: this.formData.lng };
-        
+        this.markerPosition = {
+          lat: this.formData.lat,
+          lng: this.formData.lng,
+        };
+
         // set zone center
-        const selectedZone = this.zones.find((z: any) => z.ZONE_ID == this.formData.zone_id);
+        const selectedZone = this.zones.find(
+          (z: any) => z.ZONE_ID == this.formData.zone_id,
+        );
         if (selectedZone && selectedZone.lat && selectedZone.lng) {
           this.zoneCenter = { lat: selectedZone.lat, lng: selectedZone.lng };
           this.zoneRadius = selectedZone.ZONE_RADIUS || 500;
@@ -368,30 +468,51 @@ export class EditDormPage implements OnInit {
         const dormFacs = d.facilities || [];
         this.facilities.forEach((fac: any) => {
           if (dormFacs.some((df: any) => df.name === fac.name)) {
-             fac.checked = true;
+            fac.checked = true;
           }
         });
 
         if (d.rooms && d.rooms.length > 0) {
           this.roomTypes = d.rooms.map((r: any) => {
-            const mappedPrices = this.priceTypes.map(pt => {
-              const existing = r.prices?.find((rp: any) => rp.priceTypeId === pt.id);
-              return { priceTypeId: pt.id, name: pt.name, price: existing ? existing.price : null };
+            const mappedPrices = this.priceTypes.map((pt) => {
+              const existing = r.prices?.find(
+                (rp: any) => rp.priceTypeId === pt.id,
+              );
+              return {
+                priceTypeId: pt.id,
+                name: pt.name,
+                price: existing ? existing.price : null,
+              };
             });
-            
-            const isStandardRoom = this.roomTypesDB.some(rt => (rt.name || rt.ROOM_TYPE_NAME) === r.ROOM_TYPE_NAME);
+
+            const isStandardRoom = this.roomTypesDB.some(
+              (rt) => (rt.name || rt.ROOM_TYPE_NAME) === r.ROOM_TYPE_NAME,
+            );
             const selectedType = isStandardRoom ? r.ROOM_TYPE_NAME : 'custom';
-            
+
             let matchedBedId = '1';
             const bedNameLower = (r.bedType || '').toLowerCase();
-            if (bedNameLower.includes('double') || bedNameLower.includes('คู่')) {
-               matchedBedId = '2'; // or search in bedTypesDB
-               // More robust matching:
-               const bmatch = this.bedTypesDB.find(bt => (bt.name || bt.BED_TYPE_NAME || '').toLowerCase().includes('คู่'));
-               if(bmatch) matchedBedId = (bmatch.id || bmatch.BED_TYPE_ID).toString();
+            if (
+              bedNameLower.includes('double') ||
+              bedNameLower.includes('คู่')
+            ) {
+              matchedBedId = '2'; // or search in bedTypesDB
+              // More robust matching:
+              const bmatch = this.bedTypesDB.find((bt) =>
+                (bt.name || bt.BED_TYPE_NAME || '')
+                  .toLowerCase()
+                  .includes('คู่'),
+              );
+              if (bmatch)
+                matchedBedId = (bmatch.id || bmatch.BED_TYPE_ID).toString();
             } else {
-               const bmatch = this.bedTypesDB.find(bt => (bt.name || bt.BED_TYPE_NAME || '').toLowerCase().includes('เดี่ยว'));
-               if(bmatch) matchedBedId = (bmatch.id || bmatch.BED_TYPE_ID).toString();
+              const bmatch = this.bedTypesDB.find((bt) =>
+                (bt.name || bt.BED_TYPE_NAME || '')
+                  .toLowerCase()
+                  .includes('เดี่ยว'),
+              );
+              if (bmatch)
+                matchedBedId = (bmatch.id || bmatch.BED_TYPE_ID).toString();
             }
 
             return {
@@ -399,7 +520,7 @@ export class EditDormPage implements OnInit {
               selectedType: selectedType,
               roomType: r.ROOM_TYPE_NAME,
               bedType: matchedBedId,
-              prices: mappedPrices
+              prices: mappedPrices,
             };
           });
         } else {
@@ -408,31 +529,31 @@ export class EditDormPage implements OnInit {
 
         let frontImage = res.data.FRONT_DORM_IMAGE || res.data.image;
         if (frontImage) {
-            const timestamp = new Date().getTime();
-            const separator = frontImage.includes('?') ? '&' : '?';
-            this.previews.FRONT_DORM_IMG = `${frontImage}${separator}t=${timestamp}`;
+          const timestamp = new Date().getTime();
+          const separator = frontImage.includes('?') ? '&' : '?';
+          this.previews.FRONT_DORM_IMG = `${frontImage}${separator}t=${timestamp}`;
         }
-        
+
         // ✅ Fix: Load room images correctly (backend returns them at root level)
         this.previews.BED_IMG = d.bed_img || null;
         this.previews.WALL_IMG = d.wall_img || null;
         this.previews.CEILING_IMG = d.ceiling_img || null;
         this.previews.FLOOR_IMG = d.floor_img || null;
         this.previews.FRONT_DORM_IMAGE = d.FRONT_DORM_IMAGE || null;
-
+        this.previews.DORM_LICENSE = d.DORM_LICENSE || null;
 
         // รูปส่วนต่างๆ
         this.previews.BATHROOM_IMG = d.bathroom_img || null;
         this.previews.BALCONY_IMG = d.balcony_img || null;
-        
+
         // ✅ Fix: Gallery = everything that is NOT the cover
         this.existingGallery = d.gallery || [];
-        
+
         // ✅ Load existing custom (new) facilities
         if (d.new_facilities && Array.isArray(d.new_facilities)) {
           this.formData.new_facilities = d.new_facilities.map((nf: any) => ({
             name: nf.name || nf.FAC_NAME || '',
-            icon: nf.icon || nf.FAC_ICON || 'cube-outline'
+            icon: nf.icon || nf.FAC_ICON || 'cube-outline',
           }));
         } else {
           this.formData.new_facilities = [];
@@ -456,16 +577,33 @@ export class EditDormPage implements OnInit {
   addRoomType() {
     this.roomTypes.push({
       id: null,
-      selectedType: this.roomTypesDB.length > 0 ? (this.roomTypesDB[0].name || this.roomTypesDB[0].ROOM_TYPE_NAME) : 'ห้องแอร์',
-      roomType: this.roomTypesDB.length > 0 ? (this.roomTypesDB[0].name || this.roomTypesDB[0].ROOM_TYPE_NAME) : 'ห้องแอร์',
-      bedType: this.bedTypesDB.length > 0 ? (this.bedTypesDB[0].id || this.bedTypesDB[0].BED_TYPE_ID)?.toString() : '1',
-      prices: this.priceTypes.map(pt => ({ priceTypeId: pt.id, name: pt.name, price: null }))
+      selectedType:
+        this.roomTypesDB.length > 0
+          ? this.roomTypesDB[0].name || this.roomTypesDB[0].ROOM_TYPE_NAME
+          : 'ห้องแอร์',
+      roomType:
+        this.roomTypesDB.length > 0
+          ? this.roomTypesDB[0].name || this.roomTypesDB[0].ROOM_TYPE_NAME
+          : 'ห้องแอร์',
+      bedType:
+        this.bedTypesDB.length > 0
+          ? (
+              this.bedTypesDB[0].id || this.bedTypesDB[0].BED_TYPE_ID
+            )?.toString()
+          : '1',
+      prices: this.priceTypes.map((pt) => ({
+        priceTypeId: pt.id,
+        name: pt.name,
+        price: null,
+      })),
     });
   }
 
   onZoneChange() {
     if (this.formData.zone_id) {
-      const selectedZone = this.zones.find((z: any) => z.ZONE_ID == this.formData.zone_id);
+      const selectedZone = this.zones.find(
+        (z: any) => z.ZONE_ID == this.formData.zone_id,
+      );
       if (selectedZone && selectedZone.lat && selectedZone.lng) {
         this.zoneCenter = { lat: selectedZone.lat, lng: selectedZone.lng };
         this.zoneRadius = selectedZone.ZONE_RADIUS || 500;
@@ -541,7 +679,8 @@ export class EditDormPage implements OnInit {
     // Find all zones whose radius covers this pin
     const matchingZones = this.zones.filter((zone: any) => {
       if (zone.lat == null || zone.lng == null) return false;
-      const distM = this.getDistanceFromLatLonInKm(lat, lng, zone.lat, zone.lng) * 1000;
+      const distM =
+        this.getDistanceFromLatLonInKm(lat, lng, zone.lat, zone.lng) * 1000;
       return distM <= (zone.ZONE_RADIUS || this.zoneRadius);
     });
 
@@ -551,25 +690,41 @@ export class EditDormPage implements OnInit {
       let nearestZone = this.zones[0];
       for (const zone of this.zones) {
         if (zone.lat != null && zone.lng != null) {
-          const dist = this.getDistanceFromLatLonInKm(lat, lng, zone.lat, zone.lng);
-          if (dist < minDistance) { minDistance = dist; nearestZone = zone; }
+          const dist = this.getDistanceFromLatLonInKm(
+            lat,
+            lng,
+            zone.lat,
+            zone.lng,
+          );
+          if (dist < minDistance) {
+            minDistance = dist;
+            nearestZone = zone;
+          }
         }
       }
       this.applyZone(nearestZone);
-      this.showToast(`ไม่อยู่ในรัศมีโซนใด — เลือกโซนใกล้ที่สุด: ${nearestZone.ZONE_NAME}`, 'warning');
+      this.showToast(
+        `ไม่อยู่ในรัศมีโซนใด — เลือกโซนใกล้ที่สุด: ${nearestZone.ZONE_NAME}`,
+        'warning',
+      );
     } else if (matchingZones.length === 1) {
       this.applyZone(matchingZones[0]);
     } else {
       // Multiple overlapping zones — let user choose
       const buttons = matchingZones.map((zone: any) => ({
         text: zone.ZONE_NAME,
-        handler: () => { this.applyZone(zone); }
+        handler: () => {
+          this.applyZone(zone);
+        },
       }));
       buttons.push({ text: 'ยกเลิก', handler: () => {} } as any);
 
       const sheet = await this.actionSheetCtrl.create({
-        header: '🗺️ ตำแหน่งนี้อยู่ใน ' + matchingZones.length + ' โซน — กรุณาเลือกโซน',
-        buttons
+        header:
+          '🗺️ ตำแหน่งนี้อยู่ใน ' +
+          matchingZones.length +
+          ' โซน — กรุณาเลือกโซน',
+        buttons,
       });
       await sheet.present();
     }
@@ -595,9 +750,16 @@ export class EditDormPage implements OnInit {
     this.duplicateDormName = null;
     if (this.allDorms.length === 0) return;
     for (const dorm of this.allDorms) {
-      if (dorm.lat && dorm.lng && dorm.DORM_ID !== this.dormId) { // ข้ามการเช็คหอพักตัวเอง
-        const dist = this.getDistanceFromLatLonInKm(lat, lng, dorm.lat, dorm.lng);
-        if (dist < 0.02) { // less than 20 meters
+      if (dorm.lat && dorm.lng && dorm.DORM_ID !== this.dormId) {
+        // ข้ามการเช็คหอพักตัวเอง
+        const dist = this.getDistanceFromLatLonInKm(
+          lat,
+          lng,
+          dorm.lat,
+          dorm.lng,
+        );
+        if (dist < 0.02) {
+          // less than 20 meters
           this.duplicateDormName = dorm.DORM_NAME || dorm.DORMNAME;
           break;
         }
@@ -605,19 +767,28 @@ export class EditDormPage implements OnInit {
     }
   }
 
-  getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  getDistanceFromLatLonInKm(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ) {
     const R = 6371; // Radius of the earth in km
-    const dLat = this.deg2rad(lat2-lat1);
-    const dLon = this.deg2rad(lon2-lon1); 
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return R * c; 
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 
-  deg2rad(deg: number) { return deg * (Math.PI/180); }
+  deg2rad(deg: number) {
+    return deg * (Math.PI / 180);
+  }
 
   removeRoomType(index: number) {
     if (this.roomTypes.length > 1) {
@@ -655,7 +826,14 @@ export class EditDormPage implements OnInit {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    const slots = ['BED_IMG', 'WALL_IMG', 'CEILING_IMG', 'FLOOR_IMG', 'BATHROOM_IMG', 'BALCONY_IMG'];
+    const slots = [
+      'BED_IMG',
+      'WALL_IMG',
+      'CEILING_IMG',
+      'FLOOR_IMG',
+      'BATHROOM_IMG',
+      'BALCONY_IMG',
+    ];
     let fileIndex = 0;
 
     for (let i = 0; i < slots.length && fileIndex < files.length; i++) {
@@ -663,7 +841,10 @@ export class EditDormPage implements OnInit {
       const file = files[fileIndex];
 
       if (file.size > 5 * 1024 * 1024) {
-        this.showToast(`ไฟล์ที่ ${fileIndex + 1} มีขนาดใหญ่เกินไป (สูงสุด 5MB)`, 'warning');
+        this.showToast(
+          `ไฟล์ที่ ${fileIndex + 1} มีขนาดใหญ่เกินไป (สูงสุด 5MB)`,
+          'warning',
+        );
         fileIndex++;
         continue;
       }
@@ -683,7 +864,8 @@ export class EditDormPage implements OnInit {
     if (files) {
       let hasOversized = false;
       for (let i = 0; i < files.length; i++) {
-        const totalCount = this.existingGallery.length + this.selectedFiles.OTHER_IMG.length;
+        const totalCount =
+          this.existingGallery.length + this.selectedFiles.OTHER_IMG.length;
         if (totalCount >= 5) {
           this.showToast('อัปโหลดรูปภาพเพิ่มเติมได้สูงสุด 5 รูป', 'warning');
           break;
@@ -745,12 +927,15 @@ export class EditDormPage implements OnInit {
 
   // =========== Add Custom Facility Logic ===========
   getCheckedFacilitiesCount(): number {
-    return this.facilities.filter(f => f.checked).length;
+    return this.facilities.filter((f) => f.checked).length;
   }
 
   suggestNewFacility() {
     if (this.formData.new_facilities.length >= 4) {
-      this.showToast('คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 4 รายการ', 'warning');
+      this.showToast(
+        'คุณสามารถเสนอสิ่งอำนวยความสะดวกใหม่ได้สูงสุด 4 รายการ',
+        'warning',
+      );
       return;
     }
     this.newFacilityName = '';
@@ -785,10 +970,14 @@ export class EditDormPage implements OnInit {
       this.showToast('กรุณาระบุชื่อสิ่งอำนวยความสะดวก', 'warning');
       return;
     }
-    
-    const existsInMain = this.facilities.some(f => f.name.toLowerCase() === trimmedName.toLowerCase());
-    const existsInNew = this.formData.new_facilities.some((f: any) => f.name.toLowerCase() === trimmedName.toLowerCase());
-    
+
+    const existsInMain = this.facilities.some(
+      (f) => f.name.toLowerCase() === trimmedName.toLowerCase(),
+    );
+    const existsInNew = this.formData.new_facilities.some(
+      (f: any) => f.name.toLowerCase() === trimmedName.toLowerCase(),
+    );
+
     if (existsInMain || existsInNew) {
       this.showToast('สิ่งอำนวยความสะดวกนี้มีอยู่แล้ว', 'danger');
       return;
@@ -806,13 +995,13 @@ export class EditDormPage implements OnInit {
               name: trimmedName,
               icon: '',
               file: this.newFacilitySelectedIconFile,
-              preview: this.newFacilitySelectedIconPreview
+              preview: this.newFacilitySelectedIconPreview,
             });
             this.closeAddFacilityModal();
             this.showToast('เพิ่มสิ่งอำนวยความสะดวกสำเร็จ', 'success');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }
@@ -823,7 +1012,10 @@ export class EditDormPage implements OnInit {
 
   async confirmSave() {
     if (this.isWaitingForAdmin && !this.isResubmitMode) {
-      this.showToast('กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้', 'warning');
+      this.showToast(
+        'กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้',
+        'warning',
+      );
       return;
     }
     if (this.isViewOnly) {
@@ -832,7 +1024,7 @@ export class EditDormPage implements OnInit {
     }
     const alert = await this.alertCtrl.create({
       header: 'ยืนยันการบันทึก',
-      message: this.isResubmitMode 
+      message: this.isResubmitMode
         ? 'ต้องการส่งข้อมูลใหม่เพื่อขออนุมัติอีกครั้งใช่หรือไม่?'
         : 'ต้องการบันทึกข้อมูลที่แก้ไขอยู่ใช่หรือไม่?',
       buttons: [
@@ -840,9 +1032,11 @@ export class EditDormPage implements OnInit {
         {
           text: this.isResubmitMode ? 'ส่งใหม่' : 'บันทึก',
           cssClass: 'alert-confirm-btn',
-          handler: () => { this.onSubmit(); }
-        }
-      ]
+          handler: () => {
+            this.onSubmit();
+          },
+        },
+      ],
     });
     await alert.present();
   }
@@ -857,17 +1051,25 @@ export class EditDormPage implements OnInit {
     }
   }
 
-
   async onSubmit() {
     if (this.isWaitingForAdmin && !this.isResubmitMode) {
-      this.showToast('กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้', 'warning');
+      this.showToast(
+        'กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้',
+        'warning',
+      );
       return;
     }
     if (this.isViewOnly) {
       this.showToast('โหมดดูข้อมูล ไม่สามารถบันทึกได้', 'warning');
       return;
     }
-    if (!this.formData.name || !this.formData.address || !this.formData.lat || !this.formData.lng || !this.formData.zone_id) {
+    if (
+      !this.formData.name ||
+      !this.formData.address ||
+      !this.formData.lat ||
+      !this.formData.lng ||
+      !this.formData.zone_id
+    ) {
       this.showToast('กรุณากรอกข้อมูลสำคัญให้ครบถ้วน', 'warning');
       return;
     }
@@ -878,7 +1080,7 @@ export class EditDormPage implements OnInit {
       { key: 'WALL_IMG', name: 'รูปผนังปลายเตียง' },
       { key: 'CEILING_IMG', name: 'รูปเพดาน' },
       { key: 'FLOOR_IMG', name: 'รูปฝั่งติดประตู' },
-      { key: 'BATHROOM_IMG', name: 'รูปห้องน้ำ' }
+      { key: 'BATHROOM_IMG', name: 'รูปห้องน้ำ' },
     ];
 
     for (const img of requiredImages) {
@@ -888,12 +1090,14 @@ export class EditDormPage implements OnInit {
       }
     }
 
-    const loading = await this.loadingCtrl.create({ message: 'กำลังอัปเดตข้อมูล...' });
+    const loading = await this.loadingCtrl.create({
+      message: 'กำลังอัปเดตข้อมูล...',
+    });
     await loading.present();
 
     try {
       const form = new FormData();
-      
+
       // 🌟 ใช้ระบบดักค่าว่าง (|| '') ป้องกัน undefined/null ทำให้ .toString() ทำแอปพัง
       form.append('name', this.formData.name || '');
       form.append('address', this.formData.address || '');
@@ -907,44 +1111,66 @@ export class EditDormPage implements OnInit {
       form.append('water_unit', (this.formData.water_unit || 0).toString());
       form.append('water_lump', (this.formData.water_lump || 0).toString());
       form.append('elect_unit', (this.formData.elect_unit || 0).toString());
-      
-      const selectedFacIds = this.facilities.filter((f: any) => f.checked).map((f: any) => f.id);
+
+      const selectedFacIds = this.facilities
+        .filter((f: any) => f.checked)
+        .map((f: any) => f.id);
       form.append('facilities', JSON.stringify(selectedFacIds));
-      
-      const newFacToSave = (this.formData.new_facilities || []).map((nf: any) => ({
-        name: nf.name,
-        icon: nf.icon
-      }));
+
+      const newFacToSave = (this.formData.new_facilities || []).map(
+        (nf: any) => ({
+          name: nf.name,
+          icon: nf.icon,
+        }),
+      );
       form.append('new_facilities', JSON.stringify(newFacToSave));
-      
-      const facWithFiles = (this.formData.new_facilities || []).filter((nf: any) => nf.file);
+
+      const facWithFiles = (this.formData.new_facilities || []).filter(
+        (nf: any) => nf.file,
+      );
       facWithFiles.forEach((nf: any, idx: number) => {
         if (idx < 3) {
           form.append(`FACILITY_IMG_${idx}`, nf.file);
         }
       });
-      
+
       form.append('roomTypes', JSON.stringify(this.roomTypes));
-      form.append('remaining_gallery', JSON.stringify(this.existingGallery || []));
-      form.append('deleted_room_images', JSON.stringify(this.deletedRoomImages || [])); 
+      form.append(
+        'remaining_gallery',
+        JSON.stringify(this.existingGallery || []),
+      );
+      form.append(
+        'deleted_room_images',
+        JSON.stringify(this.deletedRoomImages || []),
+      );
 
-      if (this.selectedFiles.FRONT_DORM_IMG) form.append('FRONT_DORM_IMG', this.selectedFiles.FRONT_DORM_IMG);
+      if (this.selectedFiles.FRONT_DORM_IMG)
+        form.append('FRONT_DORM_IMG', this.selectedFiles.FRONT_DORM_IMG);
 
-      if (this.selectedFiles.BED_IMG) form.append('BED_IMG', this.selectedFiles.BED_IMG);
-      if (this.selectedFiles.WALL_IMG) form.append('WALL_IMG', this.selectedFiles.WALL_IMG);
-      if (this.selectedFiles.CEILING_IMG) form.append('CEILING_IMG', this.selectedFiles.CEILING_IMG);
-      if (this.selectedFiles.FLOOR_IMG) form.append('FLOOR_IMG', this.selectedFiles.FLOOR_IMG);
-      if (this.selectedFiles.BATHROOM_IMG) form.append('BATHROOM_IMG', this.selectedFiles.BATHROOM_IMG);
-      if (this.selectedFiles.BALCONY_IMG) form.append('BALCONY_IMG', this.selectedFiles.BALCONY_IMG);
-      
-      if (this.selectedFiles.OTHER_IMG && this.selectedFiles.OTHER_IMG.length > 0) {
+      if (this.selectedFiles.BED_IMG)
+        form.append('BED_IMG', this.selectedFiles.BED_IMG);
+      if (this.selectedFiles.WALL_IMG)
+        form.append('WALL_IMG', this.selectedFiles.WALL_IMG);
+      if (this.selectedFiles.CEILING_IMG)
+        form.append('CEILING_IMG', this.selectedFiles.CEILING_IMG);
+      if (this.selectedFiles.FLOOR_IMG)
+        form.append('FLOOR_IMG', this.selectedFiles.FLOOR_IMG);
+      if (this.selectedFiles.BATHROOM_IMG)
+        form.append('BATHROOM_IMG', this.selectedFiles.BATHROOM_IMG);
+      if (this.selectedFiles.BALCONY_IMG)
+        form.append('BALCONY_IMG', this.selectedFiles.BALCONY_IMG);
+
+      if (
+        this.selectedFiles.OTHER_IMG &&
+        this.selectedFiles.OTHER_IMG.length > 0
+      ) {
         this.selectedFiles.OTHER_IMG.forEach((file: any) => {
           form.append('OTHER_IMG', file);
         });
       }
 
       await this.dormService.updateDorm(this.dormId, form);
-      
+
       // ✅ แสดงรูปที่ผู้ใช้เลือกทันทีก่อน reload
       // เพราะ previews.FRONT_DORM_IMG ถูก set เป็น base64 ไว้แล้วตอน onFileSelect
       // ป้องกันหน้าว่างระหว่างรอ GCS propagate + DB reload
@@ -954,20 +1180,25 @@ export class EditDormPage implements OnInit {
       }
 
       // รอให้ GCS upload และ DB commit เสร็จสมบูรณ์
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Reload เพื่อดึง GCS URL ใหม่จาก DB
       await this.loadDormData(this.dormId);
-      
+
       // ✅ Reset selected files (clear queued uploads)
       this.selectedFiles = {
-        FRONT_DORM_IMG: null, BED_IMG: null, WALL_IMG: null, CEILING_IMG: null,
-        FLOOR_IMG: null, BATHROOM_IMG: null, BALCONY_IMG: null, OTHER_IMG: []
+        FRONT_DORM_IMG: null,
+        BED_IMG: null,
+        WALL_IMG: null,
+        CEILING_IMG: null,
+        FLOOR_IMG: null,
+        BATHROOM_IMG: null,
+        BALCONY_IMG: null,
+        OTHER_IMG: [],
       };
       this.deletedRoomImages = [];
 
       this.showSuccessModal = true;
-
     } catch (error: any) {
       console.error(error);
       this.showToast('เกิดข้อผิดพลาดในการบันทึก', 'danger');
@@ -981,7 +1212,7 @@ export class EditDormPage implements OnInit {
       message: msg,
       duration: 2000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }
