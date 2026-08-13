@@ -192,17 +192,23 @@ export class EditDormPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.dormId = Number(this.route.snapshot.paramMap.get('id'));
-    // อ่าน mode จาก query param
-    const mode = this.route.snapshot.queryParamMap.get('mode');
-    if (mode === 'view') this.pageMode = 'view';
-    else if (mode === 'resubmit') this.pageMode = 'resubmit';
-    else this.pageMode = 'edit';
-    
-    if (this.dormId) {
-      await this.loadInitialData(); 
-      await this.loadDormData(this.dormId);
-    }
+    this.route.paramMap.subscribe(async (params) => {
+      this.dormId = Number(params.get('id'));
+      
+      this.route.queryParamMap.subscribe(async (queryParams) => {
+        const mode = queryParams.get('mode');
+        if (mode === 'view') this.pageMode = 'view';
+        else if (mode === 'resubmit') this.pageMode = 'resubmit';
+        else this.pageMode = 'edit';
+        
+        if (this.dormId) {
+          if (this.zones.length === 0) {
+            await this.loadInitialData(); 
+          }
+          await this.loadDormData(this.dormId);
+        }
+      });
+    });
   }
 
   // ย้อนกลับโดยดูว่าเข้ามาจากหน้าไหน

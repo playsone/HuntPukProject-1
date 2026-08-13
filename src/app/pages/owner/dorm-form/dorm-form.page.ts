@@ -209,15 +209,20 @@ export class DormFormPage implements OnInit {
       return;
     }
 
-    await this.loadInitialData();
-    this.resetForm();
+    this.route.paramMap.subscribe(async (params) => {
+      const idParam = params.get('id');
+      
+      if (this.zones.length === 0) {
+        await this.loadInitialData();
+      }
+      this.resetForm();
 
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.dormId = Number(idParam);
-      this.isResubmitMode = true;
-      await this.loadDormData(this.dormId);
-    }
+      if (idParam) {
+        this.dormId = Number(idParam);
+        this.isResubmitMode = true;
+        await this.loadDormData(this.dormId);
+      }
+    });
   }
 
   // ย้อนกลับโดยดูว่าเข้ามาจากหน้าไหน
