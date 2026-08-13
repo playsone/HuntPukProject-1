@@ -9,7 +9,8 @@
     <ion-title class="ion-text-center" style="color: #000; font-weight: bold;">แก้ไขข้อมูลหอพัก</ion-title>
     <ion-buttons slot="end">
       <!-- ปุ่มบันทึกปกติ -->
-      <ion-button (click)="confirmSave()" color="dark" style="font-weight: bold;" *ngIf="!isWaitingForAdmin && !isViewOnly && !isResubmitMode">
+      <ion-button (click)="confirmSave()" color="dark" style="font-weight: bold;"
+        *ngIf="!isWaitingForAdmin && !isViewOnly && !isResubmitMode">
         <ion-icon name="save-outline" slot="start"></ion-icon>
         บันทึก
       </ion-button>
@@ -42,24 +43,28 @@
 <ion-content class="ion-padding bg-light">
 
   <!-- รออนุมัติ (REQ_STATUS=0) -->
-  <div class="status-banner" *ngIf="isWaitingForAdmin && !isResubmitMode" style="background: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #ffeeba;">
+  <div class="status-banner" *ngIf="isWaitingForAdmin && !isResubmitMode"
+    style="background: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #ffeeba;">
     <ion-icon name="time-outline" style="font-size: 24px;"></ion-icon>
     <span>กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขข้อมูลได้ในขณะนี้</span>
   </div>
 
   <!-- view-only mode (เข้ามาดูข้อมูล) -->
-  <div class="status-banner" *ngIf="isViewOnly" style="background: #e0f2fe; color: #0369a1; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #bae6fd;">
+  <div class="status-banner" *ngIf="isViewOnly"
+    style="background: #e0f2fe; color: #0369a1; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #bae6fd;">
     <ion-icon name="eye-outline" style="font-size: 24px;"></ion-icon>
     <span>เรากำลังรออนุมัติจากแอดมิน อยู่ในโหมดดูข้อมูลอย่างเดียว</span>
   </div>
 
   <!-- resubmit mode (ส่งกลับให้แก้ไข) -->
-  <div class="status-banner" *ngIf="isResubmitMode" style="background: #ede9fe; color: #4c1d95; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #c4b5fd;">
+  <div class="status-banner" *ngIf="isResubmitMode"
+    style="background: #ede9fe; color: #4c1d95; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #c4b5fd;">
     <ion-icon name="pencil-outline" style="font-size: 24px;"></ion-icon>
     <span>แอดมินให้คุณแก้ไขข้อมูลและกด "ส่งใหม่" เพื่อขออนุมัติอีกครั้ง</span>
   </div>
 
-  <div class="status-banner" *ngIf="reqStatus === 2 && !isResubmitMode" style="background: #f8d7da; color: #721c24; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #f5c6cb;">
+  <div class="status-banner" *ngIf="reqStatus === 2 && !isResubmitMode"
+    style="background: #f8d7da; color: #721c24; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: bold; border: 1px solid #f5c6cb;">
     <ion-icon name="alert-circle-outline" style="font-size: 24px;"></ion-icon>
     <span>คำขอถูกปฏิเสธ กรุณาแก้ไขข้อมูลและกดบันทึกเพื่อส่งคำขอใหม่</span>
   </div>
@@ -67,10 +72,10 @@
   <div class="form-container" [class.readonly]="isWaitingForAdmin || isViewOnly">
 
     <div *ngIf="activeSegment === 'general'" class="fade-in">
-      
+
       <div class="section-card">
         <h3><ion-icon name="home-outline"></ion-icon> ข้อมูลพื้นฐาน</h3>
-        
+
         <ion-item class="custom-input">
           <ion-label position="stacked">ชื่อหอพัก <span class="req">*</span></ion-label>
           <ion-input [(ngModel)]="formData.name" placeholder="ระบุชื่อหอพัก" [disabled]="isWaitingForAdmin"></ion-input>
@@ -79,72 +84,78 @@
         <ion-item class="custom-input">
           <ion-label position="stacked">ประเภทหอพัก</ion-label>
           <ion-select [(ngModel)]="formData.type_id" interface="popover" [disabled]="isWaitingForAdmin">
-            <ion-select-option *ngFor="let dt of dormTypesDB" [value]="dt.id || dt.DORM_TYPE_ID">{{ dt.name || dt.DORM_TYPE_NAME }}</ion-select-option>
+            <ion-select-option *ngFor="let dt of dormTypesDB" [value]="dt.id || dt.DORM_TYPE_ID">{{ dt.name ||
+              dt.DORM_TYPE_NAME }}</ion-select-option>
           </ion-select>
         </ion-item>
 
         <ion-item class="custom-input">
           <ion-label position="stacked">รายละเอียด/คำเชิญชวน</ion-label>
-          <ion-textarea [(ngModel)]="formData.detail" rows="4" placeholder="เช่น หอพักสะอาด ใกล้มอ..." [disabled]="isWaitingForAdmin"></ion-textarea>
+          <ion-textarea [(ngModel)]="formData.detail" rows="4" placeholder="เช่น หอพักสะอาด ใกล้มอ..."
+            [disabled]="isWaitingForAdmin"></ion-textarea>
         </ion-item>
       </div>
 
       <div class="section-card">
         <h3><ion-icon name="location-outline"></ion-icon> ที่อยู่ & พิกัด</h3>
-        
+
         <ion-item class="custom-input">
           <ion-label position="stacked">โซนหอพัก <span class="req">*</span></ion-label>
-          <ion-select [(ngModel)]="formData.zone_id" (ionChange)="onZoneChange()" interface="popover" [disabled]="isWaitingForAdmin">
+          <ion-select [(ngModel)]="formData.zone_id" (ionChange)="onZoneChange()" interface="popover"
+            [disabled]="isWaitingForAdmin">
             <ion-select-option *ngFor="let z of zones" [value]="z.ZONE_ID">{{ z.ZONE_NAME }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item class="custom-input">
           <ion-label position="stacked">ที่อยู่</ion-label>
-          <ion-textarea [(ngModel)]="formData.address" rows="2" placeholder="บ้านเลขที่, ซอย, ถนน..." [disabled]="isWaitingForAdmin"></ion-textarea>
+          <ion-textarea [(ngModel)]="formData.address" rows="2" placeholder="บ้านเลขที่, ซอย, ถนน..."
+            [disabled]="isWaitingForAdmin"></ion-textarea>
         </ion-item>
-        
-        <div class="map-wrapper" style="margin-top: 15px; height: 300px; border-radius: 8px; overflow: hidden; position: relative;" *ngIf="apiLoaded | async">
-          <google-map height="100%" width="100%" [center]="center" [zoom]="zoom"
-            [options]="mapOptions" (mapClick)="onMapClick($event)">
+
+        <div class="map-wrapper"
+          style="margin-top: 15px; height: 300px; border-radius: 8px; overflow: hidden; position: relative;"
+          *ngIf="apiLoaded | async">
+          <google-map height="100%" width="100%" [center]="center" [zoom]="zoom" [options]="mapOptions"
+            (mapClick)="onMapClick($event)">
             <map-marker #userMarker="mapMarker" [position]="markerPosition" [options]="markerOptions">
               <map-info-window #infoWindow="mapInfoWindow">
                 <div style="text-align: center; padding: 4px;">
-                  <h3 *ngIf="duplicateDormName" style="color: red; font-size: 14px; font-weight: bold; margin: 0;">⚠️ ตำแหน่งซ้ำ</h3>
-                  <p *ngIf="duplicateDormName" style="font-size: 13px; margin: 4px 0 0;">มีหอพักชื่อ <b>{{ duplicateDormName }}</b> ตั้งอยู่แล้วครับ คุณไม่สามารถปักหมุดซ้ำได้</p>
-                  
-                  <h3 *ngIf="!duplicateDormName" style="font-size: 14px; margin: 0;">{{ currentZoneName || 'โซนที่เลือก' }}</h3>
+                  <h3 *ngIf="duplicateDormName" style="color: red; font-size: 14px; font-weight: bold; margin: 0;">⚠️
+                    ตำแหน่งซ้ำ</h3>
+                  <p *ngIf="duplicateDormName" style="font-size: 13px; margin: 4px 0 0;">มีหอพักชื่อ <b>{{
+                      duplicateDormName }}</b> ตั้งอยู่แล้วครับ คุณไม่สามารถปักหมุดซ้ำได้</p>
+
+                  <h3 *ngIf="!duplicateDormName" style="font-size: 14px; margin: 0;">{{ currentZoneName || 'โซนที่เลือก'
+                    }}</h3>
                 </div>
               </map-info-window>
             </map-marker>
             <!-- วงกลมทุกโซน -->
-            <map-circle *ngFor="let zone of zones"
-              [center]="{lat: zone.lat, lng: zone.lng}"
-              [radius]="zone.ZONE_RADIUS || 500"
-              [options]="getZoneCircleOptions(zone)">
+            <map-circle *ngFor="let zone of zones" [center]="{lat: zone.lat, lng: zone.lng}"
+              [radius]="zone.ZONE_RADIUS || 500" [options]="getZoneCircleOptions(zone)">
             </map-circle>
             <!-- หมุดศูนย์กลางโซนพร้อมชื่อ -->
-            <map-marker *ngFor="let zone of zones"
-              [position]="{lat: zone.lat, lng: zone.lng}"
-              [options]="getZoneMarkerOptions(zone)"
-              (mapClick)="onZoneMarkerClick(zone)">
+            <map-marker *ngFor="let zone of zones" [position]="{lat: zone.lat, lng: zone.lng}"
+              [options]="getZoneMarkerOptions(zone)" (mapClick)="onZoneMarkerClick(zone)">
             </map-marker>
             <!-- หมุดหอพักที่มีอยู่แล้วในระบบ -->
             <map-marker #dormMarker="mapMarker" *ngFor="let dorm of filteredDorms"
-              [position]="{lat: dorm.lat, lng: dorm.lng}"
-              [options]="getDormMarkerOptions(dorm)"
+              [position]="{lat: dorm.lat, lng: dorm.lng}" [options]="getDormMarkerOptions(dorm)"
               (mapClick)="onDormMarkerClick(dormMarker, dorm)">
             </map-marker>
 
             <!-- Dorm Info Window -->
             <map-info-window #dormInfoWindow="mapInfoWindow">
               <div class="dorm-info-window" *ngIf="selectedDormForMap" style="text-align: center; padding: 4px;">
-                <h3 style="margin: 0; font-size: 14px; font-weight: bold; color: #1e293b;">{{ selectedDormForMap.DORM_NAME || selectedDormForMap.DORMNAME || 'หอพัก' }}</h3>
+                <h3 style="margin: 0; font-size: 14px; font-weight: bold; color: #1e293b;">{{
+                  selectedDormForMap.DORM_NAME || selectedDormForMap.DORMNAME || 'หอพัก' }}</h3>
                 <p style="margin: 4px 0 0; font-size: 12px; color: red;">⚠️ ไม่สามารถปักหมุดทับได้</p>
               </div>
             </map-info-window>
           </google-map>
         </div>
-        <p class="hint-text text-danger" style="font-size: 13px; margin-top: 8px;" *ngIf="!isWaitingForAdmin">* แตะบนแผนที่เพื่อปักหมุดแก้ไขตำแหน่งหอพัก</p>
+        <p class="hint-text text-danger" style="font-size: 13px; margin-top: 8px;" *ngIf="!isWaitingForAdmin">*
+          แตะบนแผนที่เพื่อปักหมุดแก้ไขตำแหน่งหอพัก</p>
         <div class="coord-display" style="margin-top: 10px;" *ngIf="formData.lat">
           <div style="font-size: 13px; color: #28a745; display: flex; align-items: center; gap: 4px;">
             <ion-icon name="checkmark-circle-outline"></ion-icon>
@@ -153,30 +164,34 @@
         </div>
       </div>
 
-   <div class="section-card">
+      <div class="section-card">
         <h3>💡 ค่าน้ำ & ค่าไฟ</h3>
-        
+
         <div class="row-2-col">
           <ion-item class="custom-input">
             <ion-label position="stacked">ค่าน้ำ (บาท/หน่วย) <span class="req">*</span></ion-label>
-            <ion-input type="number" [(ngModel)]="formData.water_unit" placeholder="เช่น 15" [disabled]="isWaitingForAdmin"></ion-input>
+            <ion-input type="number" [(ngModel)]="formData.water_unit" placeholder="เช่น 15"
+              [disabled]="isWaitingForAdmin"></ion-input>
           </ion-item>
 
           <ion-item class="custom-input">
             <ion-label position="stacked">ค่าน้ำเหมาจ่าย (ถ้ามี)</ion-label>
-            <ion-input type="number" [(ngModel)]="formData.water_lump" placeholder="เช่น 150 หรือปล่อยว่าง" [disabled]="isWaitingForAdmin"></ion-input>
+            <ion-input type="number" [(ngModel)]="formData.water_lump" placeholder="เช่น 150 หรือปล่อยว่าง"
+              [disabled]="isWaitingForAdmin"></ion-input>
           </ion-item>
         </div>
 
         <ion-item class="custom-input">
           <ion-label position="stacked">ค่าไฟ (บาท/หน่วย) <span class="req">*</span></ion-label>
-          <ion-input type="number" [(ngModel)]="formData.elect_unit" placeholder="เช่น 8" [disabled]="isWaitingForAdmin"></ion-input>
+          <ion-input type="number" [(ngModel)]="formData.elect_unit" placeholder="เช่น 8"
+            [disabled]="isWaitingForAdmin"></ion-input>
         </ion-item>
       </div>
 
       <!-- Navigation Buttons -->
       <div class="nav-buttons-container" style="display: flex; gap: 10px; margin-top: 20px;">
-        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;" (click)="goToNextSegment('facilities')">
+        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;"
+          (click)="goToNextSegment('facilities')">
           ถัดไป <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
       </div>
@@ -187,24 +202,20 @@
       <div class="section-card">
         <h3><ion-icon name="wifi"></ion-icon> สิ่งอำนวยความสะดวก</h3>
         <p class="hint-text">เลือกสิ่งที่หอพักของคุณมีให้บริการ</p>
-        
+
         <div class="facilities-checkbox-grid">
-          <div *ngFor="let fac of facilities" 
-               class="fac-checkbox-card" 
-               [class.checked]="fac.checked"
-               [class.disabled]="isWaitingForAdmin"
-               (click)="!isWaitingForAdmin && (fac.checked = !fac.checked)">
-              <!-- ✅ FIX: แสดง Icon ตามประเภท (Font Awesome class หรือ URL) -->
-              <div class="fac-icon-area">
-                <!-- Font Awesome icon (เช่น "fas fa-snowflake") -->
-                <i *ngIf="fac.isFontAwesome" [class]="fac.icon" class="fac-fa-icon"></i>
-                <!-- URL รูปภาพ -->
-                <img *ngIf="!fac.isFontAwesome && fac.icon"
-                  [src]="getIconPath(fac.icon)" class="fac-icon-img"
-                  (error)="$any($event.target).src='assets/icon/favicon.png'">
-                <!-- Fallback ถ้าไม่มีไอคอน -->
-                <ion-icon *ngIf="!fac.icon" name="home-outline" class="fac-ion-icon"></ion-icon>
-              </div>
+          <div *ngFor="let fac of facilities" class="fac-checkbox-card" [class.checked]="fac.checked"
+            [class.disabled]="isWaitingForAdmin" (click)="!isWaitingForAdmin && (fac.checked = !fac.checked)">
+            <!-- ✅ FIX: แสดง Icon ตามประเภท (Font Awesome class หรือ URL) -->
+            <div class="fac-icon-area">
+              <!-- Font Awesome icon (เช่น "fas fa-snowflake") -->
+              <i *ngIf="fac.isFontAwesome" [class]="fac.icon" class="fac-fa-icon"></i>
+              <!-- URL รูปภาพ -->
+              <img *ngIf="!fac.isFontAwesome && fac.icon" [src]="getIconPath(fac.icon)" class="fac-icon-img"
+                (error)="$any($event.target).src='assets/icon/favicon.png'">
+              <!-- Fallback ถ้าไม่มีไอคอน -->
+              <ion-icon *ngIf="!fac.icon" name="home-outline" class="fac-ion-icon"></ion-icon>
+            </div>
             <span class="fac-name">{{ fac.name }}</span>
             <div class="fac-tick" *ngIf="fac.checked">
               <ion-icon name="checkmark-circle" style="color: #f5a623;"></ion-icon>
@@ -213,26 +224,35 @@
         </div>
 
         <!-- แสดงจำนวนที่เลือก -->
-        <div class="selected-count" *ngIf="facilities.length > 0" style="margin-top: 15px; font-size: 13px; color: #666; text-align: right;">
+        <div class="selected-count" *ngIf="facilities.length > 0"
+          style="margin-top: 15px; font-size: 13px; color: #666; text-align: right;">
           เลือกแล้ว {{ getCheckedFacilitiesCount() }} / {{ facilities.length }} รายการ
         </div>
 
         <!-- ปุ่มเสนอสิ่งอำนวยความสะดวกใหม่ -->
         <div class="suggest-fac-container" style="text-align: center; margin-top: 15px;" *ngIf="!isWaitingForAdmin">
-          <ion-button fill="outline" shape="round" color="secondary" (click)="suggestNewFacility()" *ngIf="formData.new_facilities.length < 3">
+          <ion-button fill="outline" shape="round" color="secondary" (click)="suggestNewFacility()"
+            *ngIf="formData.new_facilities.length < 3">
             <ion-icon slot="start" name="bulb-outline"></ion-icon>
             เพิ่มสิ่งอำนวยความสะดวกเพิ่มเติม (เหลือ {{ 3 - formData.new_facilities.length }} ครั้ง)
           </ion-button>
-          
-          <div *ngIf="formData.new_facilities.length > 0" class="new-fac-list" style="margin-top: 16px; padding: 12px; background: #f9f9f9; border-radius: 12px; border: 1px dashed #ddd;">
-            <p style="font-size: 13px; font-weight: 600; color: #555; margin-bottom: 10px;">✨ สิ่งอำนวยความสะดวกเพิ่มเติม (รออนุมัติ)</p>
-            <div *ngFor="let newFac of formData.new_facilities; let i = index" class="new-fac-item" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;">
+
+          <div *ngIf="formData.new_facilities.length > 0" class="new-fac-list"
+            style="margin-top: 16px; padding: 12px; background: #f9f9f9; border-radius: 12px; border: 1px dashed #ddd;">
+            <p style="font-size: 13px; font-weight: 600; color: #555; margin-bottom: 10px;">✨
+              สิ่งอำนวยความสะดวกเพิ่มเติม (รออนุมัติ)</p>
+            <div *ngFor="let newFac of formData.new_facilities; let i = index" class="new-fac-item"
+              style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;">
               <!-- Display the selected icon as image -->
-              <img *ngIf="newFac.preview || (newFac.icon && !newFac.icon.includes('-outline'))" [src]="newFac.preview || newFac.icon" alt="icon" style="width: 24px; height: 24px; object-fit: contain;">
-              <ion-icon *ngIf="!newFac.preview && newFac.icon && newFac.icon.includes('-outline')" [name]="newFac.icon" style="font-size: 24px; color: #795548;"></ion-icon>
-              
+              <img *ngIf="newFac.preview || (newFac.icon && !newFac.icon.includes('-outline'))"
+                [src]="newFac.preview || newFac.icon" alt="icon"
+                style="width: 24px; height: 24px; object-fit: contain;">
+              <ion-icon *ngIf="!newFac.preview && newFac.icon && newFac.icon.includes('-outline')" [name]="newFac.icon"
+                style="font-size: 24px; color: #795548;"></ion-icon>
+
               <span style="color: #333;"> <strong>{{ newFac.name }}</strong></span>
-              <ion-button fill="clear" color="danger" size="small" (click)="removeNewFacility(i)" style="--padding-start: 0; --padding-end: 0; height: 24px;">
+              <ion-button fill="clear" color="danger" size="small" (click)="removeNewFacility(i)"
+                style="--padding-start: 0; --padding-end: 0; height: 24px;">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
@@ -242,17 +262,20 @@
 
       <!-- Navigation Buttons -->
       <div class="nav-buttons-container" style="display: flex; gap: 10px; margin-top: 20px;">
-        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;" (click)="goToNextSegment('general')">
+        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;"
+          (click)="goToNextSegment('general')">
           <ion-icon name="arrow-back-outline" slot="start"></ion-icon> ย้อนกลับ
         </ion-button>
-        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;" (click)="goToNextSegment('rooms')">
+        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;"
+          (click)="goToNextSegment('rooms')">
           ถัดไป <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
       </div>
     </div>
 
     <!-- Modal สำหรับเพิ่มสิ่งอำนวยความสะดวกใหม่ -->
-    <ion-modal [isOpen]="isAddFacilityModalOpen" (didDismiss)="closeAddFacilityModal()" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.5, 0.75, 1]">
+    <ion-modal [isOpen]="isAddFacilityModalOpen" (didDismiss)="closeAddFacilityModal()" [initialBreakpoint]="0.75"
+      [breakpoints]="[0, 0.5, 0.75, 1]">
       <ng-template>
         <ion-header class="ion-no-border">
           <ion-toolbar style="--background: #fff;">
@@ -263,17 +286,24 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding" style="--background: #f4f5f8;">
-          <ion-item class="custom-input" lines="none" style="--background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+          <ion-item class="custom-input" lines="none"
+            style="--background: #fff; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
             <ion-label position="stacked" style="color: #666; font-weight: 600;">ชื่อสิ่งอำนวยความสะดวก</ion-label>
-            <ion-input [(ngModel)]="newFacilityName" placeholder="เช่น เครื่องซักผ้าส่วนตัว" style="color: #333; font-size: 15px; margin-top: 8px;"></ion-input>
+            <ion-input [(ngModel)]="newFacilityName" placeholder="เช่น เครื่องซักผ้าส่วนตัว"
+              style="color: #333; font-size: 15px; margin-top: 8px;"></ion-input>
           </ion-item>
 
           <div style="background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
-            <p style="font-weight: 600; margin-bottom: 16px; color: #333; text-align: center;">อัปโหลดไอคอนสิ่งอำนวยความสะดวก (ทางเลือก)</p>
+            <p style="font-weight: 600; margin-bottom: 16px; color: #333; text-align: center;">
+              อัปโหลดไอคอนสิ่งอำนวยความสะดวก (ทางเลือก)</p>
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div class="fac-icon-upload" style="width: 80px; height: 80px; border-radius: 12px; background: #f8f9fa; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative;" (click)="facIconInput.click()">
-                <img *ngIf="newFacilitySelectedIconPreview" [src]="newFacilitySelectedIconPreview" style="width: 100%; height: 100%; object-fit: contain; padding: 5px;">
-                <ion-icon *ngIf="!newFacilitySelectedIconPreview" name="image-outline" style="font-size: 32px; color: #999;"></ion-icon>
+              <div class="fac-icon-upload"
+                style="width: 80px; height: 80px; border-radius: 12px; background: #f8f9fa; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative;"
+                (click)="facIconInput.click()">
+                <img *ngIf="newFacilitySelectedIconPreview" [src]="newFacilitySelectedIconPreview"
+                  style="width: 100%; height: 100%; object-fit: contain; padding: 5px;">
+                <ion-icon *ngIf="!newFacilitySelectedIconPreview" name="image-outline"
+                  style="font-size: 32px; color: #999;"></ion-icon>
               </div>
               <p style="font-size: 12px; color: #666; margin-top: 10px;">แตะเพื่ออัปโหลด (รองรับ SVG, PNG, JPG)</p>
             </div>
@@ -282,7 +312,8 @@
         </ion-content>
         <ion-footer class="ion-no-border">
           <ion-toolbar style="--background: #f4f5f8; padding: 10px 16px 20px 16px;">
-            <ion-button expand="block" color="warning" shape="round" style="height: 48px; font-weight: bold;" (click)="confirmAddFacility()">
+            <ion-button expand="block" color="warning" shape="round" style="height: 48px; font-weight: bold;"
+              (click)="confirmAddFacility()">
               เพิ่มรายการ
             </ion-button>
           </ion-toolbar>
@@ -306,25 +337,29 @@
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
-          
+
           <ion-item class="custom-input">
             <ion-label position="stacked">ชื่อประเภทห้อง <span class="req">*</span></ion-label>
-            <ion-select [(ngModel)]="room.selectedType" (ionChange)="onRoomTypeChange(room)" interface="popover" [disabled]="isWaitingForAdmin">
-              <ion-select-option *ngFor="let rt of roomTypesDB" [value]="rt.name || rt.ROOM_TYPE_NAME">{{ rt.name || rt.ROOM_TYPE_NAME }}</ion-select-option>
+            <ion-select [(ngModel)]="room.selectedType" (ionChange)="onRoomTypeChange(room)" interface="popover"
+              [disabled]="isWaitingForAdmin">
+              <ion-select-option *ngFor="let rt of roomTypesDB" [value]="rt.name || rt.ROOM_TYPE_NAME">{{ rt.name ||
+                rt.ROOM_TYPE_NAME }}</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item class="custom-input">
             <ion-label position="stacked">ประเภทเตียง <span class="req">*</span></ion-label>
             <ion-select [(ngModel)]="room.bedType" interface="popover" [disabled]="isWaitingForAdmin">
-              <ion-select-option *ngFor="let bt of bedTypesDB" [value]="(bt.id || bt.BED_TYPE_ID).toString()">{{ bt.name || bt.BED_TYPE_NAME }}</ion-select-option>
+              <ion-select-option *ngFor="let bt of bedTypesDB" [value]="(bt.id || bt.BED_TYPE_ID).toString()">{{ bt.name
+                || bt.BED_TYPE_NAME }}</ion-select-option>
             </ion-select>
           </ion-item>
 
           <div class="price-grid">
             <ion-item class="custom-input" *ngFor="let p of room.prices">
               <ion-label position="stacked">{{ p.name }} (บาท)</ion-label>
-              <ion-input type="number" [(ngModel)]="p.price" placeholder="ไม่ระบุปล่อยว่าง" [disabled]="isWaitingForAdmin"></ion-input>
+              <ion-input type="number" [(ngModel)]="p.price" placeholder="ไม่ระบุปล่อยว่าง"
+                [disabled]="isWaitingForAdmin"></ion-input>
             </ion-item>
           </div>
         </div>
@@ -332,10 +367,12 @@
 
       <!-- Navigation Buttons -->
       <div class="nav-buttons-container" style="display: flex; gap: 10px; margin-top: 20px;">
-        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;" (click)="goToNextSegment('facilities')">
+        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;"
+          (click)="goToNextSegment('facilities')">
           <ion-icon name="arrow-back-outline" slot="start"></ion-icon> ย้อนกลับ
         </ion-button>
-        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;" (click)="goToNextSegment('images')">
+        <ion-button expand="block" color="primary" shape="round" style="flex: 1; font-weight: bold;"
+          (click)="goToNextSegment('images')">
           ถัดไป <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
       </div>
@@ -343,29 +380,33 @@
     </div>
 
     <div *ngIf="activeSegment === 'images'" class="fade-in">
-      
-<!-- รูปภาพหน้าปก -->
-<div class="section-card">
-  <h3><ion-icon name="image-outline"></ion-icon> รูปภาพหลัก (หน้าปก)</h3>
-  <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
-  <div class="img-upload-box" tabindex="0" 
-       (paste)="onPaste($event, 'FRONT_DORM_IMG')" 
-       (click)="(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? openImageViewer(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) : (!isWaitingForAdmin && frontInput.click())" 
-       [class.has-image]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE">
-    
-    <!-- เช็กทั้ง FRONT_DORM_IMG และ FRONT_DORM_IMAGE เพื่อให้แสดงรูปเดิมจาก DB ได้ -->
-    <img [src]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE || 'assets/img/placeholder.png'" class="preview-img">
-    
-    <div class="overlay" *ngIf="!isWaitingForAdmin">
-      <ion-icon name="cloud-upload-outline"></ion-icon>
-      <span>{{ (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? 'เปลี่ยนรูป' : 'กดเพื่อเลือกรูป' }}</span>
-    </div>
-  </div>
-  
-  <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && frontInput.click()" *ngIf="!isWaitingForAdmin && (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE)" style="margin-top: 10px;"><ion-icon name="cloud-upload-outline" slot="start"></ion-icon> อัปโหลดรูปภาพใหม่</ion-button>
-  <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png" hidden [disabled]="isWaitingForAdmin">
-  <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
-</div>
+
+      <!-- รูปภาพหน้าปก -->
+      <div class="section-card">
+        <h3><ion-icon name="image-outline"></ion-icon> รูปภาพหลัก (หน้าปก)</h3>
+        <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
+        <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'FRONT_DORM_IMG')"
+          (click)="(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? openImageViewer(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) : (!isWaitingForAdmin && frontInput.click())"
+          [class.has-image]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE">
+
+          <!-- เช็กทั้ง FRONT_DORM_IMG และ FRONT_DORM_IMAGE เพื่อให้แสดงรูปเดิมจาก DB ได้ -->
+          <img [src]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE || 'assets/img/placeholder.png'"
+            class="preview-img">
+
+          <div class="overlay" *ngIf="!isWaitingForAdmin">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+            <span>{{ (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? 'ดูรูปภาพ' : 'กดเพื่อเลือกรูป' }}</span>
+          </div>
+        </div>
+
+        <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && frontInput.click()"
+          *ngIf="!isWaitingForAdmin && (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE)"
+          style="margin-top: 10px;"><ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+          อัปโหลดรูปภาพใหม่</ion-button>
+        <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png"
+          hidden [disabled]="isWaitingForAdmin">
+        <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
+      </div>
 
 
 
@@ -375,9 +416,11 @@
       <div class="section-card">
         <h3><ion-icon name="grid-outline"></ion-icon> 📸 รูปภาพส่วนประกอบห้อง</h3>
         <p class="hint-text">กดที่รูปเพื่ออัปโหลดทีละภาพ หรือเลือกหลายรูปพร้อมกันเพื่อเรียงตามลำดับ (1-6)</p>
-        
-        <input #multiRoomInput type="file" (change)="onMultiRoomSelect($event)" accept="image/jpeg, image/png, image/webp" multiple hidden [disabled]="isWaitingForAdmin">
-        <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && multiRoomInput.click()" *ngIf="!isWaitingForAdmin" style="margin-bottom: 15px;">
+
+        <input #multiRoomInput type="file" (change)="onMultiRoomSelect($event)"
+          accept="image/jpeg, image/png, image/webp" multiple hidden [disabled]="isWaitingForAdmin">
+        <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && multiRoomInput.click()"
+          *ngIf="!isWaitingForAdmin" style="margin-bottom: 15px;">
           <ion-icon name="images-outline" slot="start"></ion-icon>
           เลือกรูปหลายรูปพร้อมกัน
         </ion-button>
@@ -387,73 +430,108 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BED_IMG')">
             <label>1. เตียงนอน</label>
             <div style="position: relative;">
-              <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'" (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'" (click)="previews.BED_IMG ? openImageViewer(previews.BED_IMG) : (!isWaitingForAdmin && bedInput.click())" [class.uploaded]="previews.BED_IMG">
-              <ion-button *ngIf="previews.BED_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BED_IMG')">
+              <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'"
+                (click)="previews.BED_IMG ? openImageViewer(previews.BED_IMG) : (!isWaitingForAdmin && bedInput.click())"
+                [class.uploaded]="previews.BED_IMG">
+              <ion-button *ngIf="previews.BED_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn"
+                (click)="removeRoomImage('BED_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && bedInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #bedInput type="file" (change)="onFileSelect($event, 'BED_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && bedInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #bedInput type="file" (change)="onFileSelect($event, 'BED_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'WALL_IMG')">
             <label>2. ผนังปลายเตียง</label>
             <div style="position: relative;">
-              <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'" (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'" (click)="previews.WALL_IMG ? openImageViewer(previews.WALL_IMG) : (!isWaitingForAdmin && wallInput.click())" [class.uploaded]="previews.WALL_IMG">
-              <ion-button *ngIf="previews.WALL_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('WALL_IMG')">
+              <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'"
+                (click)="previews.WALL_IMG ? openImageViewer(previews.WALL_IMG) : (!isWaitingForAdmin && wallInput.click())"
+                [class.uploaded]="previews.WALL_IMG">
+              <ion-button *ngIf="previews.WALL_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn"
+                (click)="removeRoomImage('WALL_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && wallInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #wallInput type="file" (change)="onFileSelect($event, 'WALL_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && wallInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #wallInput type="file" (change)="onFileSelect($event, 'WALL_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'CEILING_IMG')">
             <label>3. เพดาน</label>
             <div style="position: relative;">
-              <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'" (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'" (click)="previews.CEILING_IMG ? openImageViewer(previews.CEILING_IMG) : (!isWaitingForAdmin && ceilingInput.click())" [class.uploaded]="previews.CEILING_IMG">
-              <ion-button *ngIf="previews.CEILING_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('CEILING_IMG')">
+              <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'"
+                (click)="previews.CEILING_IMG ? openImageViewer(previews.CEILING_IMG) : (!isWaitingForAdmin && ceilingInput.click())"
+                [class.uploaded]="previews.CEILING_IMG">
+              <ion-button *ngIf="previews.CEILING_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn"
+                (click)="removeRoomImage('CEILING_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && ceilingInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #ceilingInput type="file" (change)="onFileSelect($event, 'CEILING_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && ceilingInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #ceilingInput type="file" (change)="onFileSelect($event, 'CEILING_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'FLOOR_IMG')">
             <label>4. ฝั่งติดประตู</label>
             <div style="position: relative;">
-              <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'" (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'" (click)="previews.FLOOR_IMG ? openImageViewer(previews.FLOOR_IMG) : (!isWaitingForAdmin && floorInput.click())" [class.uploaded]="previews.FLOOR_IMG">
-              <ion-button *ngIf="previews.FLOOR_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('FLOOR_IMG')">
+              <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'"
+                (click)="previews.FLOOR_IMG ? openImageViewer(previews.FLOOR_IMG) : (!isWaitingForAdmin && floorInput.click())"
+                [class.uploaded]="previews.FLOOR_IMG">
+              <ion-button *ngIf="previews.FLOOR_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn"
+                (click)="removeRoomImage('FLOOR_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && floorInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #floorInput type="file" (change)="onFileSelect($event, 'FLOOR_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && floorInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #floorInput type="file" (change)="onFileSelect($event, 'FLOOR_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BATHROOM_IMG')">
             <label>5. ห้องน้ำ</label>
             <div style="position: relative;">
-              <img [src]="previews.BATHROOM_IMG || 'assets/img/placeholder.png'" (error)="previews.BATHROOM_IMG = 'https://placehold.co/400x400?text=Bathroom'" (click)="!isWaitingForAdmin && bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG">
-              <ion-button *ngIf="previews.BATHROOM_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BATHROOM_IMG')">
+              <img [src]="previews.BATHROOM_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.BATHROOM_IMG = 'https://placehold.co/400x400?text=Bathroom'"
+                (click)="!isWaitingForAdmin && bathInput.click()" [class.uploaded]="previews.BATHROOM_IMG">
+              <ion-button *ngIf="previews.BATHROOM_IMG && !isWaitingForAdmin" color="danger" fill="clear"
+                class="del-btn" (click)="removeRoomImage('BATHROOM_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && bathInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #bathInput type="file" (change)="onFileSelect($event, 'BATHROOM_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && bathInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #bathInput type="file" (change)="onFileSelect($event, 'BATHROOM_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BALCONY_IMG')">
             <label>6. ระเบียง (ถ้ามี)</label>
             <div style="position: relative;">
-              <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'" (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'" (click)="previews.BALCONY_IMG ? openImageViewer(previews.BALCONY_IMG) : (!isWaitingForAdmin && balconyInput.click())" [class.uploaded]="previews.BALCONY_IMG">
-              <ion-button *ngIf="previews.BALCONY_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BALCONY_IMG')">
+              <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'"
+                (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'"
+                (click)="previews.BALCONY_IMG ? openImageViewer(previews.BALCONY_IMG) : (!isWaitingForAdmin && balconyInput.click())"
+                [class.uploaded]="previews.BALCONY_IMG">
+              <ion-button *ngIf="previews.BALCONY_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn"
+                (click)="removeRoomImage('BALCONY_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
-            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn" (click)="!isWaitingForAdmin && balconyInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
-            <input #balconyInput type="file" (change)="onFileSelect($event, 'BALCONY_IMG')" accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
+            <ion-button size="small" fill="outline" expand="block" color="primary" class="upload-btn"
+              (click)="!isWaitingForAdmin && balconyInput.click()" *ngIf="!isWaitingForAdmin">เลือกไฟล์</ion-button>
+            <input #balconyInput type="file" (change)="onFileSelect($event, 'BALCONY_IMG')"
+              accept="image/jpeg, image/png, image/webp" hidden [disabled]="isWaitingForAdmin">
           </div>
 
         </div>
@@ -461,9 +539,12 @@
 
       <div class="section-card">
         <h3><ion-icon name="images-outline"></ion-icon> อัลบั้มรูปเพิ่มเติม (Gallery)</h3>
-        <p style="font-size: 13px; color: #888; margin-bottom: 10px;">เลือกได้หลายรูปพร้อมกัน &bull; สูงสุด <strong>5 ภาพ</strong> ({{ (existingGallery.length + previews.OTHER_IMG.length) }}/5)</p>
-        <input #galleryInput type="file" (change)="onGallerySelect($event)" accept="image/*" multiple hidden [disabled]="isWaitingForAdmin">
-        <ion-button expand="block" fill="outline" (click)="galleryInput.click()" *ngIf="!isWaitingForAdmin" [disabled]="existingGallery.length + previews.OTHER_IMG.length >= 5">
+        <p style="font-size: 13px; color: #888; margin-bottom: 10px;">เลือกได้หลายรูปพร้อมกัน &bull; สูงสุด <strong>5
+            ภาพ</strong> ({{ (existingGallery.length + previews.OTHER_IMG.length) }}/5)</p>
+        <input #galleryInput type="file" (change)="onGallerySelect($event)" accept="image/*" multiple hidden
+          [disabled]="isWaitingForAdmin">
+        <ion-button expand="block" fill="outline" (click)="galleryInput.click()" *ngIf="!isWaitingForAdmin"
+          [disabled]="existingGallery.length + previews.OTHER_IMG.length >= 5">
           <ion-icon name="add-circle-outline" slot="start"></ion-icon>
           เลือกรูปหลายรูป
         </ion-button>
@@ -471,7 +552,8 @@
         <div class="gallery-grid" *ngIf="existingGallery.length > 0">
           <div class="gallery-item" *ngFor="let img of existingGallery; let i = index">
             <img [src]="img">
-            <ion-button class="del-btn" fill="clear" color="danger" (click)="removeGalleryImage(i, true)" *ngIf="!isWaitingForAdmin">
+            <ion-button class="del-btn" fill="clear" color="danger" (click)="removeGalleryImage(i, true)"
+              *ngIf="!isWaitingForAdmin">
               <ion-icon name="close-circle" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
@@ -480,7 +562,8 @@
         <div class="gallery-grid" *ngIf="previews.OTHER_IMG.length > 0">
           <div class="gallery-item" *ngFor="let img of previews.OTHER_IMG; let i = index">
             <img [src]="img">
-            <ion-button class="del-btn" fill="clear" color="danger" (click)="removeGalleryImage(i, false)" *ngIf="!isWaitingForAdmin">
+            <ion-button class="del-btn" fill="clear" color="danger" (click)="removeGalleryImage(i, false)"
+              *ngIf="!isWaitingForAdmin">
               <ion-icon name="close-circle" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
@@ -489,13 +572,16 @@
 
       <!-- Navigation Buttons -->
       <div class="nav-buttons-container" style="display: flex; gap: 10px;">
-        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;" (click)="goToNextSegment('rooms')">
+        <ion-button expand="block" fill="outline" color="medium" shape="round" style="flex: 1;"
+          (click)="goToNextSegment('rooms')">
           <ion-icon name="arrow-back-outline" slot="start"></ion-icon> ย้อนกลับ
         </ion-button>
-        <ion-button expand="block" color="dark" shape="round" style="flex: 1; font-weight: bold;" (click)="confirmSave()" *ngIf="!isWaitingForAdmin && !isViewOnly && !isResubmitMode">
+        <ion-button expand="block" color="dark" shape="round" style="flex: 1; font-weight: bold;"
+          (click)="confirmSave()" *ngIf="!isWaitingForAdmin && !isViewOnly && !isResubmitMode">
           <ion-icon name="save-outline" slot="start"></ion-icon> บันทึกข้อมูล
         </ion-button>
-        <ion-button expand="block" color="success" shape="round" style="flex: 1; font-weight: bold;" (click)="confirmSave()" *ngIf="isResubmitMode">
+        <ion-button expand="block" color="success" shape="round" style="flex: 1; font-weight: bold;"
+          (click)="confirmSave()" *ngIf="isResubmitMode">
           <ion-icon name="send-outline" slot="start"></ion-icon> ส่งข้อมูลใหม่
         </ion-button>
       </div>
@@ -509,14 +595,10 @@
 </ion-content>
 
 <!-- Success Popup -->
-<app-success-modal
-  *ngIf="showSuccessModal"
-  [title]="'บันทึกสำเร็จ! ✅'"
+<app-success-modal *ngIf="showSuccessModal" [title]="'บันทึกสำเร็จ! ✅'"
   [subTitle]="isResubmitMode ? 'ส่งข้อมูลใหม่เรียบร้อยแล้ว' : 'บันทึกข้อมูลเรียบร้อยแล้ว'"
-  [message]="'ข้อมูลหอพักของคุณถูกอัปเดตเรียบร้อยแล้ว<br>ระบบจะพาคุณกลับหน้าหอพักของฉัน'"
-  [icon]="'checkmark-circle'"
-  [buttonText]="'ตกลง'"
-  (confirmed)="onSuccessConfirmed()">
+  [message]="'ข้อมูลหอพักของคุณถูกอัปเดตเรียบร้อยแล้ว<br>ระบบจะพาคุณกลับหน้าหอพักของฉัน'" [icon]="'checkmark-circle'"
+  [buttonText]="'ตกลง'" (confirmed)="onSuccessConfirmed()">
 </app-success-modal>
 
 <!-- Image Viewer Modal -->
