@@ -366,26 +366,7 @@
   <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
 </div>
 
-<!-- รูปภาพใบอนุญาต -->
-<div class="section-card">
-  <h3><ion-icon name="document-text-outline"></ion-icon> ใบอนุญาตประกอบกิจการหอพัก</h3>
-  <p class="hint-text">รูปภาพใบอนุญาตประกอบกิจการหอพักที่ถูกต้อง</p>
-  <div class="img-upload-box" tabindex="0" 
-       (paste)="onPaste($event, 'LICENSE_IMG')" 
-       (click)="!isWaitingForAdmin && licenseInput.click()" 
-       [class.has-image]="previews.LICENSE_IMG || previews.DORM_LICENSE">
-    
-    <img [src]="previews.LICENSE_IMG || previews.DORM_LICENSE || 'assets/img/placeholder.png'" class="preview-img">
-    
-    <div class="overlay" *ngIf="!isWaitingForAdmin">
-      <ion-icon name="cloud-upload-outline"></ion-icon>
-      <span>{{ (previews.LICENSE_IMG || previews.DORM_LICENSE) ? 'เปลี่ยนรูป' : 'กดเพื่อเลือกรูป' }}</span>
-    </div>
-  </div>
-  
-  <input #licenseInput type="file" (change)="onFileSelect($event, 'LICENSE_IMG')" accept="image/jpeg, image/png" hidden [disabled]="isWaitingForAdmin">
-  <p class="upload-status" *ngIf="selectedFiles.LICENSE_IMG">✅ {{ selectedFiles.LICENSE_IMG.name }}</p>
-</div>
+
 
 
 
