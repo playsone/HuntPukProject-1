@@ -103,6 +103,7 @@ export class EditDormPage implements OnInit {
 
   selectedFiles: any = {
     FRONT_DORM_IMG: null,
+    LICENSE_IMG: null,
     BED_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
@@ -115,6 +116,8 @@ export class EditDormPage implements OnInit {
   previews: any = {
     FRONT_DORM_IMG: null,
     LICENSE_IMG: null,
+    FRONT_DORM_IMAGE: null,
+    DORM_LICENSE: null,
     BED_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
@@ -418,6 +421,10 @@ export class EditDormPage implements OnInit {
         this.previews.WALL_IMG = d.wall_img || null;
         this.previews.CEILING_IMG = d.ceiling_img || null;
         this.previews.FLOOR_IMG = d.floor_img || null;
+        this.previews.FRONT_DORM_IMAGE = d.FRONT_DORM_IMAGE || null;
+        this.previews.DORM_LICENSE = d.DORM_LICENSE || null;
+
+        // รูปส่วนต่างๆ
         this.previews.BATHROOM_IMG = d.bathroom_img || null;
         this.previews.BALCONY_IMG = d.balcony_img || null;
         
@@ -913,16 +920,19 @@ export class EditDormPage implements OnInit {
       }));
       form.append('new_facilities', JSON.stringify(newFacToSave));
       
-      const facWithFile = (this.formData.new_facilities || []).find((nf: any) => nf.file);
-      if (facWithFile) {
-        form.append('FACILITY_IMG', facWithFile.file);
-      }
+      const facWithFiles = (this.formData.new_facilities || []).filter((nf: any) => nf.file);
+      facWithFiles.forEach((nf: any, idx: number) => {
+        if (idx < 3) {
+          form.append(`FACILITY_IMG_${idx}`, nf.file);
+        }
+      });
       
       form.append('roomTypes', JSON.stringify(this.roomTypes));
       form.append('remaining_gallery', JSON.stringify(this.existingGallery || []));
-      form.append('deleted_room_images', JSON.stringify(this.deletedRoomImages || []));
+      form.append('deleted_room_images', JSON.stringify(this.deletedRoomImages || [])); 
 
       if (this.selectedFiles.FRONT_DORM_IMG) form.append('FRONT_DORM_IMG', this.selectedFiles.FRONT_DORM_IMG);
+      if (this.selectedFiles.LICENSE_IMG) form.append('LICENSE_IMG', this.selectedFiles.LICENSE_IMG);
       if (this.selectedFiles.BED_IMG) form.append('BED_IMG', this.selectedFiles.BED_IMG);
       if (this.selectedFiles.WALL_IMG) form.append('WALL_IMG', this.selectedFiles.WALL_IMG);
       if (this.selectedFiles.CEILING_IMG) form.append('CEILING_IMG', this.selectedFiles.CEILING_IMG);
@@ -954,7 +964,7 @@ export class EditDormPage implements OnInit {
       
       // ✅ Reset selected files (clear queued uploads)
       this.selectedFiles = {
-        FRONT_DORM_IMG: null, BED_IMG: null, WALL_IMG: null, CEILING_IMG: null,
+        FRONT_DORM_IMG: null, LICENSE_IMG: null, BED_IMG: null, WALL_IMG: null, CEILING_IMG: null,
         FLOOR_IMG: null, BATHROOM_IMG: null, BALCONY_IMG: null, OTHER_IMG: []
       };
       this.deletedRoomImages = [];

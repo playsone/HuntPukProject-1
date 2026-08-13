@@ -100,14 +100,10 @@ export class MyDormsPage implements OnInit {
 
   getDormCover(dorm: any): string {
     let url = dorm?.image || dorm?.FRONT_DORM_IMAGE || dorm?.FRONT_DORM_IMG;
-    if (!url) return 'assets/dorm-placeholder.jpg';
-    if (url.startsWith('data:') || url.startsWith('blob:')) return url;
-    
-    
-
-    // Check if the URL already has query parameters to preserve them (e.g. Firebase tokens)
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}t=${this.imageCacheBust}`;
+    if (!url || url.trim() === '') {
+      return 'https://placehold.co/600x400?text=No+Image';
+    }
+    return url;
   }
 
   checkLoginAndLoadData() {
