@@ -1,5 +1,5 @@
 
 export const environment = {
   production: false,
-  GGMAPI: 'AIzaSyCpxAPWB4UOKJmedYUd5xoRk1t8pMPLk',
+  GGMAPI: 'AIzaSyCq7xAPWB4UOKJmedYUd5xoRk1t78pMPLk',
 };
