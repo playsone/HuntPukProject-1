@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  GGMAPI: 'AIzaSyD3H8L5h64r72N2qteAXC12FH1QRvocYQY'
+  GGMAPI: 'AIzaSyCpxAPWB4UOKJmedYUd5xoRk1t8pMPLk'
 };
