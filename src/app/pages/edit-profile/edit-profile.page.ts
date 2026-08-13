@@ -143,6 +143,20 @@ export class EditProfilePage implements OnInit {
       return;
     }
 
+    if (this.isOwner) {
+      const numberRegex = /\d/;
+      if (numberRegex.test(this.ownerEditData.first_name) || numberRegex.test(this.ownerEditData.last_name)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'ข้อมูลไม่ถูกต้อง',
+          text: 'ชื่อและนามสกุลต้องไม่มีตัวเลข กรุณากรอกใหม่',
+          confirmButtonColor: '#f1c40f',
+          confirmButtonText: 'ตกลง'
+        });
+        return;
+      }
+    }
+
     const alert = await this.alertController.create({
       header: 'ยืนยันการแก้ไข',
       message: 'คุณต้องการบันทึกการเปลี่ยนแปลงข้อมูลใช่หรือไม่?',

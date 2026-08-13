@@ -751,6 +751,48 @@ export class DormFormPage implements OnInit {
   // ==========================
   // รูปภาพ
   // ==========================
+  onMultiRoomSelect(event: any) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const slots = [
+      'BED_IMG',
+      'WALL_IMG',
+      'CEILING_IMG',
+      'FLOOR_IMG',
+      'BATHROOM_IMG',
+      'BALCONY_IMG',
+    ];
+    let fileIndex = 0;
+
+    for (let i = 0; i < slots.length && fileIndex < files.length; i++) {
+      const field = slots[i];
+      const file = files[fileIndex];
+
+      if (file.size > 5 * 1024 * 1024) {
+        this.showToast(
+          `ไฟล์ที่ ${fileIndex + 1} มีขนาดใหญ่เกินไป (สูงสุด 5MB)`,
+          'warning',
+        );
+        fileIndex++;
+        continue;
+      }
+
+      this.selectedFiles[field] = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previews[field] = reader.result;
+      };
+      reader.readAsDataURL(file);
+      fileIndex++;
+    }
+  }
+
+  removeRoomImage(field: string) {
+    this.previews[field] = null;
+    this.selectedFiles[field] = null;
+  }
+
   onFileSelect(event: any, field: string) {
     const file = event.target.files?.[0];
     if (!file) return;

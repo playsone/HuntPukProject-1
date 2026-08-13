@@ -350,7 +350,7 @@
   <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
   <div class="img-upload-box" tabindex="0" 
        (paste)="onPaste($event, 'FRONT_DORM_IMG')" 
-       (click)="!isWaitingForAdmin && frontInput.click()" 
+       (click)="(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? openImageViewer(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) : (!isWaitingForAdmin && frontInput.click())" 
        [class.has-image]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE">
     
     <!-- เช็กทั้ง FRONT_DORM_IMG และ FRONT_DORM_IMAGE เพื่อให้แสดงรูปเดิมจาก DB ได้ -->
@@ -362,6 +362,7 @@
     </div>
   </div>
   
+  <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && frontInput.click()" *ngIf="!isWaitingForAdmin && (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE)" style="margin-top: 10px;"><ion-icon name="cloud-upload-outline" slot="start"></ion-icon> อัปโหลดรูปภาพใหม่</ion-button>
   <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png" hidden [disabled]="isWaitingForAdmin">
   <p class="upload-status" *ngIf="selectedFiles.FRONT_DORM_IMG">✅ {{ selectedFiles.FRONT_DORM_IMG.name }}</p>
 </div>
@@ -386,7 +387,7 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BED_IMG')">
             <label>1. เตียงนอน</label>
             <div style="position: relative;">
-              <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'" (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'" (click)="!isWaitingForAdmin && bedInput.click()" [class.uploaded]="previews.BED_IMG">
+              <img [src]="previews.BED_IMG || 'assets/img/placeholder.png'" (error)="previews.BED_IMG = 'https://placehold.co/400x400?text=Bed'" (click)="previews.BED_IMG ? openImageViewer(previews.BED_IMG) : (!isWaitingForAdmin && bedInput.click())" [class.uploaded]="previews.BED_IMG">
               <ion-button *ngIf="previews.BED_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BED_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -398,7 +399,7 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'WALL_IMG')">
             <label>2. ผนังปลายเตียง</label>
             <div style="position: relative;">
-              <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'" (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'" (click)="!isWaitingForAdmin && wallInput.click()" [class.uploaded]="previews.WALL_IMG">
+              <img [src]="previews.WALL_IMG || 'assets/img/placeholder.png'" (error)="previews.WALL_IMG = 'https://placehold.co/400x400?text=Wall'" (click)="previews.WALL_IMG ? openImageViewer(previews.WALL_IMG) : (!isWaitingForAdmin && wallInput.click())" [class.uploaded]="previews.WALL_IMG">
               <ion-button *ngIf="previews.WALL_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('WALL_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -410,7 +411,7 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'CEILING_IMG')">
             <label>3. เพดาน</label>
             <div style="position: relative;">
-              <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'" (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'" (click)="!isWaitingForAdmin && ceilingInput.click()" [class.uploaded]="previews.CEILING_IMG">
+              <img [src]="previews.CEILING_IMG || 'assets/img/placeholder.png'" (error)="previews.CEILING_IMG = 'https://placehold.co/400x400?text=Ceiling'" (click)="previews.CEILING_IMG ? openImageViewer(previews.CEILING_IMG) : (!isWaitingForAdmin && ceilingInput.click())" [class.uploaded]="previews.CEILING_IMG">
               <ion-button *ngIf="previews.CEILING_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('CEILING_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -422,7 +423,7 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'FLOOR_IMG')">
             <label>4. ฝั่งติดประตู</label>
             <div style="position: relative;">
-              <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'" (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'" (click)="!isWaitingForAdmin && floorInput.click()" [class.uploaded]="previews.FLOOR_IMG">
+              <img [src]="previews.FLOOR_IMG || 'assets/img/placeholder.png'" (error)="previews.FLOOR_IMG = 'https://placehold.co/400x400?text=Floor'" (click)="previews.FLOOR_IMG ? openImageViewer(previews.FLOOR_IMG) : (!isWaitingForAdmin && floorInput.click())" [class.uploaded]="previews.FLOOR_IMG">
               <ion-button *ngIf="previews.FLOOR_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('FLOOR_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -446,7 +447,7 @@
           <div class="img-mini-box" tabindex="0" (paste)="onPaste($event, 'BALCONY_IMG')">
             <label>6. ระเบียง (ถ้ามี)</label>
             <div style="position: relative;">
-              <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'" (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'" (click)="!isWaitingForAdmin && balconyInput.click()" [class.uploaded]="previews.BALCONY_IMG">
+              <img [src]="previews.BALCONY_IMG || 'assets/img/placeholder.png'" (error)="previews.BALCONY_IMG = 'https://placehold.co/400x400?text=Balcony'" (click)="previews.BALCONY_IMG ? openImageViewer(previews.BALCONY_IMG) : (!isWaitingForAdmin && balconyInput.click())" [class.uploaded]="previews.BALCONY_IMG">
               <ion-button *ngIf="previews.BALCONY_IMG && !isWaitingForAdmin" color="danger" fill="clear" class="del-btn" (click)="removeRoomImage('BALCONY_IMG')">
                 <ion-icon name="close-circle" slot="icon-only"></ion-icon>
               </ion-button>
@@ -517,3 +518,23 @@
   [buttonText]="'ตกลง'"
   (confirmed)="onSuccessConfirmed()">
 </app-success-modal>
+
+<!-- Image Viewer Modal -->
+<ion-modal [isOpen]="isImageViewerOpen" (didDismiss)="closeImageViewer()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="dark">
+        <ion-buttons slot="end">
+          <ion-button (click)="closeImageViewer()">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="dark" class="ion-padding ion-text-center">
+      <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <img [src]="fullSizeImageUrl" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

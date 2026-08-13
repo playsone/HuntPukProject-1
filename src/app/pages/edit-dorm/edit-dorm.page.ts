@@ -210,6 +210,21 @@ export class EditDormPage implements OnInit {
   };
 
   existingGallery: string[] = [];
+  
+  // Image Viewer
+  isImageViewerOpen = false;
+  fullSizeImageUrl = '';
+
+  openImageViewer(url: string | null) {
+    if (!url) return;
+    this.fullSizeImageUrl = url;
+    this.isImageViewerOpen = true;
+  }
+
+  closeImageViewer() {
+    this.isImageViewerOpen = false;
+    this.fullSizeImageUrl = '';
+  }
   geocoder = new google.maps.Geocoder();
 
   // =========== Custom Facility Modal State ===========
@@ -1043,12 +1058,7 @@ export class EditDormPage implements OnInit {
 
   onSuccessConfirmed() {
     this.showSuccessModal = false;
-    const from = this.route.snapshot.queryParamMap.get('from');
-    if (from === 'manage-dorm') {
-      this.router.navigate(['/manage-dorm']);
-    } else {
-      this.router.navigate(['/my-dorms']);
-    }
+    this.router.navigate(['/my-dorms']);
   }
 
   async onSubmit() {
