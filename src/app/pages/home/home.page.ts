@@ -691,25 +691,18 @@ export class HomePage implements OnInit, ViewDidEnter {
     this.mouseY = e.clientY;
   }
 
-  openHoverCard(marker: MapMarker, dorm: any) {
+  openHoverCard(marker: any, dorm: any) {
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
     this.hoverDorm = dorm;
-    this.cdr.detectChanges(); // Ensure *ngIf="hoverDorm" renders before opening
-    
-    if (this.hoverInfoWindow) {
-      this.hoverInfoWindow.open(marker);
-    }
+    this.cdr.detectChanges();
   }
 
   closeHoverCard() {
     this.hoverTimeout = setTimeout(() => {
-      if (this.hoverInfoWindow) {
-        this.hoverInfoWindow.close();
-      }
       this.hoverDorm = null;
-    }, 1500); // 1500ms delay to prevent immediate close if mouse enters the InfoWindow gap
+    }, 500); 
   }
 
   keepHoverCardOpen() {
