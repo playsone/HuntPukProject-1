@@ -668,7 +668,12 @@ export class HomePage implements OnInit, ViewDidEnter {
     return this.dormMarkerIcon;
   }
 
+  hoverTimeout: any;
+
   openHoverCard(marker: MapMarker, dorm: any) {
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
     this.hoverDorm = dorm;
     if (this.hoverInfoWindow) {
       this.hoverInfoWindow.open(marker);
@@ -676,8 +681,16 @@ export class HomePage implements OnInit, ViewDidEnter {
   }
 
   closeHoverCard() {
-    if (this.hoverInfoWindow) {
-      this.hoverInfoWindow.close();
+    this.hoverTimeout = setTimeout(() => {
+      if (this.hoverInfoWindow) {
+        this.hoverInfoWindow.close();
+      }
+    }, 200);
+  }
+
+  keepHoverCardOpen() {
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
     }
   }
 

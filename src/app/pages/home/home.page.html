@@ -70,7 +70,7 @@
           [options]="isNavigating && navMarkerIcon ? navMarkerIcon : { icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', zIndex: 999 }">
         </map-marker>
 
-        <map-marker *ngFor="let dorm of dorms; trackBy: trackByDormId" [position]="{ lat: dorm.lat, lng: dorm.lng }" [title]="dorm.DORM_NAME"
+        <map-marker *ngFor="let dorm of dorms; trackBy: trackByDormId" [position]="{ lat: dorm.lat, lng: dorm.lng }"
           [options]="{ icon: getDormMarkerIcon(dorm) }"
           (mapMouseover)="openHoverCard(marker, dorm)"
           (mapMouseout)="closeHoverCard()"
@@ -79,7 +79,10 @@
 
         <!-- Hover Popup Card -->
         <map-info-window #hoverInfoWindow>
-            <div *ngIf="hoverDorm" style="width: 220px; font-family: 'Prompt', sans-serif; cursor: pointer; padding: 0; margin: -5px;" (click)="openInfoWindow(null, hoverDorm)">
+            <div *ngIf="hoverDorm" style="width: 220px; font-family: 'Prompt', sans-serif; cursor: pointer; padding: 0; margin: -5px;" 
+                 (click)="openInfoWindow(null, hoverDorm)"
+                 (mouseenter)="keepHoverCardOpen()"
+                 (mouseleave)="closeHoverCard()">
                 <div style="position: relative; width: 100%; height: 120px;">
                     <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/400x250?text=No+Image'" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;" />
                     
