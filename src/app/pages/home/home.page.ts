@@ -259,11 +259,11 @@ export class HomePage implements OnInit, ViewDidEnter {
           scaledSize: new google.maps.Size(36, 36)
         });
 
-        this.dormMarkerIcon = '/assets/yellow.png';
-        this.availableDormMarkerIcon = '/assets/green.png';
-        this.fullDormMarkerIcon = '/assets/red.png';
-        this.closedDormMarkerIcon = '/assets/yellow.png';
-        this.deletedDormMarkerIcon = '/assets/gray.png';
+        this.dormMarkerIcon = getSvgIcon('#fbc02d');
+        this.availableDormMarkerIcon = getSvgIcon('#2ecc71');
+        this.fullDormMarkerIcon = getSvgIcon('#e74c3c');
+        this.closedDormMarkerIcon = getSvgIcon('#7f8c8d');
+        this.deletedDormMarkerIcon = getSvgIcon('#95a5a6');
         this.mainRouteOptions = {
           suppressMarkers: true,
           polylineOptions: { 
