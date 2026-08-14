@@ -84,6 +84,7 @@ export class HomePage implements OnInit, ViewDidEnter {
   availableDormMarkerIcon: any = null;
   fullDormMarkerIcon: any = null;
   closedDormMarkerIcon: any = null;
+  deletedDormMarkerIcon: any = null;
 
   @ViewChild('hoverInfoWindow') hoverInfoWindow!: MapInfoWindow;
   hoverDorm: any = null;
@@ -258,11 +259,11 @@ export class HomePage implements OnInit, ViewDidEnter {
           scaledSize: new google.maps.Size(36, 36)
         });
 
-        this.dormMarkerIcon = getSvgIcon('#fbc02d');
-        this.availableDormMarkerIcon = getSvgIcon('#2ecc71');
-        this.fullDormMarkerIcon = getSvgIcon('#e74c3c');
-        this.closedDormMarkerIcon = getSvgIcon('#7f8c8d');
-
+        this.dormMarkerIcon = { url: 'assets/yellow.png', scaledSize: new google.maps.Size(36, 36) };
+        this.availableDormMarkerIcon = { url: 'assets/green.png', scaledSize: new google.maps.Size(36, 36) };
+        this.fullDormMarkerIcon = { url: 'assets/red.png', scaledSize: new google.maps.Size(36, 36) };
+        this.closedDormMarkerIcon = { url: 'assets/yellow.png', scaledSize: new google.maps.Size(36, 36) };
+        this.deletedDormMarkerIcon = { url: 'assets/gray.png', scaledSize: new google.maps.Size(36, 36) };
         this.mainRouteOptions = {
           suppressMarkers: true,
           polylineOptions: { 
@@ -619,7 +620,7 @@ export class HomePage implements OnInit, ViewDidEnter {
             return url || null;
         };
 
-        this.allDorms = res.data.map((d: any) => ({ 
+        let processedDorms = res.data.map((d: any) => ({ 
           ...d, 
           image: formatImg(d.image),
           FRONT_DORM_IMAGE: formatImg(d.FRONT_DORM_IMAGE),
@@ -627,6 +628,17 @@ export class HomePage implements OnInit, ViewDidEnter {
           lng: Number(d.lng),
           isChecked: favoriteIds.includes(Number(d.DORM_ID || d.id))
         })) as any[];        
+
+        // Filter out closed (2) and deleted (4) dorms for non-admins (role != 3)
+        const userRole = this.currentUser ? (this.currentUser.role_id || this.currentUser.ROLE_ID || this.currentUser.role) : null;
+        if (Number(userRole) !== 3) {
+            processedDorms = processedDorms.filter((d: any) => {
+                const sId = Number(d.status || d.DORM_STATUS_ID);
+                return sId === 1 || sId === 3; // Only show open (1) and full (3)
+            });
+        }
+        
+        this.allDorms = processedDorms;
         this.dorms = [...this.allDorms];
         // ✅ Call performSearch to apply initial radius filter
         this.performSearch();
@@ -665,6 +677,7 @@ export class HomePage implements OnInit, ViewDidEnter {
     if (statusId === 1) return this.availableDormMarkerIcon || this.dormMarkerIcon;
     if (statusId === 3) return this.fullDormMarkerIcon || this.dormMarkerIcon;
     if (statusId === 2) return this.closedDormMarkerIcon || this.dormMarkerIcon;
+    if (statusId === 4) return this.deletedDormMarkerIcon || this.dormMarkerIcon;
     return this.dormMarkerIcon;
   }
 

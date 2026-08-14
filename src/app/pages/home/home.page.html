@@ -72,12 +72,60 @@
 
         <map-marker *ngFor="let dorm of dorms; trackBy: trackByDormId" [position]="{ lat: dorm.lat, lng: dorm.lng }"
           [options]="{ icon: getDormMarkerIcon(dorm) }"
-          (mapMouseover)="openHoverCard(dorm)"
+          (mapMouseover)="openHoverCard(marker, dorm)"
           (mapMouseout)="closeHoverCard()"
           (mapClick)="openInfoWindow(marker, dorm)" #marker="mapMarker">
         </map-marker>
 
-        <!-- Removed map-info-window fragment -->
+        <!-- Google Maps Style Hover Popup Card -->
+        <map-info-window #hoverInfoWindow>
+            <div *ngIf="hoverDorm" class="gm-custom-card"
+                 (click)="selectNearbyDorm(hoverDorm)"
+                 (mouseenter)="keepHoverCardOpen()"
+                 (mouseleave)="closeHoverCard()">
+                 
+                <!-- Image Section -->
+                <div class="gm-card-img">
+                  <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/400x250?text=No+Image'" />
+                  
+                  <!-- Floating Action Buttons -->
+                  <div class="gm-card-actions">
+                    <div class="gm-btn dir-btn"><ion-icon name="arrow-undo"></ion-icon></div>
+                    <div class="gm-btn save-btn"><ion-icon name="bookmark-outline"></ion-icon></div>
+                  </div>
+                </div>
+
+                <!-- Content Section -->
+                <div class="gm-card-content">
+                  <h3 class="gm-title">{{ hoverDorm.DORM_NAME }}</h3>
+                  
+                  <div class="gm-rating">
+                    <span class="score">{{ hoverDorm.SCORE | number:'1.1-1' }}</span>
+                    <div class="stars">
+                      <ion-icon name="star" style="color: #fbc02d;"></ion-icon>
+                      <ion-icon name="star" style="color: #fbc02d;"></ion-icon>
+                      <ion-icon name="star" style="color: #fbc02d;"></ion-icon>
+                      <ion-icon name="star" style="color: #fbc02d;"></ion-icon>
+                      <ion-icon name="star" style="color: #fbc02d;"></ion-icon>
+                    </div>
+                    <span class="reviews">({{ hoverDorm.VIEW_COUNT || 0 }})</span>
+                  </div>
+
+                  <div class="gm-type">หอพัก</div>
+
+                  <div class="gm-status">
+                     <ng-container *ngFor="let stat of dormStatusList">
+                       <span *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
+                             class="status-text" [ngClass]="'text-status-' + stat.id">
+                         {{ stat.STATUS_NAME || stat.name }}
+                       </span>
+                     </ng-container>
+                     · เริ่มต้น ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }} 
+                  </div>
+                </div>
+            </div>
+        </map-info-window>
+
         <!-- เส้นทาง (หลัก) -->
         <map-directions-renderer *ngIf="directionsResult" [directions]="directionsResult" [options]="mainRouteOptions"></map-directions-renderer>
         
@@ -87,57 +135,6 @@
         <map-polyline *ngIf="directLinePath" [path]="directLinePath" [options]="directLineOptions"></map-polyline>
 
       </google-map>
-
-      <!-- Custom Floating Hover Card (Matches List Page) -->
-      <div *ngIf="hoverDorm && isDesktop" 
-           class="custom-hover-card"
-           [style.left.px]="mouseX - 130"
-           [style.top.px]="mouseY - 330"
-           (click)="selectNearbyDorm(hoverDorm)"
-           (mouseenter)="keepHoverCardOpen()"
-           (mouseleave)="closeHoverCard()">
-           
-          <div class="card-image">
-             <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/600x400?text=No+Image'" 
-                  onerror="this.src='https://placehold.co/600x400?text=No+Image'" loading="lazy" />
-
-              <ng-container *ngFor="let stat of dormStatusList">
-                <div *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
-                     class="status-badge" [ngClass]="'status-' + stat.id">
-                  {{ stat.STATUS_NAME || stat.name }}
-                </div>
-              </ng-container>
-             
-             <div class="price-tag">เริ่มต้น ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }}</div>          
-          </div>
-
-          <div class="card-content">
-             <h3>{{ hoverDorm.DORM_NAME }}</h3>
-             
-             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; margin-bottom: 6px;">
-               <div class="rating-row" style="margin: 0;">
-                 <ion-icon name="star"></ion-icon>
-                 <span>{{ hoverDorm.SCORE | number:'1.1-1' }}</span>
-               </div>
-               <div style="display: flex; align-items: center; gap: 4px; color: #666; font-size: 12px;">
-                 <ion-icon name="eye"></ion-icon>
-                 <span>{{ hoverDorm.VIEW_COUNT || hoverDorm.views || 0 | number }} เข้าชม</span>
-               </div>
-             </div>
-
-             <p class="zone" *ngIf="hoverDorm.zone"><ion-icon name="location"></ion-icon> {{ hoverDorm.zone }}</p>
-             <p class="address"><ion-icon name="map-outline"></ion-icon> {{ hoverDorm.ADDRESS || hoverDorm.address || 'ไม่ระบุที่อยู่' }}</p>
-
-             <p class="update-date" *ngIf="hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT">
-               <ion-icon name="time-outline"></ion-icon>
-               อัปเดต: {{ (hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT) | thaiDate }}
-             </p>
-             
-             <div class="click-more-hint">
-               <ion-icon name="finger-print-outline"></ion-icon> กดเพื่อดูเพิ่มเติม
-             </div>
-          </div>
-      </div>
 
       <div class="gps-fab-btn" (click)="!isLocating && getCurrentLocation()" [class.disabled]="isLocating">
         <ion-spinner *ngIf="isLocating" name="crescent" style="width: 18px; height: 18px;"></ion-spinner>
