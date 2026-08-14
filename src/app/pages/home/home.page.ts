@@ -254,16 +254,16 @@ export class HomePage implements OnInit, ViewDidEnter {
 
     this.apiLoaded.subscribe((loaded) => {
       if (loaded && typeof google === 'object' && typeof google.maps === 'object') {
-        const getSvgIcon = (color: string) => ({
-          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="${color}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="${color}" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>`),
+        const getAssetIcon = (filename: string) => ({
+          url: `assets/${filename}.png`,
           scaledSize: new google.maps.Size(36, 36)
         });
 
-        this.dormMarkerIcon = getSvgIcon('#fbc02d');
-        this.availableDormMarkerIcon = getSvgIcon('#2ecc71');
-        this.fullDormMarkerIcon = getSvgIcon('#e74c3c');
-        this.closedDormMarkerIcon = getSvgIcon('#7f8c8d');
-        this.deletedDormMarkerIcon = getSvgIcon('#95a5a6');
+        this.dormMarkerIcon = getAssetIcon('yellow');
+        this.availableDormMarkerIcon = getAssetIcon('green');
+        this.fullDormMarkerIcon = getAssetIcon('red');
+        this.closedDormMarkerIcon = getAssetIcon('yellow');
+        this.deletedDormMarkerIcon = getAssetIcon('gray');
         this.mainRouteOptions = {
           suppressMarkers: true,
           polylineOptions: { 
@@ -629,7 +629,14 @@ export class HomePage implements OnInit, ViewDidEnter {
           isChecked: favoriteIds.includes(Number(d.DORM_ID || d.id))
         })) as any[];        
 
-        // Temporarily removed role filter to see if markers appear
+        // Filter out closed (2) and deleted (4) dorms for non-admins (role != 3)
+        const userRole = this.currentUser ? (this.currentUser.role_id || this.currentUser.ROLE_ID || this.currentUser.role) : null;
+        if (Number(userRole) !== 3) {
+            processedDorms = processedDorms.filter((d: any) => {
+                const sId = Number(d.status || d.DORM_STATUS_ID);
+                return sId === 1 || sId === 3; // Only show open (1) and full (3)
+            });
+        }
         
         this.allDorms = processedDorms;
         this.dorms = [...this.allDorms];
@@ -689,6 +696,8 @@ export class HomePage implements OnInit, ViewDidEnter {
       clearTimeout(this.hoverTimeout);
     }
     this.hoverDorm = dorm;
+    this.cdr.detectChanges(); // Ensure *ngIf="hoverDorm" renders before opening
+    
     if (this.hoverInfoWindow) {
       this.hoverInfoWindow.open(marker);
     }
@@ -804,9 +813,14 @@ export class HomePage implements OnInit, ViewDidEnter {
       );
       if (res.success && res.data) {
         let tempDorms = res.data.map((d: any) => ({ ...d, lat: Number(d.lat), lng: Number(d.lng) })) as any[];
-        
-        // Temporarily removed role filter to see if markers appear
-        
+        // Filter out closed (2) and deleted (4) dorms for non-admins (role != 3)
+        const userRole = this.currentUser ? (this.currentUser.role_id || this.currentUser.ROLE_ID || this.currentUser.role) : null;
+        if (Number(userRole) !== 3) {
+            tempDorms = tempDorms.filter((d: any) => {
+                const sId = Number(d.status || d.DORM_STATUS_ID);
+                return sId === 1 || sId === 3; // Only show open (1) and full (3)
+            });
+        }
         if (this.selectedZone) {
           const targetZone = this.zoneOptions.find(z => z.ZONE_NAME === this.selectedZone);
           if (targetZone && targetZone.lat && targetZone.lng) {
