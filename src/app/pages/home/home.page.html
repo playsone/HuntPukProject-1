@@ -88,27 +88,54 @@
 
       </google-map>
 
-      <!-- Custom Floating Hover Card -->
+      <!-- Custom Floating Hover Card (Matches List Page) -->
       <div *ngIf="hoverDorm && isDesktop" 
            class="custom-hover-card"
-           [style.left.px]="mouseX - 110"
-           [style.top.px]="mouseY - 220"
+           [style.left.px]="mouseX - 130"
+           [style.top.px]="mouseY - 330"
            (click)="selectNearbyDorm(hoverDorm)"
            (mouseenter)="keepHoverCardOpen()"
            (mouseleave)="closeHoverCard()">
-          <div class="hover-card-img-wrapper">
-              <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/400x250?text=No+Image'" />
+           
+          <div class="card-image">
+             <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/600x400?text=No+Image'" 
+                  onerror="this.src='https://placehold.co/600x400?text=No+Image'" loading="lazy" />
+
+              <ng-container *ngFor="let stat of dormStatusList">
+                <div *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
+                     class="status-badge" [ngClass]="'status-' + stat.id">
+                  {{ stat.STATUS_NAME || stat.name }}
+                </div>
+              </ng-container>
+             
+             <div class="price-tag">เริ่มต้น ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }}</div>          
           </div>
-          <div class="hover-card-content">
-              <h4>{{ hoverDorm.DORM_NAME }}</h4>
-              <div class="hover-card-stats">
-                  <p class="score-p"><ion-icon name="star"></ion-icon> {{ hoverDorm.SCORE | number:'1.1-1' }}</p>
-                  <p class="view-p"><ion-icon name="eye"></ion-icon>{{ hoverDorm.VIEW_COUNT || 0 }} เข้าชม</p>
-              </div>
-              <p class="address-p">
-                  <ion-icon name="location-sharp"></ion-icon>
-                  {{ hoverDorm.ADDRESS || hoverDorm.address || 'ไม่ระบุที่อยู่' }}
-              </p>
+
+          <div class="card-content">
+             <h3>{{ hoverDorm.DORM_NAME }}</h3>
+             
+             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; margin-bottom: 6px;">
+               <div class="rating-row" style="margin: 0;">
+                 <ion-icon name="star"></ion-icon>
+                 <span>{{ hoverDorm.SCORE | number:'1.1-1' }}</span>
+               </div>
+               <div style="display: flex; align-items: center; gap: 4px; color: #666; font-size: 12px;">
+                 <ion-icon name="eye"></ion-icon>
+                 <span>{{ hoverDorm.VIEW_COUNT || hoverDorm.views || 0 | number }} เข้าชม</span>
+               </div>
+             </div>
+
+             <p class="zone" *ngIf="hoverDorm.zone"><ion-icon name="location"></ion-icon> {{ hoverDorm.zone }}</p>
+             <p class="address"><ion-icon name="map-outline"></ion-icon> {{ hoverDorm.ADDRESS || hoverDorm.address || 'ไม่ระบุที่อยู่' }}</p>
+
+             <p class="update-date" *ngIf="hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT">
+               <ion-icon name="time-outline"></ion-icon>
+               อัปเดต: {{ (hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT) | thaiDate }}
+             </p>
+             
+             <div class="click-more-hint">
+               <ion-icon name="finger-print-outline"></ion-icon> กดเพื่อดูเพิ่มเติม
+             </div>
           </div>
       </div>
 
