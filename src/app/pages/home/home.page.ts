@@ -81,6 +81,12 @@ export class HomePage implements OnInit, ViewDidEnter {
   dormMarkerIcon: any = {
     url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="#fbc02d" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="#fbc02d" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>')
   };
+  availableDormMarkerIcon: any = null;
+  fullDormMarkerIcon: any = null;
+  closedDormMarkerIcon: any = null;
+
+  @ViewChild('hoverInfoWindow') hoverInfoWindow!: MapInfoWindow;
+  hoverDorm: any = null;
 
   // 🔍 ระบบ Filter ค้นหา
   searchText: string = '';
@@ -91,7 +97,7 @@ export class HomePage implements OnInit, ViewDidEnter {
   minPrice: number | null = null;
   maxPrice: number | null = null;
   selectedZone: string = '';
-  maxDistance: number = 1;
+  maxDistance: number = 2;
   zoneOptions: any[] = [];
   minScore: number | null = null;
   maxWaterUnit: number | null = null;  // ค่าน้ำแบบรายหน่วย
@@ -247,10 +253,15 @@ export class HomePage implements OnInit, ViewDidEnter {
 
     this.apiLoaded.subscribe((loaded) => {
       if (loaded && typeof google === 'object' && typeof google.maps === 'object') {
-        this.dormMarkerIcon = {
-          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="#ea4335" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="#ea4335" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>'),
+        const getSvgIcon = (color: string) => ({
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="${color}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="${color}" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>`),
           scaledSize: new google.maps.Size(36, 36)
-        };
+        });
+
+        this.dormMarkerIcon = getSvgIcon('#fbc02d');
+        this.availableDormMarkerIcon = getSvgIcon('#2ecc71');
+        this.fullDormMarkerIcon = getSvgIcon('#e74c3c');
+        this.closedDormMarkerIcon = getSvgIcon('#7f8c8d');
 
         this.mainRouteOptions = {
           suppressMarkers: true,
@@ -407,7 +418,7 @@ export class HomePage implements OnInit, ViewDidEnter {
 
   async onDistanceChange(event?: any) {
     if (!this.currentUser) {
-      this.maxDistance = 1;
+      this.maxDistance = 2;
       const modal = await this.modalCtrl.create({
         component: AlertModalComponent,
         componentProps: {
@@ -649,6 +660,27 @@ export class HomePage implements OnInit, ViewDidEnter {
     return dorm?.DORM_ID;
   }
 
+  getDormMarkerIcon(dorm: any): any {
+    const statusId = Number(dorm.status || dorm.DORM_STATUS_ID);
+    if (statusId === 1) return this.availableDormMarkerIcon || this.dormMarkerIcon;
+    if (statusId === 3) return this.fullDormMarkerIcon || this.dormMarkerIcon;
+    if (statusId === 2) return this.closedDormMarkerIcon || this.dormMarkerIcon;
+    return this.dormMarkerIcon;
+  }
+
+  openHoverCard(marker: MapMarker, dorm: any) {
+    this.hoverDorm = dorm;
+    if (this.hoverInfoWindow) {
+      this.hoverInfoWindow.open(marker);
+    }
+  }
+
+  closeHoverCard() {
+    if (this.hoverInfoWindow) {
+      this.hoverInfoWindow.close();
+    }
+  }
+
   getFacIconPath(fac: any): string {
     const iconName = fac?.FAC_TYPE_ICON || fac?.icon;
     if (!iconName) return '';
@@ -661,15 +693,7 @@ export class HomePage implements OnInit, ViewDidEnter {
   onSearch(text: any) {
     const searchValue = (typeof text === 'string' ? text : text?.target?.value || '').trim();
     this.searchText = searchValue;
-    // real-time marker filter while typing
-    if (searchValue) {
-      this.dorms = this.allDorms.filter(d =>
-        (d.DORM_NAME || '').toLowerCase().includes(searchValue.toLowerCase())
-      ) as any[];
-    } else {
-      this.dorms = [...this.allDorms];
-    }
-    this.cdr.detectChanges();
+    this.performSearch();
   }
 
   // กดเลือกหอพักจาก autocomplete dropdown
@@ -715,7 +739,7 @@ export class HomePage implements OnInit, ViewDidEnter {
     return (this.minPrice !== null && this.minPrice !== undefined && this.minPrice !== 0) || 
            (this.maxPrice !== null && this.maxPrice !== undefined && this.maxPrice !== 0) || 
            !!this.selectedZone ||
-           (this.maxDistance !== null && this.maxDistance !== undefined && this.maxDistance !== 1) || 
+           (this.maxDistance !== null && this.maxDistance !== undefined && this.maxDistance !== 2) || 
            (this.minScore !== null && this.minScore !== undefined && this.minScore !== 0) || 
            (this.maxWaterUnit !== null && this.maxWaterUnit !== undefined && this.maxWaterUnit !== 0) || 
            (this.maxWaterLump !== null && this.maxWaterLump !== undefined && this.maxWaterLump !== 0) || 
@@ -724,7 +748,7 @@ export class HomePage implements OnInit, ViewDidEnter {
 
   clearAllFilters() {
     this.minPrice = null; this.maxPrice = null; this.selectedZone = '';
-    this.maxDistance = 1; this.minScore = null; this.maxWaterUnit = null;
+    this.maxDistance = 2; this.minScore = null; this.maxWaterUnit = null;
     this.maxWaterLump = null; this.maxElect = null;
     this.zoneCircleCenter = undefined; this.zoneCircleRadius = 0;
     this.circleCenter = this.referencePoint;
@@ -1063,7 +1087,10 @@ export class HomePage implements OnInit, ViewDidEnter {
       const dormId = this.selectedDorm.DORM_ID || this.selectedDorm.id;
       if (dormId) {
         this.selectedDorm = null; // ปิด Panel/Modal ก่อนเปลี่ยนหน้า
-        this.router.navigate(['/dorm-detail', dormId]);
+        // หน่วงเวลาเล็กน้อยให้ Modal มีเวลาปิดตัวลงก่อนเปลี่ยนหน้า (ป้องกันบั๊กเปิดทับ)
+        setTimeout(() => {
+          this.router.navigate(['/dorm-detail', dormId]);
+        }, 300);
       }
     }
   }

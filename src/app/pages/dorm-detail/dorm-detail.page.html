@@ -71,8 +71,8 @@
           <div class="util-text">
             <span class="label">ค่าน้ำ</span>
             <div class="val">
-              <div class="rate-line"><span class="sub-label">หน่วย:</span> {{ dormData.water_unit || dormData.WATER_UNIT ? (dormData.water_unit || dormData.WATER_UNIT) + ' บ.' : 'ไม่ระบุ' }}</div>
-              <div class="rate-line"><span class="sub-label">เหมา:</span> {{ dormData.water_lump || dormData.WATER_LUMP ? (dormData.water_lump || dormData.WATER_LUMP) + ' บ./ด.' : 'ไม่ระบุ' }}</div>
+              <div class="rate-line"><span class="sub-label">หน่วย:</span> {{ (dormData.water_unit > 0 || dormData.WATER_UNIT > 0) ? (dormData.water_unit || dormData.WATER_UNIT) + ' บ.' : 'ไม่ระบุ' }}</div>
+              <div class="rate-line"><span class="sub-label">เหมา:</span> {{ (dormData.water_lump > 0 || dormData.WATER_LUMP > 0) ? (dormData.water_lump || dormData.WATER_LUMP) + ' บ./ด.' : 'ไม่ระบุ' }}</div>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@
           <div class="util-text">
             <span class="label">ค่าไฟ</span>
             <div class="val">
-              <div class="rate-line"><span class="sub-label">หน่วย:</span> {{ dormData.elect_unit || dormData.ELECT_UNIT ? (dormData.elect_unit || dormData.ELECT_UNIT) + ' บ.' : 'ไม่ระบุ' }}</div>
+              <div class="rate-line"><span class="sub-label">หน่วย:</span> {{ (dormData.elect_unit > 0 || dormData.ELECT_UNIT > 0) ? (dormData.elect_unit || dormData.ELECT_UNIT) + ' บ.' : 'ไม่ระบุ' }}</div>
             </div>
           </div>
         </div>

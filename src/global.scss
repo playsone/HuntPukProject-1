@@ -178,3 +178,11 @@ ion-modal.custom-alert-modal {
   }
 }
 
+/* =========================================
+   🛑 แก้ปัญหาจอดำจาก SweetAlert2 (heightAuto issue ใน Ionic)
+   ========================================= */
+body.swal2-shown,
+body.swal2-height-auto {
+  height: 100% !important;
+}
+

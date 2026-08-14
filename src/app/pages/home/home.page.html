@@ -71,9 +71,50 @@
         </map-marker>
 
         <map-marker *ngFor="let dorm of dorms; trackBy: trackByDormId" [position]="{ lat: dorm.lat, lng: dorm.lng }" [title]="dorm.DORM_NAME"
-          [options]="{ icon: dormMarkerIcon }"
+          [options]="{ icon: getDormMarkerIcon(dorm) }"
+          (mapMouseover)="openHoverCard(marker, dorm)"
+          (mapMouseout)="closeHoverCard()"
           (mapClick)="openInfoWindow(marker, dorm)" #marker="mapMarker">
         </map-marker>
+
+        <!-- Hover Popup Card -->
+        <map-info-window #hoverInfoWindow>
+            <div *ngIf="hoverDorm" style="width: 220px; font-family: 'Prompt', sans-serif; cursor: pointer; padding: 0; margin: -5px;" (click)="openInfoWindow(null, hoverDorm)">
+                <div style="position: relative; width: 100%; height: 120px;">
+                    <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/400x250?text=No+Image'" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;" />
+                    
+                    <ng-container *ngFor="let stat of dormStatusList">
+                      <div *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
+                           style="position: absolute; top: 8px; left: 8px; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; color: #fff;"
+                           [ngStyle]="{
+                             'background': stat.id == 1 ? '#2ecc71' : (stat.id == 3 ? '#e74c3c' : '#7f8c8d')
+                           }">
+                        {{ stat.STATUS_NAME || stat.name }}
+                      </div>
+                    </ng-container>
+
+                    <div style="position: absolute; bottom: 8px; left: 8px; background: #FFC107; color: #333; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                        เริ่มต้น ฿{{ hoverDorm.MIN_PRICE | number }}
+                    </div>
+                </div>
+                <div style="padding: 8px;">
+                    <h4 style="margin: 0 0 4px; font-size: 14px; font-weight: bold; color: #333;">{{ hoverDorm.DORM_NAME }}</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <p style="margin: 0; font-size: 12px; color: #666; display: flex; align-items: center; gap: 4px;">
+                            <ion-icon name="star" style="color: #FFC107; font-size: 14px; margin-right: 2px;"></ion-icon> 
+                            {{ hoverDorm.SCORE | number:'1.1-1' }}
+                        </p>
+                        <p style="margin: 0; font-size: 11px; color: #888; display: flex; align-items: center;">
+                            <ion-icon name="eye" style="margin-right: 2px;"></ion-icon>{{ hoverDorm.VIEW_COUNT || 0 }} เข้าชม
+                        </p>
+                    </div>
+                    <p style="margin: 0; font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <ion-icon name="location-sharp"></ion-icon>
+                        {{ hoverDorm.ADDRESS || hoverDorm.address || 'ไม่ระบุที่อยู่' }}
+                    </p>
+                </div>
+            </div>
+        </map-info-window>
         <!-- เส้นทาง (หลัก) -->
         <map-directions-renderer *ngIf="directionsResult" [directions]="directionsResult" [options]="mainRouteOptions"></map-directions-renderer>
         
@@ -123,7 +164,8 @@
 
       <div class="panel-drag-handle" (click)="togglePanelSize()">
         <div class="drag-pill"></div>
-        <span>{{ isPanelMinimized ? 'ปัดขึ้นเพื่อดูเพิ่มเติม' : 'ปัดลงเพื่อปิด' }}</span>
+        <span *ngIf="isDesktop">{{ isPanelMinimized ? 'คลิกเพื่อขยาย' : 'คลิกเพื่อย่อ' }}</span>
+        <span *ngIf="!isDesktop">ปัดขึ้นเพื่อดูเพิ่มเติม / ปัดลงเพื่อปิด</span>
       </div>
       
       <div class="btn-close-panel" (click)="closeDetailPanel()"><ion-icon name="close"></ion-icon></div>
@@ -289,7 +331,7 @@
             </div>
           </div>
 
-          <ion-button expand="block" shape="round" color="dark" (click)="goToDetail()" style="margin: 20px 0;">
+          <ion-button expand="block" shape="round" color="dark" (click)="goToDetail()" style="margin: 20px 0 60px 0;">
             ดูข้อมูลหอพักทั้งหมด <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
           </ion-button>
 

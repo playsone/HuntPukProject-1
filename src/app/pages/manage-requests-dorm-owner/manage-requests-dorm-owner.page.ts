@@ -110,6 +110,7 @@ export class ManageRequestsDormOwnerPage implements OnInit {
       title: 'ยืนยันการอนุมัติ',
       text: `คุณต้องการให้สิทธิ์คุณ ${req.first_name} เป็นเจ้าของหอพักใช่หรือไม่?`,
       icon: 'question',
+      heightAuto: false,
       showCancelButton: true,
       confirmButtonColor: '#111',
       cancelButtonColor: '#d33',
@@ -133,6 +134,7 @@ export class ManageRequestsDormOwnerPage implements OnInit {
       title: 'ปฏิเสธคำขอ',
       text: 'กรุณาระบุเหตุผลที่ไม่อนุมัติคำขอนี้ (ถ้ามี)',
       icon: 'warning',
+      heightAuto: false,
       input: 'textarea',
       inputPlaceholder: 'ระบุเหตุผล...',
       showCancelButton: true,
@@ -158,6 +160,7 @@ export class ManageRequestsDormOwnerPage implements OnInit {
     Swal.fire({
       title: 'กำลังดำเนินการ...',
       allowOutsideClick: false,
+      heightAuto: false,
       didOpen: () => {
         Swal.showLoading();
       }
@@ -178,7 +181,8 @@ export class ManageRequestsDormOwnerPage implements OnInit {
             : 'คำขอถูกปฏิเสธเรียบร้อยแล้ว',
           confirmButtonColor: '#111',
           timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
+          heightAuto: false
         });
       },
       error: async (err) => {
@@ -186,7 +190,8 @@ export class ManageRequestsDormOwnerPage implements OnInit {
           icon: 'error',
           title: 'เกิดข้อผิดพลาด',
           text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-          confirmButtonColor: '#C62828'
+          confirmButtonColor: '#C62828',
+          heightAuto: false
         });
       }
     });

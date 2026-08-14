@@ -170,7 +170,7 @@
         <div class="row-2-col">
           <ion-item class="custom-input">
             <ion-label position="stacked">ค่าน้ำ (บาท/หน่วย) <span class="req">*</span></ion-label>
-            <ion-input type="number" [(ngModel)]="formData.water_unit" placeholder="เช่น 15"
+            <ion-input type="number" [(ngModel)]="formData.water_unit" placeholder="เช่น 15 (ใส่ 0 หากไม่ระบุ)"
               [disabled]="isWaitingForAdmin"></ion-input>
           </ion-item>
 
@@ -180,12 +180,18 @@
               [disabled]="isWaitingForAdmin"></ion-input>
           </ion-item>
         </div>
+        <p class="hint-text text-danger" *ngIf="formData.water_unit === 0" style="margin-top: 5px; font-size: 13px;">
+          <ion-icon name="information-circle-outline"></ion-icon> แสดงผลเป็น "ไม่ระบุ"
+        </p>
 
         <ion-item class="custom-input">
           <ion-label position="stacked">ค่าไฟ (บาท/หน่วย) <span class="req">*</span></ion-label>
-          <ion-input type="number" [(ngModel)]="formData.elect_unit" placeholder="เช่น 8"
+          <ion-input type="number" [(ngModel)]="formData.elect_unit" placeholder="เช่น 8 (ใส่ 0 หากไม่ระบุ)"
             [disabled]="isWaitingForAdmin"></ion-input>
         </ion-item>
+        <p class="hint-text text-danger" *ngIf="formData.elect_unit === 0" style="margin-top: 5px; font-size: 13px;">
+          <ion-icon name="information-circle-outline"></ion-icon> แสดงผลเป็น "ไม่ระบุ"
+        </p>
       </div>
 
       <!-- Navigation Buttons -->
