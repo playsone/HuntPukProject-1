@@ -505,7 +505,84 @@ ion-modal.filter-modal-custom {
 .w50           { width: 50%; }
 .skel-row      { display: flex; gap: 10px; }
 .skel-badge    { height: 28px; width: 90px; border-radius: 20px; }
-.skel-section  { height: 80px; width: 100%; border-radius: 14px; }
+.skel-section { height: 48px;
+  width: 100%;
+}
+
+/* Custom Floating Hover Card */
+.custom-hover-card {
+  position: absolute;
+  width: 220px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  cursor: pointer;
+  pointer-events: auto;
+  font-family: 'Prompt', sans-serif;
+  overflow: hidden;
+  transition: opacity 0.2s;
+
+  .hover-card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .hover-card-content {
+    padding: 8px;
+    
+    h4 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .hover-card-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      
+      .score-p {
+        margin: 0;
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        ion-icon { color: #FFC107; font-size: 14px; }
+      }
+      
+      .view-p {
+        margin: 0;
+        font-size: 11px;
+        color: #888;
+        display: flex;
+        align-items: center;
+        ion-icon { margin-right: 2px; }
+      }
+    }
+    
+    .address-p {
+      margin: 0;
+      font-size: 11px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
 .skel-section.short { height: 50px; }
 @keyframes skshimmer {
   0%   { background-position: -200% 0; }
