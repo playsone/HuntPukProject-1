@@ -255,7 +255,7 @@ export class HomePage implements OnInit, ViewDidEnter {
     this.apiLoaded.subscribe((loaded) => {
       if (loaded && typeof google === 'object' && typeof google.maps === 'object') {
         const getAssetIcon = (filename: string) => ({
-          url: `assets/${filename}.png`,
+          url: `assets/${filename}.jpg`,
           scaledSize: new google.maps.Size(36, 36)
         });
 
