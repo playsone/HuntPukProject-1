@@ -513,6 +513,22 @@ ion-modal.filter-modal-custom {
       object-fit: cover;
     }
 
+    .status-badge {
+      position: absolute; top: 10px; left: 10px;
+      padding: 4px 12px; border-radius: 12px;
+      font-size: 12px; font-weight: 900; color: #fff;
+      z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      
+      &.status-3 { background: #e74c3c; } 
+      &.status-1 { background: #2ecc71; }
+      &.status-2 { background: #7f8c8d; }
+    }
+
+    .price-badge {
+      position: absolute; bottom: 10px; left: 10px; background: #FFD600; color: #1a1a1a;
+      padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 900; z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
     .gm-card-actions {
       position: absolute;
       bottom: -18px; /* Half floating */
