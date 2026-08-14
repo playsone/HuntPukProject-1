@@ -691,16 +691,22 @@ export class HomePage implements OnInit, ViewDidEnter {
     this.mouseY = e.clientY;
   }
 
-  openHoverCard(dorm: any) {
+  openHoverCard(marker: MapMarker, dorm: any) {
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
     this.hoverDorm = dorm;
+    if (this.hoverInfoWindow) {
+      this.hoverInfoWindow.open(marker);
+    }
   }
 
   closeHoverCard() {
     this.hoverTimeout = setTimeout(() => {
       this.hoverDorm = null;
+      if (this.hoverInfoWindow) {
+        this.hoverInfoWindow.close();
+      }
     }, 200);
   }
 
