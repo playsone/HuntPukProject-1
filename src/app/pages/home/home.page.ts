@@ -254,16 +254,16 @@ export class HomePage implements OnInit, ViewDidEnter {
 
     this.apiLoaded.subscribe((loaded) => {
       if (loaded && typeof google === 'object' && typeof google.maps === 'object') {
-        const getAssetIcon = (filename: string) => ({
-          url: `assets/${filename}.jpg`,
+        const getSvgIcon = (color: string) => ({
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="${color}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="${color}" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>`),
           scaledSize: new google.maps.Size(36, 36)
         });
 
-        this.dormMarkerIcon = getAssetIcon('yellow');
-        this.availableDormMarkerIcon = getAssetIcon('green');
-        this.fullDormMarkerIcon = getAssetIcon('red');
-        this.closedDormMarkerIcon = getAssetIcon('yellow');
-        this.deletedDormMarkerIcon = getAssetIcon('gray');
+        this.dormMarkerIcon = getSvgIcon('#fbc02d');
+        this.availableDormMarkerIcon = getSvgIcon('#2ecc71');
+        this.fullDormMarkerIcon = getSvgIcon('#e74c3c');
+        this.closedDormMarkerIcon = getSvgIcon('#7f8c8d');
+        this.deletedDormMarkerIcon = getSvgIcon('#95a5a6');
         this.mainRouteOptions = {
           suppressMarkers: true,
           polylineOptions: { 
@@ -705,11 +705,11 @@ export class HomePage implements OnInit, ViewDidEnter {
 
   closeHoverCard() {
     this.hoverTimeout = setTimeout(() => {
-      this.hoverDorm = null;
       if (this.hoverInfoWindow) {
         this.hoverInfoWindow.close();
       }
-    }, 200);
+      this.hoverDorm = null;
+    }, 1500); // 1500ms delay to prevent immediate close if mouse enters the InfoWindow gap
   }
 
   keepHoverCardOpen() {
