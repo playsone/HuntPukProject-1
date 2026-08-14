@@ -74,6 +74,9 @@
           [options]="{ icon: getDormMarkerIcon(dorm) }"
           (mapMouseover)="openHoverCard(dorm)"
           (mapMouseout)="closeHoverCard()"
+          (mapClick)="openInfoWindow(marker, dorm)" #marker="mapMarker">
+        </map-marker>
+
         <!-- Removed map-info-window fragment -->
         <!-- เส้นทาง (หลัก) -->
         <map-directions-renderer *ngIf="directionsResult" [directions]="directionsResult" [options]="mainRouteOptions"></map-directions-renderer>
