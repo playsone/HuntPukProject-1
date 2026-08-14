@@ -259,11 +259,11 @@ export class HomePage implements OnInit, ViewDidEnter {
           scaledSize: new google.maps.Size(36, 36)
         });
 
-        this.dormMarkerIcon = { url: 'assets/yellow.png', scaledSize: new google.maps.Size(36, 36) };
-        this.availableDormMarkerIcon = { url: 'assets/green.png', scaledSize: new google.maps.Size(36, 36) };
-        this.fullDormMarkerIcon = { url: 'assets/red.png', scaledSize: new google.maps.Size(36, 36) };
-        this.closedDormMarkerIcon = { url: 'assets/yellow.png', scaledSize: new google.maps.Size(36, 36) };
-        this.deletedDormMarkerIcon = { url: 'assets/gray.png', scaledSize: new google.maps.Size(36, 36) };
+        this.dormMarkerIcon = 'assets/yellow.png';
+        this.availableDormMarkerIcon = 'assets/green.png';
+        this.fullDormMarkerIcon = 'assets/red.png';
+        this.closedDormMarkerIcon = 'assets/yellow.png';
+        this.deletedDormMarkerIcon = 'assets/gray.png';
         this.mainRouteOptions = {
           suppressMarkers: true,
           polylineOptions: { 
@@ -811,6 +811,15 @@ export class HomePage implements OnInit, ViewDidEnter {
       );
       if (res.success && res.data) {
         let tempDorms = res.data.map((d: any) => ({ ...d, lat: Number(d.lat), lng: Number(d.lng) })) as any[];
+        
+        // Filter out closed (2) and deleted (4) dorms for non-admins (role != 3)
+        const userRole = this.currentUser ? (this.currentUser.role_id || this.currentUser.ROLE_ID || this.currentUser.role) : null;
+        if (Number(userRole) !== 3) {
+            tempDorms = tempDorms.filter((d: any) => {
+                const sId = Number(d.status || d.DORM_STATUS_ID);
+                return sId === 1 || sId === 3; // Only show open (1) and full (3)
+            });
+        }
         
         if (this.selectedZone) {
           const targetZone = this.zoneOptions.find(z => z.ZONE_NAME === this.selectedZone);
