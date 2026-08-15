@@ -210,13 +210,25 @@ export class TypeManagementPage implements OnInit {
           this.markerPosition = { ...this.center };
           this.isLocating = false;
         },
-        () => { 
-          console.error('ไม่สามารถดึงตำแหน่งได้');
+        async (error) => { 
+          console.error('ไม่สามารถดึงตำแหน่งได้:', error);
           this.isLocating = false;
-        }
+          const alert = await this.alertController.create({
+            header: 'ไม่สามารถดึงพิกัดได้',
+            message: 'กรุณาเปิด GPS หรือตรวจสอบการตั้งค่าเบราว์เซอร์ว่าอนุญาตให้เข้าถึงตำแหน่ง (Location) หรือไม่',
+            buttons: ['ตกลง']
+          });
+          await alert.present();
+        },
+        { timeout: 10000, enableHighAccuracy: true }
       );
     } else {
       this.isLocating = false;
+      this.alertController.create({
+        header: 'เบราว์เซอร์ไม่รองรับ',
+        message: 'อุปกรณ์หรือเบราว์เซอร์ของคุณไม่รองรับการดึงตำแหน่งปัจจุบัน',
+        buttons: ['ตกลง']
+      }).then(a => a.present());
     }
   }
 

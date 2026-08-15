@@ -416,7 +416,16 @@ export class DashboardPage implements OnInit {
       }
     };
 
-    const statusColors = ['#10b981', '#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6'];
+    const getColorForStatus = (statusName: string) => {
+      switch (statusName) {
+        case 'เปิดให้บริการ': return '#10b981'; // Green
+        case 'ห้องเต็ม': return '#ef4444'; // Red
+        case 'ปิดปรับปรุง': return '#f59e0b'; // Yellow
+        default: return '#3b82f6';
+      }
+    };
+    const statusColors = this.stats.dormStatusBreakdown.map(d => getColorForStatus(d.statusName));
+    
     const statusCtx = this.dormStatusCanvas.nativeElement;
     const statusChart = new Chart(statusCtx, {
       type: 'doughnut',

@@ -276,25 +276,30 @@ export class ComparePage implements OnInit {
     } catch(e) {}
     
     // ถ้าไม่มีให้ลองใช้ Geolocation API ของ Browser
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        this.referencePoint = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        this.recalcDistances();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          this.referencePoint = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          this.recalcDistances();
+          this.isLocating = false;
+          this.cdr.detectChanges();
+        }, async (error) => {
+          this.isLocating = false;
+          this.refMode = '' as any; // reset mode since it failed
+          this.cdr.detectChanges();
+          
+          const alert = await this.alertCtrl.create({
+            header: 'ไม่สามารถระบุตำแหน่งได้',
+            message: 'กรุณาเปิด GPS และอนุญาตการเข้าถึงตำแหน่งในการตั้งค่าเว็บไซต์/เบราว์เซอร์ของคุณ',
+            buttons: ['ตกลง'],
+            cssClass: 'custom-alert'
+          });
+          await alert.present();
+        });
+      } else {
         this.isLocating = false;
+        this.refMode = '' as any;
         this.cdr.detectChanges();
-      }, () => {
-        // Fallback to default
-        this.referencePoint = { lat: 16.246, lng: 103.252 };
-        this.recalcDistances();
-        this.isLocating = false;
-        this.cdr.detectChanges();
-      });
-    } else {
-      this.referencePoint = { lat: 16.246, lng: 103.252 };
-      this.recalcDistances();
-      this.isLocating = false;
-      this.cdr.detectChanges();
-    }
+      }
   }
 
   openMapModal() {
