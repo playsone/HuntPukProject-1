@@ -88,7 +88,8 @@ export class HomePage implements OnInit, ViewDidEnter {
   
   hoverDorm: any = null;
   hoverTimeout: any;
-  @ViewChild('hoverInfoWindow') hoverInfoWindow!: MapInfoWindow;
+  mouseX = 0;
+  mouseY = 0;
 
 
   // 🔍 ระบบ Filter ค้นหา
@@ -696,25 +697,40 @@ export class HomePage implements OnInit, ViewDidEnter {
     };
   }
 
-  openHoverCard(marker: any, dorm: any) {
+  openHoverCard(event: any, dorm: any) {
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
     
+    if (event && event.domEvent && typeof event.domEvent.clientX === 'number') {
+      let calcX = event.domEvent.clientX + 15;
+      let calcY = event.domEvent.clientY - 60;
+      
+      // Boundary check to prevent card (width: ~220px, height: ~250px) from going off-screen
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+      
+      if (calcX + 240 > screenW) {
+        calcX = event.domEvent.clientX - 240; // Flip to left side of cursor
+      }
+      if (calcY + 280 > screenH) {
+        calcY = event.domEvent.clientY - 280; // Flip to top of cursor
+      }
+      
+      this.mouseX = calcX;
+      this.mouseY = calcY;
+    } else {
+      this.mouseX = 300;
+      this.mouseY = 300;
+    }
+    
     this.hoverDorm = dorm;
     this.cdr.detectChanges();
-    
-    if (this.hoverInfoWindow) {
-      this.hoverInfoWindow.open(marker);
-    }
   }
 
   closeHoverCard() {
     this.hoverTimeout = setTimeout(() => {
       this.hoverDorm = null;
-      if (this.hoverInfoWindow) {
-        this.hoverInfoWindow.close();
-      }
       this.cdr.detectChanges();
     }, 500); 
   }
