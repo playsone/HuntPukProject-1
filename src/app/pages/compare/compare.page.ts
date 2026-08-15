@@ -416,4 +416,28 @@ export class ComparePage implements OnInit {
     return v + ' บ./ด.';
   }
 
+  getUnitText(item: any, key1: string, key2: string): string {
+    const v = item[key1] ?? item[key2];
+    if (v === null || v === undefined) return '-';
+    if (Number(v) === 0) return 'ไม่ระบุ';
+    return v + ' บ.';
+  }
+
+  getParsedFacilities(item: any): any[] {
+    const facData = item.facilities || item.FACILITIES || item.facility;
+    if (!facData || facData === 'null') return [];
+
+    if (Array.isArray(facData)) {
+      return facData.map((f: any) => {
+        if (typeof f === 'string') return { name: f, icon: '', isFontAwesome: false };
+        const iconSrc = f.icon || f.FAC_TYPE_ICON || '';
+        const isFontAwesome = iconSrc && !iconSrc.startsWith('http') && !iconSrc.startsWith('/') && !iconSrc.startsWith('assets');
+        return { name: f.name || f.FAC_TYPE_NAME || '', icon: iconSrc, isFontAwesome: isFontAwesome };
+      });
+    } else if (typeof facData === 'string') {
+      return facData.split(',').map((s: string) => ({ name: s.trim(), icon: '', isFontAwesome: false }));
+    }
+    return [];
+  }
+
 }

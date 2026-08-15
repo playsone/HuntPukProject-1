@@ -141,12 +141,12 @@
               </div>
 
               <div class="row-cell utility-text">
-                 <div class="sub-rate">หน่วย: {{ (item.WATER_UNIT != null) ? item.WATER_UNIT + ' บ.' : ((item.water_unit != null) ? item.water_unit + ' บ.' : '-') }}</div>
+                 <div class="sub-rate">หน่วย: {{ getUnitText(item, 'WATER_UNIT', 'water_unit') }}</div>
                  <div class="sub-rate">เหมา: {{ getWaterLump(item) }}</div>
               </div>
 
               <div class="row-cell utility-text">
-                 <div class="sub-rate">หน่วย: {{ (item.ELECT_UNIT !== null && item.ELECT_UNIT !== undefined) ? item.ELECT_UNIT + ' บ.' : ((item.elect_unit !== null && item.elect_unit !== undefined) ? item.elect_unit + ' บ.' : '-') }}</div>
+                 <div class="sub-rate">หน่วย: {{ getUnitText(item, 'ELECT_UNIT', 'elect_unit') }}</div>
               </div>
 
               <div class="row-cell zone-text">
@@ -172,14 +172,15 @@
               </div>
 
               <div class="row-cell fac-row">
-                 <div class="inner-scroll-box tags-box" *ngIf="item.facilities && item.facilities.length > 0">
-                    <span class="tag" *ngFor="let fac of item.facilities">
-                       <img *ngIf="fac.icon && fac.icon.includes('http')" [src]="fac.icon" width="20" height="20" style="border-radius: 4px; margin-right: 4px; vertical-align: middle;">
-                       <ion-icon *ngIf="!fac.icon || !fac.icon.includes('http')" [name]="fac.icon || 'checkmark-circle'"></ion-icon> 
-                       {{ fac.name || fac }}
+                 <div class="inner-scroll-box tags-box" *ngIf="getParsedFacilities(item).length > 0">
+                    <span class="tag" *ngFor="let fac of getParsedFacilities(item)">
+                       <img *ngIf="!fac.isFontAwesome && fac.icon" [src]="fac.icon" width="16" height="16" style="border-radius: 4px; vertical-align: middle;">
+                       <i *ngIf="fac.isFontAwesome" [class]="fac.icon" style="color: #ff9800; font-size: 14px;"></i>
+                       <ion-icon *ngIf="!fac.icon" name="checkmark-circle"></ion-icon> 
+                       {{ fac.name }}
                     </span>
                  </div>
-                 <div *ngIf="!item.facilities?.length" class="no-data">-</div>
+                 <div *ngIf="getParsedFacilities(item).length === 0" class="no-data">-</div>
               </div>
 
               <div class="row-cell desc-row">

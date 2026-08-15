@@ -186,3 +186,10 @@ body.swal2-height-auto {
   height: 100% !important;
 }
 
+/* =========================================
+   🛑 ให้ SweetAlert2 อยู่เหนือ ion-modal เสมอ
+   ========================================= */
+.swal2-container {
+  z-index: 99999 !important;
+}
+

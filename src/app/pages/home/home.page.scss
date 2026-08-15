@@ -653,6 +653,21 @@ ion-modal.filter-modal-custom {
   width: 100%;
 }
 
+/* Marker Permanent Label */
+::ng-deep .marker-label-badge {
+  background: white !important;
+  color: #333 !important;
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+  font-family: 'Prompt', sans-serif !important;
+  text-shadow: none !important;
+  white-space: nowrap;
+  font-size: 13px !important;
+  margin-top: 6px; /* Space from marker icon */
+}
+
 /* Custom Floating Hover Card */
 .custom-hover-card {
   position: absolute;

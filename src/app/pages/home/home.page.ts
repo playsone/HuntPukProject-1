@@ -85,9 +85,12 @@ export class HomePage implements OnInit, ViewDidEnter {
   fullDormMarkerIcon: any = null;
   closedDormMarkerIcon: any = null;
   deletedDormMarkerIcon: any = null;
-
-  @ViewChild('hoverInfoWindow') hoverInfoWindow!: MapInfoWindow;
+  
   hoverDorm: any = null;
+  hoverTimeout: any;
+  mouseX = 0;
+  mouseY = 0;
+
 
   // 🔍 ระบบ Filter ค้นหา
   searchText: string = '';
@@ -256,7 +259,8 @@ export class HomePage implements OnInit, ViewDidEnter {
       if (loaded && typeof google === 'object' && typeof google.maps === 'object') {
         const getSvgIcon = (color: string) => ({
           url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"><path fill="${color}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="${color}" d="M12 6l-5 4v7h3v-4h4v4h3v-7l-5-4z"/></svg>`),
-          scaledSize: new google.maps.Size(36, 36)
+          scaledSize: new google.maps.Size(36, 36),
+          labelOrigin: new google.maps.Point(18, 44) // Position label below the icon
         });
 
         this.dormMarkerIcon = getSvgIcon('#fbc02d');
@@ -672,44 +676,49 @@ export class HomePage implements OnInit, ViewDidEnter {
     return dorm?.DORM_ID;
   }
 
-  getDormMarkerIcon(dorm: any): any {
-    const statusId = Number(dorm.status || dorm.DORM_STATUS_ID);
-    if (statusId === 1) return this.availableDormMarkerIcon || this.dormMarkerIcon;
-    if (statusId === 3) return this.fullDormMarkerIcon || this.dormMarkerIcon;
-    if (statusId === 2) return this.closedDormMarkerIcon || this.dormMarkerIcon;
-    if (statusId === 4) return this.deletedDormMarkerIcon || this.dormMarkerIcon;
-    return this.dormMarkerIcon;
+  getMarkerOptions(dorm: any): any {
+    const sId = Number(dorm.status || dorm.DORM_STATUS_ID);
+    let icon = this.dormMarkerIcon;
+    
+    if (sId === 1) icon = this.availableDormMarkerIcon;
+    else if (sId === 2) icon = this.closedDormMarkerIcon;
+    else if (sId === 3) icon = this.fullDormMarkerIcon;
+    else if (sId === 4) icon = this.deletedDormMarkerIcon;
+
+    return {
+      icon: icon,
+      label: {
+        text: dorm.DORM_NAME || 'ไม่ระบุชื่อ',
+        color: '#333333',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        className: 'marker-label-badge'
+      }
+    };
   }
 
-  hoverTimeout: any;
-  mouseX = 0;
-  mouseY = 0;
-
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(e: MouseEvent) {
-    this.mouseX = e.clientX;
-    this.mouseY = e.clientY;
-  }
-
-  openHoverCard(marker: MapMarker, dorm: any) {
+  openHoverCard(event: any, dorm: any) {
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
-    this.hoverDorm = dorm;
-    if (this.hoverInfoWindow) {
-      this.hoverInfoWindow.open(marker);
+    
+    if (event && event.domEvent && typeof event.domEvent.clientX === 'number') {
+      this.mouseX = event.domEvent.clientX + 15;
+      this.mouseY = event.domEvent.clientY - 60;
+    } else {
+      this.mouseX = 300;
+      this.mouseY = 300;
     }
+    
+    this.hoverDorm = dorm;
     this.cdr.detectChanges();
   }
 
   closeHoverCard() {
     this.hoverTimeout = setTimeout(() => {
       this.hoverDorm = null;
-      if (this.hoverInfoWindow) {
-        this.hoverInfoWindow.close();
-      }
       this.cdr.detectChanges();
-    }, 100); 
+    }, 500); 
   }
 
   keepHoverCardOpen() {
