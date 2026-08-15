@@ -30,7 +30,7 @@ export class DormDetailPage implements OnInit, OnChanges {
 
   @Input() dormData: any = null; 
   @Input() isPopup: boolean = false; 
-  facilitiesList: { name: string; icon: string; isFontAwesome?: boolean }[] = [];
+  facilitiesList: { name: string; icon: string; isImage?: boolean }[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['dormData'] && changes['dormData'].currentValue) {
