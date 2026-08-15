@@ -71,7 +71,7 @@
         </map-marker>
 
         <map-marker *ngFor="let dorm of dorms; trackBy: trackByDormId" [position]="{ lat: dorm.lat, lng: dorm.lng }"
-          [options]="{ icon: getDormMarkerIcon(dorm) }"
+          [options]="getMarkerOptions(dorm)"
           (mapMouseover)="openHoverCard($event, dorm)"
           (mapMouseout)="closeHoverCard()"
           (mapClick)="openInfoWindow(marker, dorm)" #marker="mapMarker">
