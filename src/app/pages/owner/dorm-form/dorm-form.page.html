@@ -199,14 +199,16 @@
 
             <!-- ✅ FIX: แสดง Icon ตามประเภท (Font Awesome class หรือ URL) -->
             <div class="fac-icon-wrapper">
-              <!-- Font Awesome icon (เช่น "fas fa-snowflake") -->
-              <i *ngIf="fac.isFontAwesome" [class]="fac.icon" class="fac-fa-icon"></i>
               <!-- URL รูปภาพ -->
-              <img *ngIf="!fac.isFontAwesome && fac.icon"
-                [src]="fac.icon" class="fac-icon-img"
+              <img *ngIf="isFacImage(fac)"
+                [src]="getFacIconPath(fac)" class="fac-icon-img"
                 (error)="$any($event.target).src='assets/icon/favicon.png'">
+              
+              <!-- Ionicon (เช่น "cube-outline") -->
+              <ion-icon *ngIf="!isFacImage(fac) && fac.icon" [name]="fac.icon" class="fac-fa-icon" style="font-size: 24px; color: #ff9800;"></ion-icon>
+
               <!-- Fallback ถ้าไม่มีไอคอน -->
-              <ion-icon *ngIf="!fac.icon" name="home-outline" class="fac-ion-icon"></ion-icon>
+              <ion-icon *ngIf="!fac.icon" name="checkmark-circle-outline" class="fac-ion-icon" style="font-size: 24px; color: #999;"></ion-icon>
             </div>
 
             <ion-label>{{ fac.name }}</ion-label>

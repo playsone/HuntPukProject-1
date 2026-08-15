@@ -101,19 +101,23 @@
           <div class="hover-card-img-wrapper">
              <img [src]="hoverDorm.image || hoverDorm.FRONT_DORM_IMAGE || 'https://placehold.co/600x400?text=No+Image'" 
                   onerror="this.src='https://placehold.co/600x400?text=No+Image'" loading="lazy" />
-
-              <ng-container *ngFor="let stat of dormStatusList">
-                <div *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
-                     class="status-badge" [ngClass]="'status-' + stat.id">
-                  {{ stat.STATUS_NAME || stat.name }}
-                </div>
-              </ng-container>
-             
-             <div class="price-tag">เริ่มต้น ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }}</div>          
+             <div style="position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px;">
+               ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }}
+             </div>          
           </div>
 
-          <div class="card-content" style="padding: 8px 10px;">
-             <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ hoverDorm.DORM_NAME }}</h3>
+          <div class="card-content" style="padding: 6px 8px;">
+             <h3 style="font-size: 13px; font-weight: bold; margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ hoverDorm.DORM_NAME }}</h3>
+             
+             <div style="margin-bottom: 4px;">
+               <ng-container *ngFor="let stat of dormStatusList">
+                 <span *ngIf="(hoverDorm.status || hoverDorm.DORM_STATUS_ID) == stat.id" 
+                       style="font-size: 9px; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold;"
+                       [ngStyle]="{'background-color': stat.id == 1 ? '#2ecc71' : (stat.id == 2 ? '#7f8c8d' : '#e74c3c')}">
+                   {{ stat.STATUS_NAME || stat.name }}
+                 </span>
+               </ng-container>
+             </div>
              
              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
                <div style="color: #fbc02d; display: flex; align-items: center; gap: 2px;">
@@ -320,8 +324,9 @@
             <div class="inline-fac-grid">
               <div class="fac-icon-only" *ngFor="let fac of selectedDorm.facilities" 
                    [attr.data-tooltip]="fac.FAC_TYPE_NAME || fac.name || fac">
-                 <img *ngIf="fac.FAC_TYPE_ICON || fac.icon" [src]="getFacIconPath(fac)" (error)="fac.iconError = true" [hidden]="fac.iconError" />
-                 <ion-icon *ngIf="!(fac.FAC_TYPE_ICON || fac.icon) || fac.iconError" name="checkmark-circle-outline"></ion-icon>
+                 <img *ngIf="isFacImage(fac)" [src]="getFacIconPath(fac)" (error)="fac.iconError = true" [hidden]="fac.iconError" />
+                 <ion-icon *ngIf="!isFacImage(fac) && !fac.iconError" [name]="getFacIconName(fac)"></ion-icon>
+                 <ion-icon *ngIf="fac.iconError" name="checkmark-circle-outline"></ion-icon>
               </div>
             </div>
           </div>

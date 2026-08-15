@@ -156,6 +156,20 @@ export class DormFormPage implements OnInit {
   ) {
       addIcons({arrowBackOutline,personOutline,personAddOutline,homeOutline,locationOutline,locateOutline,wifi,bulbOutline,alertCircleOutline,closeCircle,cloudUploadOutline,bedOutline,addCircleOutline,trashOutline,documentTextOutline,imageOutline,imagesOutline,arrowForwardOutline,searchOutline,timeOutline,checkmarkCircleOutline,listOutline,eyeOutline,closeCircleOutline,refreshOutline});}
 
+  isFacImage(fac: any): boolean {
+    const iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    return iconPath.includes('/') || iconPath.includes('.png');
+  }
+
+  getFacIconPath(fac: any): string {
+    let iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    if (!iconPath) return '';
+    if (iconPath.startsWith('assets/icon/')) {
+      return iconPath.replace('assets/icon/', 'assets/allIcons/');
+    }
+    return iconPath;
+  }
+
   async ngOnInit() {
     // ✅ FIX: รองรับทุก key ที่ backend อาจส่งกลับมาใน localStorage
     const stored = localStorage.getItem('loggedIn');

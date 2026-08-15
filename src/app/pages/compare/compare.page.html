@@ -174,9 +174,9 @@
               <div class="row-cell fac-row">
                  <div class="inner-scroll-box tags-box" *ngIf="getParsedFacilities(item).length > 0">
                     <span class="tag" *ngFor="let fac of getParsedFacilities(item)">
-                       <img *ngIf="!fac.isFontAwesome && fac.icon" [src]="fac.icon" width="16" height="16" style="border-radius: 4px; vertical-align: middle;">
-                       <i *ngIf="fac.isFontAwesome" [class]="fac.icon" style="color: #ff9800; font-size: 14px;"></i>
-                       <ion-icon *ngIf="!fac.icon" name="checkmark-circle"></ion-icon> 
+                       <img *ngIf="fac.isImage && fac.icon" [src]="fac.icon" width="16" height="16" style="border-radius: 4px; vertical-align: middle;">
+                       <ion-icon *ngIf="!fac.isImage && fac.icon" [name]="fac.icon" style="color: #ff9800; font-size: 14px;"></ion-icon>
+                       <ion-icon *ngIf="!fac.icon" name="checkmark-circle-outline"></ion-icon> 
                        {{ fac.name }}
                     </span>
                  </div>

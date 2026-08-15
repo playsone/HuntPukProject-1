@@ -429,13 +429,16 @@ export class ComparePage implements OnInit {
 
     if (Array.isArray(facData)) {
       return facData.map((f: any) => {
-        if (typeof f === 'string') return { name: f, icon: '', isFontAwesome: false };
-        const iconSrc = f.icon || f.FAC_TYPE_ICON || '';
-        const isFontAwesome = iconSrc && !iconSrc.startsWith('http') && !iconSrc.startsWith('/') && !iconSrc.startsWith('assets');
-        return { name: f.name || f.FAC_TYPE_NAME || '', icon: iconSrc, isFontAwesome: isFontAwesome };
+        if (typeof f === 'string') return { name: f, icon: '', isImage: false };
+        let iconSrc = f.icon || f.FAC_TYPE_ICON || '';
+        if (iconSrc.startsWith('assets/icon/')) {
+          iconSrc = iconSrc.replace('assets/icon/', 'assets/allIcons/');
+        }
+        const isImage = iconSrc.includes('/') || iconSrc.includes('.png');
+        return { name: f.name || f.FAC_TYPE_NAME || '', icon: iconSrc, isImage: isImage };
       });
     } else if (typeof facData === 'string') {
-      return facData.split(',').map((s: string) => ({ name: s.trim(), icon: '', isFontAwesome: false }));
+      return facData.split(',').map(s => ({ name: s.trim(), icon: '', isImage: false }));
     }
     return [];
   }

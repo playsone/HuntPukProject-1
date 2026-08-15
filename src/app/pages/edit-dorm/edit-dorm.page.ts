@@ -291,6 +291,20 @@ export class EditDormPage implements OnInit {
     }
   }
 
+  isFacImage(fac: any): boolean {
+    const iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    return iconPath.includes('/') || iconPath.includes('.png');
+  }
+
+  getFacIconPath(fac: any): string {
+    let iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    if (!iconPath) return '';
+    if (iconPath.startsWith('assets/icon/')) {
+      return iconPath.replace('assets/icon/', 'assets/allIcons/');
+    }
+    return iconPath;
+  }
+
   async ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
       this.dormId = Number(params.get('id'));

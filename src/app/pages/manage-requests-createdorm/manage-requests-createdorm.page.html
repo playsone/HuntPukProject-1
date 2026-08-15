@@ -217,7 +217,8 @@
               </div>
               <div class="fac-chips">
                 <span class="fac-chip" *ngFor="let fac of (expandedDormData.facilities || expandedDormData.FACILITIES)">
-                  <img *ngIf="fac.icon" [src]="fac.icon" class="fac-icon-img" (error)="fac.icon = ''">
+                  <img *ngIf="isFacImage(fac)" [src]="getFacIconPath(fac)" class="fac-icon-img" (error)="fac.icon = ''">
+                  <ion-icon *ngIf="!isFacImage(fac) && fac.icon" [name]="fac.icon" style="font-size: 20px; margin-right: 4px; color: #ff9800;"></ion-icon>
                   <ion-icon *ngIf="!fac.icon" name="checkmark-circle-outline"></ion-icon>
                   {{ fac.name || fac.FAC_TYPE_NAME }}
                 </span>

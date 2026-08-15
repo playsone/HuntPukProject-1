@@ -753,13 +753,23 @@ export class HomePage implements OnInit, ViewDidEnter {
     }
   }
 
+  isFacImage(fac: any): boolean {
+    const iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    return iconPath.includes('/') || iconPath.includes('.png');
+  }
+
   getFacIconPath(fac: any): string {
-    const iconName = fac?.FAC_TYPE_ICON || fac?.icon;
-    if (!iconName) return '';
-    if (iconName.startsWith('http') || iconName.startsWith('assets/')) {
-      return iconName;
+    let iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    if (!iconPath) return '';
+    if (iconPath.startsWith('assets/icon/')) {
+      return iconPath.replace('assets/icon/', 'assets/allIcons/');
     }
-    return `assets/allIcons/${iconName}`;
+    return iconPath;
+  }
+
+  getFacIconName(fac: any): string {
+    const iconPath = fac?.FAC_TYPE_ICON || fac?.icon || '';
+    return iconPath ? iconPath : 'checkmark-circle-outline';
   }
 
   onSearch(text: any) {
