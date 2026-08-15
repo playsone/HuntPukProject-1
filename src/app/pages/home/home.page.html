@@ -112,30 +112,26 @@
              <div class="price-tag">เริ่มต้น ฿{{ hoverDorm.MIN_PRICE || hoverDorm.start_price | number }}</div>          
           </div>
 
-          <div class="card-content">
-             <h3>{{ hoverDorm.DORM_NAME }}</h3>
+          <div class="card-content" style="padding: 8px 10px;">
+             <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ hoverDorm.DORM_NAME }}</h3>
              
-             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; margin-bottom: 6px;">
-               <div class="rating-row" style="margin: 0; color: #fbc02d; display: flex; align-items: center; gap: 4px;">
+             <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+               <div style="color: #fbc02d; display: flex; align-items: center; gap: 2px;">
                  <ion-icon name="star"></ion-icon>
                  <span style="color: #333; font-weight: bold;">{{ hoverDorm.SCORE | number:'1.1-1' }}</span>
                </div>
-               <div style="display: flex; align-items: center; gap: 4px; color: #666; font-size: 12px;">
+               <div style="display: flex; align-items: center; gap: 2px; color: #666;">
                  <ion-icon name="eye"></ion-icon>
-                 <span>{{ hoverDorm.VIEW_COUNT || hoverDorm.views || 0 | number }} เข้าชม</span>
+                 <span>{{ hoverDorm.VIEW_COUNT || hoverDorm.views || 0 | number }}</span>
                </div>
              </div>
 
-             <p class="zone" *ngIf="hoverDorm.zone"><ion-icon name="location"></ion-icon> {{ hoverDorm.zone }}</p>
-             <p class="address"><ion-icon name="map-outline"></ion-icon> {{ hoverDorm.ADDRESS || hoverDorm.address || 'ไม่ระบุที่อยู่' }}</p>
-
-             <p class="update-date" *ngIf="hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT">
-               <ion-icon name="time-outline"></ion-icon>
-               อัปเดต: {{ (hoverDorm.UPDATED_AT || hoverDorm.updated_at || hoverDorm.CREATE_DATE || hoverDorm.UPDATE_AT) | date:'dd/MM/yyyy' }}
+             <p class="zone" *ngIf="hoverDorm.zone" style="font-size: 11px; margin: 0; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+               <ion-icon name="location"></ion-icon> {{ hoverDorm.zone }}
              </p>
              
-             <div class="click-more-hint" style="text-align: center; font-size: 11px; color: #888; margin-top: 8px;">
-               <ion-icon name="finger-print-outline"></ion-icon> กดเพื่อดูเพิ่มเติม
+             <div class="click-more-hint" style="text-align: center; font-size: 10px; color: #1976d2; margin-top: 6px; font-weight: 600;">
+               <ion-icon name="finger-print-outline" style="vertical-align: -2px;"></ion-icon> แตะเพื่อดูต่อ
              </div>
           </div>
       </div>

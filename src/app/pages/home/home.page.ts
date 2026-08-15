@@ -703,25 +703,37 @@ export class HomePage implements OnInit, ViewDidEnter {
     }
     
     if (event && event.domEvent && typeof event.domEvent.clientX === 'number') {
-      let calcX = event.domEvent.clientX + 15;
-      let calcY = event.domEvent.clientY - 60;
+      const mapWrapper = document.querySelector('.map-wrapper') || document.querySelector('google-map');
+      let offsetX = 0;
+      let offsetY = 0;
+      let containerW = window.innerWidth;
+      let containerH = window.innerHeight;
       
-      // Boundary check to prevent card (width: ~220px, height: ~250px) from going off-screen
-      const screenW = window.innerWidth;
-      const screenH = window.innerHeight;
-      
-      if (calcX + 240 > screenW) {
-        calcX = event.domEvent.clientX - 240; // Flip to left side of cursor
+      if (mapWrapper) {
+        const rect = mapWrapper.getBoundingClientRect();
+        offsetX = rect.left;
+        offsetY = rect.top;
+        containerW = rect.width;
+        containerH = rect.height;
       }
-      if (calcY + 280 > screenH) {
-        calcY = event.domEvent.clientY - 280; // Flip to top of cursor
+      
+      // Calculate position relative to the map wrapper
+      let calcX = event.domEvent.clientX - offsetX + 15;
+      let calcY = event.domEvent.clientY - offsetY - 30;
+      
+      // Boundary check to prevent card (width: 170px) from going off-container
+      if (calcX + 170 > containerW) {
+        calcX = event.domEvent.clientX - offsetX - 185; // Flip to left side of cursor
+      }
+      if (calcY + 120 > containerH) {
+        calcY = event.domEvent.clientY - offsetY - 120; // Flip to top of cursor
       }
       
       this.mouseX = calcX;
       this.mouseY = calcY;
     } else {
-      this.mouseX = 300;
-      this.mouseY = 300;
+      this.mouseX = 50;
+      this.mouseY = 50;
     }
     
     this.hoverDorm = dorm;
