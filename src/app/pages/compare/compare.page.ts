@@ -15,7 +15,7 @@ import {
   cashOutline, layersOutline, callOutline, checkmarkCircleOutline,
   logoFacebook, logoInstagram, logoTwitter, paperPlaneOutline, arrowForwardCircle, 
   location, closeCircle, call, chatbubbleEllipsesOutline, trashOutline, eye,
-  mapOutline, timeOutline
+  mapOutline, timeOutline, star
 } from 'ionicons/icons';
 import { AlertModalComponent } from '../../components/alert-modal/alert-modal.component';
 import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
@@ -74,7 +74,7 @@ export class ComparePage implements OnInit {
       cashOutline, layersOutline, callOutline, checkmarkCircleOutline,
       logoFacebook, logoInstagram, logoTwitter, paperPlaneOutline, arrowForwardCircle, 
       location, closeCircle, call, chatbubbleEllipsesOutline, trashOutline
-    , eye, mapOutline, timeOutline});
+    , eye, mapOutline, timeOutline, star});
     // โหลด referencePoint จาก localStorage ถ้ามี
     try {
       const stored = localStorage.getItem('userLocation');

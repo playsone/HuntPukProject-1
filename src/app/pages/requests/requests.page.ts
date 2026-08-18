@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ViewWillEnter, AlertController } from '@ionic/angular'; // 🌟 เอา LoadingController ออกแล้ว
+import { IonicModule, ViewWillEnter, AlertController, ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons'; 
 
 import { personOutline, callOutline, arrowBack, logoFacebook, chatbubbles, arrowForward, logoInstagram, logoTwitter, paperPlane, alertCircle, time, checkmarkCircle, image, cloudUploadOutline, camera, heartDislikeOutline, personCircleOutline } from 'ionicons/icons'; 
@@ -9,6 +9,7 @@ import { personOutline, callOutline, arrowBack, logoFacebook, chatbubbles, arrow
 import { OwnerRequestService, UserDormOwnerReqPostReq } from '../../services/owner-request'; 
 import { UserService } from '../../services/user';
 import { Router } from '@angular/router';
+import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
 
 @Component({
   selector: 'app-requests',
@@ -41,8 +42,8 @@ export class RequestsPage implements OnInit, ViewWillEnter {
     private ownerRequestService: OwnerRequestService,
     private userService: UserService,
     private router: Router,
-    private alertCtrl: AlertController
-    // 🌟 เอา private loadingCtrl ออกไปแล้วครับ
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
   ) {
     addIcons({ personOutline, callOutline, arrowBack, logoFacebook, chatbubbles, arrowForward, logoInstagram, logoTwitter, paperPlane, alertCircle, time, checkmarkCircle, image, cloudUploadOutline, camera, heartDislikeOutline, personCircleOutline });
   }
@@ -196,26 +197,29 @@ export class RequestsPage implements OnInit, ViewWillEnter {
       this.errorMessage = 'กรุณาอัปโหลดรูปโปรไฟล์'; return;
     }
     
-    const alert = await this.alertCtrl.create({
-      header: 'ยืนยันการขอสิทธิ์',
-      message: this.isRejectedRetry ? 'คุณต้องการส่งข้อมูลชุดใหม่เพื่อแทนที่คำขอเดิมที่ถูกปฏิเสธหรือไม่?' : 'คุณแน่ใจหรือไม่ว่าต้องการขอสิทธิ์เป็นเจ้าของหอพัก?',
-      buttons: [
-        {
-          text: 'ยกเลิก',
-          role: 'cancel',
-          handler: () => {
-            this.isSubmitting = false;
-          }
-        },
-        {
-          text: 'ยืนยัน',
-          handler: () => {
-            this.proceedSubmit();
-          }
-        }
-      ]
+    const modal = await this.modalCtrl.create({
+      component: ActionConfirmModalComponent,
+      cssClass: 'custom-action-modal',
+      componentProps: {
+        title: 'ยืนยันการขอสิทธิ์',
+        message: this.isRejectedRetry 
+          ? 'คุณต้องการส่งข้อมูลชุดใหม่เพื่อแทนที่คำขอเดิมที่ถูกปฏิเสธหรือไม่?' 
+          : 'คุณแน่ใจหรือไม่ว่าต้องการขอสิทธิ์เป็นเจ้าของหอพัก?',
+        confirmText: 'ยืนยัน',
+        cancelText: 'ยกเลิก',
+        type: 'confirm'
+      }
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { role } = await modal.onDidDismiss();
+    
+    if (role === 'confirm') {
+      this.proceedSubmit();
+    } else {
+      this.isSubmitting = false;
+    }
   }
 
   proceedSubmit() {

@@ -106,6 +106,8 @@ export class ManageRequestsDormOwnerPage implements OnInit {
   }
 
   async showApproveAlert(req: OwnerRequest) {
+    this.closeModal(); // ปิด Modal ป้องกันบั๊ก Focus
+
     const result = await Swal.fire({
       title: 'ยืนยันการอนุมัติ',
       text: `คุณต้องการให้สิทธิ์คุณ ${req.first_name} เป็นเจ้าของหอพักใช่หรือไม่?`,
@@ -126,13 +128,17 @@ export class ManageRequestsDormOwnerPage implements OnInit {
 
     if (result.isConfirmed) {
       this.processUpdate(req.user_id, true, '');
+    } else {
+      this.openDetailModal(req); // เปิด Modal คืนถ้ากดยกเลิก
     }
   }
 
   async showRejectAlert(req: OwnerRequest) {
+    this.closeModal(); // ปิด Modal ก่อนเพื่อไม่ให้ Ionic บล็อกการพิมพ์ (Focus trap)
+
     const result = await Swal.fire({
       title: 'ปฏิเสธคำขอ',
-      text: 'กรุณาระบุเหตุผลที่ไม่อนุมัติคำขอนี้ (ถ้ามี)',
+      text: 'กรุณาระบุเหตุผลที่ไม่อนุมัติคำขอนี้',
       icon: 'warning',
       heightAuto: false,
       input: 'textarea',
@@ -143,6 +149,12 @@ export class ManageRequestsDormOwnerPage implements OnInit {
       confirmButtonText: 'ยืนยันปฏิเสธ',
       cancelButtonText: 'ยกเลิก',
       reverseButtons: true,
+      inputValidator: (value) => {
+        if (!value || value.trim() === '') {
+          return 'กรุณาระบุเหตุผลในการปฏิเสธคำขอ!';
+        }
+        return null;
+      },
       customClass: {
         popup: 'swal-custom-popup',
         title: 'swal-custom-title',
@@ -151,8 +163,10 @@ export class ManageRequestsDormOwnerPage implements OnInit {
     });
 
     if (result.isConfirmed) {
-      const msg = result.value || 'ไม่ผ่านการพิจารณา';
+      const msg = result.value.trim();
       this.processUpdate(req.user_id, false, msg);
+    } else {
+      this.openDetailModal(req); // เปิด Modal คืนถ้ากดยกเลิก
     }
   }
 

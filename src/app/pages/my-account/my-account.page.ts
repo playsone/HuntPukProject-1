@@ -5,13 +5,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { 
   person, mail, create, arrowBack, arrowForward, chevronForward, logOut, call, shieldCheckmark, home, documentText, 
-  close, alertCircle, business, chatbubbleEllipses, logoFacebook, logoInstagram, 
+  close, alertCircle, business, chatbubbleEllipses, logoFacebook, logoInstagram, logoTwitter, paperPlane,
   documentTextOutline, personCircle, createOutline, lockClosedOutline, trashOutline 
 } from 'ionicons/icons';
 import { UserService } from '../../services/user'; 
 import { DormitoryService } from '../../services/dormitory';
 import { Auth } from '../../services/auth';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonSpinner, LoadingController, ToastController, AlertController, IonModal, ModalController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonSpinner, LoadingController, ToastController, AlertController, ModalController } from '@ionic/angular/standalone';
 import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
 
 @Component({
@@ -19,7 +19,7 @@ import { ActionConfirmModalComponent } from '../../components/action-confirm-mod
   templateUrl: './my-account.page.html',
   styleUrls: ['./my-account.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonSpinner, IonModal, ActionConfirmModalComponent]
+  imports: [CommonModule, FormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonSpinner, ActionConfirmModalComponent]
 })
 export class MyAccountPage implements OnInit {
   user: any = {};
@@ -29,7 +29,6 @@ export class MyAccountPage implements OnInit {
   
   timestamp: number = Date.now();
   myDorms: any[] = [];
-  isDormModalOpen: boolean = false;
   ownerData: any = null; // เก็บข้อมูลเจ้าของหอพัก (ชื่อ, โซเชียล) สำหรับส่งไป edit-profile
 
   constructor(
@@ -47,7 +46,7 @@ export class MyAccountPage implements OnInit {
       'chevron-forward': chevronForward, 'log-out-outline': logOut,
       call, shieldCheckmark, home, documentText, 
       close, alertCircle, business, 'chatbubble-ellipses': chatbubbleEllipses, 
-      'logo-facebook': logoFacebook, 'logo-instagram': logoInstagram, 
+      'logo-facebook': logoFacebook, 'logo-instagram': logoInstagram, 'logo-twitter': logoTwitter, 'paper-plane': paperPlane,
       'document-text-outline': documentTextOutline, 'person-circle': personCircle,
       'create-outline': createOutline, 'lock-closed-outline': lockClosedOutline, 'trash-outline': trashOutline 
     });
@@ -193,13 +192,31 @@ export class MyAccountPage implements OnInit {
               id: rawData.USER_ID || rawData.id || this.user.id || 0,
               username: rawData.USERNAME || rawData.username || this.user.username || 'ไม่ระบุชื่อ',
               email: rawData.EMAIL || rawData.email || this.user.email || '-',
-              phone:rawData.PHONE_NUMBER || this.user.phone  || finalPhone,
+              phone: rawData.PHONE_NUMBER || this.user.phone || finalPhone,
               role_id: rawData.ROLE_TYPE_ID || rawData.role_id || this.user.role_id || 1,
               status: rawData.ACCOUNT_STATUS ?? rawData.status ?? this.user.status,
               first_name: rawData.FIRST_NAME || rawData.first_name || '',
               last_name: rawData.LAST_NAME || rawData.last_name || '',
-              profile_image: rawData.PROFILE_IMAGE || rawData.profile_image || ''
+              profile_image: rawData.PROFILE_IMAGE || rawData.profile_image || '',
+              facebook: rawData.FACEBOOK || rawData.facebook || '',
+              line: rawData.LINE || rawData.line || '',
+              instagram: rawData.INSTAGRAM || rawData.instagram || '',
+              x: rawData.X || rawData.x || '',
+              telegram: rawData.TELEGRAM || rawData.telegram || ''
             };
+
+            if (rawData.FIRST_NAME || rawData.first_name || rawData.FACEBOOK || rawData.LINE || rawData.REQ_STATUS !== undefined) {
+              this.ownerData = {
+                first_name: rawData.FIRST_NAME || rawData.first_name || '',
+                last_name: rawData.LAST_NAME || rawData.last_name || '',
+                facebook: rawData.FACEBOOK || rawData.facebook || '',
+                line: rawData.LINE || rawData.line || '',
+                instagram: rawData.INSTAGRAM || rawData.instagram || '',
+                x: rawData.X || rawData.x || '',
+                telegram: rawData.TELEGRAM || rawData.telegram || '',
+                profile_image: rawData.PROFILE_IMAGE || rawData.profile_image || ''
+              };
+            }
 
             // อัปเดตกลับเข้า localStorage
             if (stored) {
@@ -242,7 +259,6 @@ export class MyAccountPage implements OnInit {
   }
 
   goToMyDorms() {
-    this.closeDormModal();
     this.router.navigate(['/my-dorms']);
   }
   
@@ -272,11 +288,11 @@ export class MyAccountPage implements OnInit {
                 this.ownerData = {
                   first_name: fullDorm.FIRST_NAME || fullDorm.OWNER_FIRST_NAME || dorm.FIRST_NAME || this.user.first_name || '',
                   last_name: fullDorm.LAST_NAME || fullDorm.OWNER_LAST_NAME || dorm.LAST_NAME || this.user.last_name || '',
-                  facebook: fullDorm.facebook || fullDorm.FACEBOOK || dorm.facebook || dorm.FACEBOOK || '',
-                  line: fullDorm.line || fullDorm.LINE || dorm.line || dorm.LINE || '',
-                  instagram: fullDorm.instagram || fullDorm.INSTAGRAM || dorm.instagram || dorm.INSTAGRAM || '',
-                  x: fullDorm.x || fullDorm.X || dorm.x || dorm.X || '',
-                  telegram: fullDorm.telegram || fullDorm.TELEGRAM || dorm.telegram || dorm.TELEGRAM || '',
+                  facebook: fullDorm.facebook || fullDorm.FACEBOOK || dorm.facebook || dorm.FACEBOOK || this.user.facebook || '',
+                  line: fullDorm.line || fullDorm.LINE || dorm.line || dorm.LINE || this.user.line || '',
+                  instagram: fullDorm.instagram || fullDorm.INSTAGRAM || dorm.instagram || dorm.INSTAGRAM || this.user.instagram || '',
+                  x: fullDorm.x || fullDorm.X || dorm.x || dorm.X || this.user.x || '',
+                  telegram: fullDorm.telegram || fullDorm.TELEGRAM || dorm.telegram || dorm.TELEGRAM || this.user.telegram || '',
                   profile_image: this.user.profile_image || fullDorm.PROFILE_IMAGE || ''
                 };
               }
@@ -299,18 +315,19 @@ export class MyAccountPage implements OnInit {
           }; // ถ้าดึงแบบละเอียดไม่สำเร็จ ก็ใช้แบบสรุปไปก่อนและแนบชื่อเจ้าของ
         }));
         this.myDorms = detailedDorms;
+
+        // ซิงค์ข้อมูลกลับไปที่ user หากยังไม่มี
+        if (this.ownerData) {
+          if (!this.user.first_name) this.user.first_name = this.ownerData.first_name;
+          if (!this.user.last_name) this.user.last_name = this.ownerData.last_name;
+          if (!this.user.line) this.user.line = this.ownerData.line;
+          if (!this.user.facebook) this.user.facebook = this.ownerData.facebook;
+          if (!this.user.instagram) this.user.instagram = this.ownerData.instagram;
+        }
       }
     } catch (e) {
       console.error('Failed to load owner dorms', e);
     }
-  }
-
-  openDormModal() {
-    this.isDormModalOpen = true;
-  }
-
-  closeDormModal() {
-    this.isDormModalOpen = false;
   }
 
   async deleteAccount() {
@@ -337,6 +354,7 @@ export class MyAccountPage implements OnInit {
                 if (success) {
                   this.showToast('ลบบัญชีสำเร็จ', 'success');
                   localStorage.removeItem('loggedIn');
+                  localStorage.removeItem('rememberLogin');
                   window.dispatchEvent(new CustomEvent('user-logged-out'));
                   this.router.navigate(['/home']);
                   return true;
@@ -376,6 +394,7 @@ export class MyAccountPage implements OnInit {
     const { role } = await modal.onDidDismiss();
     if (role === 'confirm') {
       localStorage.removeItem('loggedIn');
+      localStorage.removeItem('rememberLogin');
       window.dispatchEvent(new CustomEvent('user-logged-out'));
       this.router.navigate(['/login']);
     }

@@ -108,6 +108,7 @@
         <div class="column-labels">
              <div class="row-header dorm-header">หัวข้อ</div> 
              <div class="row-cell img-row">ภาพรวม</div>
+             <div class="row-cell">คะแนนรีวิว</div>
              <div class="row-cell">ราคาเริ่มต้น</div>
              <div class="row-cell">ระยะทาง (กม.)</div>
              <div class="row-cell">ค่าน้ำ</div>
@@ -130,6 +131,11 @@
                 <div class="img-box">
                   <img [src]="item.image || 'assets/dorm-placeholder.jpg'" onerror="this.src='https://placehold.co/600x400?text=No+Image'">
                 </div>
+              </div>
+
+              <div class="row-cell rating-text" style="color: #fbc02d; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 4px;">
+                 <ion-icon name="star"></ion-icon>
+                 <span>{{ item.SCORE ? (item.SCORE | number:'1.1-1') : '0.0' }}</span>
               </div>
 
               <div class="row-cell price-text">

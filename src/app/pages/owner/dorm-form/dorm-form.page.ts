@@ -971,7 +971,7 @@ export class DormFormPage implements OnInit {
     
     const alert = await this.alertCtrl.create({
       header: 'ยืนยันการเพิ่ม',
-      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่?<br>สิทธิ์คงเหลือ: ${4 - this.formData.new_facilities.length - 1} รายการ`,
+      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่? (สิทธิ์คงเหลือ: ${4 - this.formData.new_facilities.length - 1} รายการ)`,
       buttons: [
         { text: 'ยกเลิก', role: 'cancel' },
         {
@@ -1148,9 +1148,10 @@ export class DormFormPage implements OnInit {
       form.append('facilities', JSON.stringify(selectedFacIds));
 
       if (this.formData.new_facilities && this.formData.new_facilities.length > 0) {
+        // ส่งแค่ชื่อ ไม่ส่ง icon (Base64) ใน JSON เพราะจะส่งเป็นไฟล์แยกผ่าน FACILITY_IMG_n
         const newFacToSave = this.formData.new_facilities.map((nf: any) => ({
           name: nf.name,
-          icon: nf.icon
+          icon: '' // ไม่ส่ง Base64 ลง column — backend จะอัปเดต icon ทีหลังจากไฟล์ที่แนบมา
         }));
         form.append('new_facilities', JSON.stringify(newFacToSave));
 

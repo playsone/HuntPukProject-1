@@ -217,6 +217,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     const { role } = await modal.onDidDismiss();
     if (role === 'confirm') {
       localStorage.removeItem('loggedIn');
+      localStorage.removeItem('rememberLogin');
       this.currentUser = null;
       if (!this.isDesktop) {
         this.isOpen = false;

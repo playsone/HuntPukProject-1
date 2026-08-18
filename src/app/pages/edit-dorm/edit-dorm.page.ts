@@ -1010,7 +1010,7 @@ export class EditDormPage implements OnInit {
 
     const alert = await this.alertCtrl.create({
       header: 'ยืนยันการเพิ่ม',
-      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่?<br>สิทธิ์คงเหลือ: ${3 - this.formData.new_facilities.length - 1} รายการ`,
+      message: `ต้องการเพิ่ม "${trimmedName}" ใช่หรือไม่? (สิทธิ์คงเหลือ: ${3 - this.formData.new_facilities.length - 1} รายการ)`,
       buttons: [
         { text: 'ยกเลิก', role: 'cancel' },
         {

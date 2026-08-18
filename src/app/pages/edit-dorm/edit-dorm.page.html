@@ -584,7 +584,7 @@
           (click)="goToNextSegment('rooms')">
           <ion-icon name="arrow-back-outline" slot="start"></ion-icon> ย้อนกลับ
         </ion-button>
-        <ion-button expand="block" color="dark" shape="round" style="flex: 1; font-weight: bold;"
+        <ion-button expand="block" color="warning" fill="solid" shape="round" style="flex: 1; font-weight: bold; color: black;"
           (click)="confirmSave()" *ngIf="!isWaitingForAdmin && !isViewOnly && !isResubmitMode">
           <ion-icon name="save-outline" slot="start"></ion-icon> บันทึกข้อมูล
         </ion-button>

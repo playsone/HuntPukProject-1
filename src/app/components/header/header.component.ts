@@ -103,6 +103,7 @@ export class HeaderComponent implements OnInit {
     const { role } = await modal.onDidDismiss();
     if (role === 'confirm') {
       localStorage.removeItem('loggedIn');
+      localStorage.removeItem('rememberLogin');
       window.location.reload();
     }
   }

@@ -258,7 +258,7 @@ export class FacilityManagementPage implements OnInit {
     const fac = this.deletingFac();
     if (!fac) return;
     this.isDeleteModalOpen.set(false);
-    this.dormSv.approveFacilityReq(fac.FAC_TYPE_ID, false, 'Deleted by Admin').subscribe({
+    this.dormSv.deleteFacility(fac.FAC_TYPE_ID).subscribe({
       next: () => {
         this.showToast('ลบสิ่งอำนวยความสะดวกสำเร็จ', 'success');
         this.loadData();
@@ -279,7 +279,7 @@ export class FacilityManagementPage implements OnInit {
         { 
           text: 'ยืนยัน', 
           handler: () => {
-            this.dormSv.approveFacilityReq(fac.FAC_TYPE_ID, true).subscribe({
+            this.dormSv.approveFacility(fac.FAC_TYPE_ID).subscribe({
               next: () => {
                 this.showToast('อนุมัติสำเร็จ', 'success');
                 this.loadData();
@@ -302,7 +302,7 @@ export class FacilityManagementPage implements OnInit {
         { 
           text: 'ยืนยัน', 
           handler: () => {
-            this.dormSv.approveFacilityReq(fac.FAC_TYPE_ID, false).subscribe({
+            this.dormSv.rejectFacility(fac.FAC_TYPE_ID).subscribe({
               next: () => {
                 this.showToast('ปฏิเสธคำร้องขอสำเร็จ', 'success');
                 this.loadData();

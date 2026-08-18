@@ -186,6 +186,21 @@ ion-content {
       color: #F57F17; // สีส้มอมเหลืองเข้มๆ
       font-size: 18px; 
     }
+
+    &.line-box {
+      background: #e8f5e9;
+      ion-icon { color: #00c300; }
+    }
+
+    &.fb-box {
+      background: #e3f2fd;
+      ion-icon { color: #1877f2; }
+    }
+
+    &.ig-box {
+      background: #fce4ec;
+      ion-icon { color: #e1306c; }
+    }
   }
 }
 

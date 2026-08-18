@@ -5,7 +5,8 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>บัญชีผู้ใช้</ion-title> </ion-toolbar>
+    <ion-title>บัญชีผู้ใช้</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -37,13 +38,6 @@
     </div>
 
     <div class="profile-content-card">
-      
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;" *ngIf="user.role_id === 2">
-        <ion-button fill="outline" size="small" color="dark" (click)="openDormModal()" style="--border-radius: 20px; font-size: 12px;">
-          <ion-icon name="business" slot="start" style="font-size: 14px;"></ion-icon>
-          ดูข้อมูลติดต่อ
-        </ion-button>
-      </div>
 
       <div class="info-group">
         <div class="info-label">
@@ -56,6 +50,22 @@
           {{ user.username || '-' }}
         </div>
       </div>
+
+      <!-- ข้อมูลชื่อ-นามสกุล (สำหรับเจ้าของหอพัก หรือเมื่อมีข้อมูล) -->
+      <ng-container *ngIf="user.role_id === 2 || user.first_name || ownerData?.first_name">
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box">
+              <ion-icon name="person-circle"></ion-icon>
+            </div>
+            <span>ชื่อ - นามสกุล</span>
+          </div>
+          <div class="info-value">
+            {{ ((user.first_name || ownerData?.first_name || '') + ' ' + (user.last_name || ownerData?.last_name || '')).trim() || '-' }}
+          </div>
+        </div>
+      </ng-container>
 
       <div class="divider"></div>
 
@@ -85,6 +95,74 @@
         </div>
       </div>
 
+      <!-- ช่องทางติดต่อสำหรับเจ้าของหอพัก (role_id === 2) -->
+      <ng-container *ngIf="user.role_id === 2">
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box line-box">
+              <ion-icon name="chatbubble-ellipses"></ion-icon>
+            </div>
+            <span>LINE ID</span>
+          </div>
+          <div class="info-value">
+            {{ user.line || ownerData?.line || '-' }}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box fb-box">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </div>
+            <span>Facebook</span>
+          </div>
+          <div class="info-value">
+            {{ user.facebook || ownerData?.facebook || '-' }}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box ig-box">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </div>
+            <span>Instagram</span>
+          </div>
+          <div class="info-value">
+            {{ user.instagram || ownerData?.instagram || '-' }}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box" style="background: #e1f5fe;">
+              <ion-icon name="logo-twitter" style="color: #1DA1F2;"></ion-icon>
+            </div>
+            <span>X (Twitter)</span>
+          </div>
+          <div class="info-value">
+            {{ user.x || ownerData?.x || '-' }}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="info-group">
+          <div class="info-label">
+            <div class="icon-box" style="background: #e3f2fd;">
+              <ion-icon name="paper-plane" style="color: #0088cc;"></ion-icon>
+            </div>
+            <span>Telegram</span>
+          </div>
+          <div class="info-value">
+            {{ user.telegram || ownerData?.telegram || '-' }}
+          </div>
+        </div>
+      </ng-container>
+
       <div class="divider"></div>
 
       <div class="info-group">
@@ -99,6 +177,8 @@
           <span *ngIf="user.status !== 0 && user.status !== 'active'" style="color: red;">ถูกระงับ</span>
         </div>
       </div>
+
+
 
       <!-- Action Buttons -->
       <div class="action-section" *ngIf="canEdit || isOwnProfile">
@@ -150,122 +230,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal แสดงข้อมูลเจ้าของหอพัก -->
-  <ion-modal [isOpen]="isDormModalOpen" (didDismiss)="closeDormModal()" class="owner-info-modal">
-    <ng-template>
-      <ion-header class="ion-no-border">
-        <ion-toolbar style="--background: #1a1a1a; --color: #fff;">
-          <ion-title style="font-weight: 700; font-size: 16px;">ข้อมูลเจ้าของหอพัก</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="closeDormModal()" style="--color: #fff;">
-              <ion-icon name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      
-      <ion-content style="--background: #f5f5f5;">
-        <div *ngIf="myDorms.length === 0" class="empty-state">
-          <ion-icon name="document-text-outline"></ion-icon>
-          <p>ยังไม่มีข้อมูลเจ้าของหอพัก</p>
-        </div>
-
-        <div *ngIf="myDorms.length > 0" class="owner-modal-body">
-          
-          <!-- Hero Section -->
-          <div class="owner-hero">
-            <div class="owner-avatar-wrap">
-              <ion-icon name="business"></ion-icon>
-            </div>
-            <h2 class="owner-full-name">
-              {{ myDorms[0].OWNER_FIRST_NAME || myDorms[0].FIRST_NAME || 'ไม่ระบุชื่อ' }} 
-              {{ myDorms[0].OWNER_LAST_NAME || myDorms[0].LAST_NAME || '' }}
-            </h2>
-            <p class="owner-license">ทะเบียน/ใบอนุญาต: {{ myDorms[0].LICENSE || myDorms[0].license || myDorms[0].OWNER_LICENSE || '-' }}</p>
-          </div>
-
-          <!-- Contact Cards -->
-          <div class="owner-info-cards">
-            
-            <div class="info-card">
-              <div class="info-card-icon phone-icon">
-                <ion-icon name="call"></ion-icon>
-              </div>
-              <div class="info-card-content">
-                <span class="info-card-label">เบอร์โทรศัพท์</span>
-                <span class="info-card-value">{{ myDorms[0].OWNER_PHONE || myDorms[0].phone || myDorms[0].PHONE || '-' }}</span>
-              </div>
-            </div>
-
-            <h3 class="social-title">ช่องทางติดต่ออื่นๆ</h3>
-
-            <div class="info-card">
-              <div class="info-card-icon line-icon">
-                <ion-icon name="chatbubble-ellipses"></ion-icon>
-              </div>
-              <div class="info-card-content">
-                <span class="info-card-label">LINE ID</span>
-                <span class="info-card-value">{{ myDorms[0].LINE || myDorms[0].line || myDorms[0].OWNER_LINE || '-' }}</span>
-              </div>
-            </div>
-
-            <div class="info-card">
-              <div class="info-card-icon fb-icon">
-                <ion-icon name="logo-facebook"></ion-icon>
-              </div>
-              <div class="info-card-content">
-                <span class="info-card-label">Facebook</span>
-                <span class="info-card-value">{{ myDorms[0].FACEBOOK || myDorms[0].facebook || myDorms[0].OWNER_FACEBOOK || '-' }}</span>
-              </div>
-            </div>
-
-            <div class="info-card">
-              <div class="info-card-icon ig-icon">
-                <ion-icon name="logo-instagram"></ion-icon>
-              </div>
-              <div class="info-card-content">
-                <span class="info-card-label">Instagram</span>
-                <span class="info-card-value">{{ myDorms[0].INSTAGRAM || myDorms[0].instagram || myDorms[0].OWNER_INSTAGRAM || '-' }}</span>
-              </div>
-            </div>
-            
-            <h3 class="social-title" style="margin-top: 10px;">หอพักที่เป็นเจ้าของ ({{ myDorms.length }} แห่ง)</h3>
-            <div class="dorm-list-card">
-              <div *ngFor="let dorm of myDorms; let i = index" class="dorm-list-item" [class.border-top]="i > 0">
-                <div class="dorm-list-icon">
-                  <ion-icon name="home"></ion-icon>
-                </div>
-                <div class="dorm-list-detail">
-                  <span class="dorm-name">{{ dorm.DORM_NAME || dorm.dorm_name || 'ไม่ระบุชื่อ' }}</span>
-                  <div class="dorm-status">
-                    สถานะ:
-                    <span *ngIf="dorm.DORM_STATUS === 1 || dorm.DORM_STATUS_ID === 1" class="status-badge available">ว่าง</span>
-                    <span *ngIf="dorm.DORM_STATUS === 2 || dorm.DORM_STATUS_ID === 2" class="status-badge closed">ปิด</span>
-                    <span *ngIf="dorm.DORM_STATUS === 3 || dorm.DORM_STATUS_ID === 3" class="status-badge full">เต็ม</span>
-                  </div>
-                  <!-- แสดงรูปหน้าหอพักเท่านั้น (ไม่แสดงใบอนุญาตเพราะถูกลบหลังอนุมัติแล้ว) -->
-                  <div style="margin-top: 8px;">
-                    <div style="font-size: 11px; color: #888; margin-bottom: 4px;">หน้าหอพัก</div>
-                    <img [src]="dorm.FRONT_DORM_IMAGE || dorm.FRONT_DORM_IMG || 'assets/no-image.png'" 
-                         onerror="this.src='https://placehold.co/200x100?text=No+Image'"
-                         style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;">
-                  </div>
-                  <!-- ปุ่มไปหน้า my-dorms -->
-                  <div style="margin-top: 10px; text-align: right;">
-                    <ion-button fill="clear" size="small" color="primary" (click)="goToMyDorms()" style="font-size: 12px;">
-                      จัดการหอพัก
-                      <ion-icon name="arrow-forward" slot="end" style="font-size: 13px;"></ion-icon>
-                    </ion-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
 
 </ion-content>

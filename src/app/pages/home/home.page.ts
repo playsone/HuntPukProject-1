@@ -332,8 +332,14 @@ export class HomePage implements OnInit, ViewDidEnter {
           this.currentUser = userObj.user ? userObj.user : userObj;
           await this.refreshFavorites();
           this.cdr.detectChanges();
+        } else {
+          this.currentUser = null;
         }
-      } catch (e) {}
+      } catch (e) {
+        this.currentUser = null;
+      }
+    } else {
+      this.currentUser = null;
     }
   }
 
@@ -894,7 +900,10 @@ export class HomePage implements OnInit, ViewDidEnter {
           this.zoneCircleRadius = 0;
         }
 
-        if (this.maxDistance !== null && this.maxDistance !== undefined) {
+        // If user typed a keyword, bypass radius filter so results always appear
+        const hasKeyword = this.searchText && this.searchText.trim().length > 0;
+        
+        if (!hasKeyword && this.maxDistance !== null && this.maxDistance !== undefined) {
           const searchOrigin = this.selectedZone && this.zoneCircleCenter ? this.zoneCircleCenter : this.referencePoint;
           this.circleCenter = searchOrigin;
           this.circleRadius = this.maxDistance * 1000;

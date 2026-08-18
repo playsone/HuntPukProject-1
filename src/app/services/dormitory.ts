@@ -464,9 +464,19 @@ export class DormitoryService {
     return this.http.get<ApiResponse<any[]>>(url);
   }
 
-  public approveFacilityReq(facId: number, isApprove: boolean, reason: string = ''): Observable<ApiResponse<any>> {
-    const url = `${this.apiUrl}/dorms/facility/approve/${facId}`;
-    return this.http.put<ApiResponse<any>>(url, { isApprove, reason });
+  public approveFacility(facId: number): Observable<ApiResponse<any>> {
+    const url = `${this.apiUrl}/admin/facilities/approve/${facId}`;
+    return this.http.put<ApiResponse<any>>(url, {});
+  }
+
+  public rejectFacility(facId: number): Observable<ApiResponse<any>> {
+    const url = `${this.apiUrl}/admin/facilities/reject/${facId}`;
+    return this.http.delete<ApiResponse<any>>(url);
+  }
+
+  public deleteFacility(facId: number): Observable<ApiResponse<any>> {
+    const url = `${this.apiUrl}/admin/facilities/${facId}`;
+    return this.http.delete<ApiResponse<any>>(url);
   }
 
   // ==========================================
