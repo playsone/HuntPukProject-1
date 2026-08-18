@@ -1100,9 +1100,14 @@ export class EditDormPage implements OnInit {
     await alert.present();
   }
 
-  onSuccessConfirmed() {
+    onSuccessConfirmed() {
     this.showSuccessModal = false;
-    this.router.navigate(['/my-dorms']);
+    const from = this.route.snapshot.queryParamMap.get('from');
+    if (from === 'manage-dorm') {
+      this.router.navigate(['/manage-dorm']);
+    } else {
+      this.router.navigate(['/my-dorms']);
+    }
   }
 
   async onSubmit() {
