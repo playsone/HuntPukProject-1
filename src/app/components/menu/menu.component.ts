@@ -9,7 +9,7 @@ import {
   key, create, business, heartOutline, logOutOutline, cubeOutline,
   close, chevronBackOutline, barChartOutline, peopleOutline,
   documentTextOutline, gridOutline, informationCircleOutline, chatbubblesOutline,
-  phonePortraitOutline
+  phonePortraitOutline, bookOutline
 } from 'ionicons/icons';
 import { ActionConfirmModalComponent } from '../action-confirm-modal/action-confirm-modal.component';
 
@@ -51,7 +51,8 @@ export class MenuComponent implements OnInit, OnDestroy {
       gridOutline,
       informationCircleOutline,
       chatbubblesOutline,
-      phonePortraitOutline
+      phonePortraitOutline,
+      bookOutline
     });
   }
 
@@ -189,6 +190,14 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
 
     this.router.navigate([path]);
+  }
+
+  openManual() {
+    if (!this.isDesktop) {
+      this.isOpen = false;
+      this.dispatchStateChange();
+    }
+    window.open('https://drive.google.com/drive/folders/1vASmPQ3dB2HEK98GpQ2UUQOFsR08mMwS?usp=sharing', '_blank');
   }
 
   async logout() {

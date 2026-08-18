@@ -61,6 +61,10 @@
           <div class="menu-icon-wrap"><ion-icon name="phone-portrait-outline"></ion-icon></div>
           <span>Download Mobile Application</span>
         </div>
+        <div class="menu-item" (click)="openManual()">
+          <div class="menu-icon-wrap"><ion-icon name="book-outline"></ion-icon></div>
+          <span>คู่มือการใช้งาน</span>
+        </div>
 
         <ng-container *ngIf="userRole > 0">
           <div class="menu-section-divider">
@@ -70,21 +74,25 @@
             <div class="menu-icon-wrap"><ion-icon name="person-circle-outline"></ion-icon></div>
             <span>โปรไฟล์</span>
           </div>
-          <div class="menu-item" *ngIf="userRole === 1 || userRole === 3" [class.active]="isActive('/requests')" (click)="navigate('/requests')">
+          <div class="menu-item" *ngIf="userRole === 1 || userRole === 3" [class.active]="isActive('/requests')"
+            (click)="navigate('/requests')">
             <div class="menu-icon-wrap"><ion-icon name="key"></ion-icon></div>
             <span>ร้องขอเป็นเจ้าของหอพัก</span>
           </div>
           <!-- เจ้าของหอพัก + Admin: ลงทะเบียนหอพัก -->
-          <div class="menu-item" *ngIf="userRole === 2 || userRole === 3" [class.active]="isActive('/dorm-form')" (click)="navigate('/dorm-form')">
+          <div class="menu-item" *ngIf="userRole === 2 || userRole === 3" [class.active]="isActive('/dorm-form')"
+            (click)="navigate('/dorm-form')">
             <div class="menu-icon-wrap"><ion-icon name="create"></ion-icon></div>
             <span>ลงทะเบียนหอพัก</span>
           </div>
           <!-- เจ้าของหอพักเท่านั้น: หอพักของฉัน -->
-          <div class="menu-item" *ngIf="userRole === 2" [class.active]="isActive('/my-dorms')" (click)="navigate('/my-dorms')">
+          <div class="menu-item" *ngIf="userRole === 2" [class.active]="isActive('/my-dorms')"
+            (click)="navigate('/my-dorms')">
             <div class="menu-icon-wrap"><ion-icon name="business"></ion-icon></div>
             <span>หอพักของฉัน</span>
           </div>
-          <div class="menu-item" *ngIf="userRole === 1" [class.active]="isActive('/favorites')" (click)="navigate('/favorites')">
+          <div class="menu-item" *ngIf="userRole === 1" [class.active]="isActive('/favorites')"
+            (click)="navigate('/favorites')">
             <div class="menu-icon-wrap"><ion-icon name="heart-outline"></ion-icon></div>
             <span>รายการโปรด</span>
           </div>
@@ -98,11 +106,13 @@
             <div class="menu-icon-wrap"><ion-icon name="bar-chart-outline"></ion-icon></div>
             <span>Dashboard</span>
           </div>
-          <div class="menu-item" [class.active]="isActive('/manage-requests-dorm-owner')" (click)="navigate('/manage-requests-dorm-owner')">
+          <div class="menu-item" [class.active]="isActive('/manage-requests-dorm-owner')"
+            (click)="navigate('/manage-requests-dorm-owner')">
             <div class="menu-icon-wrap"><ion-icon name="key"></ion-icon></div>
             <span>จัดการคำร้องขอเจ้าของหอพัก</span>
           </div>
-          <div class="menu-item" [class.active]="isActive('/manage-requests-createdorm')" (click)="navigate('/manage-requests-createdorm')">
+          <div class="menu-item" [class.active]="isActive('/manage-requests-createdorm')"
+            (click)="navigate('/manage-requests-createdorm')">
             <div class="menu-icon-wrap"><ion-icon name="document-text-outline"></ion-icon></div>
             <span>จัดการคำร้องขอเพิ่มหอพัก</span>
           </div>
@@ -114,13 +124,14 @@
             <div class="menu-icon-wrap"><ion-icon name="business"></ion-icon></div>
             <span>จัดการหอพัก</span>
           </div>
-          <div class="menu-item" [class.active]="isActive('/facility-management')" (click)="navigate('/facility-management')">
+          <div class="menu-item" [class.active]="isActive('/facility-management')"
+            (click)="navigate('/facility-management')">
             <div class="menu-icon-wrap"><ion-icon name="cube-outline"></ion-icon></div>
             <span>จัดการสิ่งอำนวยความสะดวก</span>
           </div>
           <div class="menu-item" [class.active]="isActive('/type-management')" (click)="navigate('/type-management')">
             <div class="menu-icon-wrap"><ion-icon name="grid-outline"></ion-icon></div>
-            <span>จัดการประเภทหอพัก</span>
+            <span>จัดการประเภทและข้อมูลพื้นฐาน</span>
           </div>
         </ng-container>
 
