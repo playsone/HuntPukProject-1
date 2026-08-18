@@ -249,7 +249,7 @@ export class LoginPage implements OnInit, OnDestroy, ViewDidEnter {
           Swal.fire({
             icon: 'error',
             title: 'เข้าสู่ระบบไม่สำเร็จ',
-            text: 'บัญชีของคุณถูกระงับหรือไม่มีสิทธิ์เข้าใช้งาน',
+            text: res.message || 'บัญชีของคุณถูกระงับหรือไม่มีสิทธิ์เข้าใช้งาน',
             confirmButtonColor: '#1a1a1a',
             confirmButtonText: 'ตกลง',
             heightAuto: false,
@@ -323,9 +323,13 @@ export class LoginPage implements OnInit, OnDestroy, ViewDidEnter {
 
       // Show popup only if it's not handled by inline error
       if (!this.emailErrorMsg && !this.passwordErrorMsg) {
+        let title = 'พบข้อผิดพลาด';
+        if (displayMsg.includes('ถูกปิด') || displayMsg.includes('ถูกระงับ')) {
+          title = 'เข้าสู่ระบบไม่สำเร็จ';
+        }
         Swal.fire({
           icon: 'error',
-          title: 'พบข้อผิดพลาด',
+          title: title,
           text: displayMsg,
           confirmButtonColor: '#1a1a1a',
           confirmButtonText: 'ตกลง',
