@@ -196,7 +196,6 @@ export class EditDormPage implements OnInit {
 
   previews: any = {
     FRONT_DORM_IMG: null,
-    FRONT_DORM_IMAGE: null,
     BED_IMG: null,
     WALL_IMG: null,
     CEILING_IMG: null,
@@ -565,7 +564,6 @@ export class EditDormPage implements OnInit {
         this.previews.WALL_IMG = d.wall_img || null;
         this.previews.CEILING_IMG = d.ceiling_img || null;
         this.previews.FLOOR_IMG = d.floor_img || null;
-        this.previews.FRONT_DORM_IMAGE = d.FRONT_DORM_IMAGE || null;
 
         // รูปส่วนต่างๆ
         this.previews.BATHROOM_IMG = d.bathroom_img || null;
@@ -839,6 +837,10 @@ export class EditDormPage implements OnInit {
         return;
       }
       this.selectedFiles[field] = file;
+      
+      // ✅ ลบออกจาก deletedRoomImages หากผู้ใช้เลือกอัปโหลดรูปใหม่กลับเข้าไป
+      this.deletedRoomImages = this.deletedRoomImages.filter(k => k !== field);
+
       const reader = new FileReader();
       reader.onload = () => {
         this.previews[field] = reader.result;

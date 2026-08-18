@@ -55,9 +55,18 @@ export class ManageDormPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  private hasLoadedOnce = false;
+
+  ngOnInit() {
+    this.initData();
+  }
 
   ionViewWillEnter() {
+    if (!this.hasLoadedOnce) return; // Prevent double firing on initial load
+    this.initData();
+  }
+
+  initData() {
     // Read queryParams from dashboard navigation
     const params = this.route.snapshot.queryParams;
     if (params['search']) {
@@ -69,7 +78,9 @@ export class ManageDormPage implements OnInit {
     } else if (params['zoneFilter']) {
       this.zoneFilterQuery = params['zoneFilter'];
     }
+    
     this.loadAllDorms();
+    this.hasLoadedOnce = true;
   }
 
   goBack() {

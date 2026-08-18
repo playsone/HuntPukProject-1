@@ -394,21 +394,20 @@
         <h3><ion-icon name="image-outline"></ion-icon> รูปภาพหลัก (หน้าปก)</h3>
         <p class="hint-text">รูปภาพด้านหน้าอาคาร หรือรูปที่สวยที่สุดของหอพัก</p>
         <div class="img-upload-box" tabindex="0" (paste)="onPaste($event, 'FRONT_DORM_IMG')"
-          (click)="(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? openImageViewer(previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) : (!isWaitingForAdmin && frontInput.click())"
-          [class.has-image]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE">
+          (click)="previews.FRONT_DORM_IMG ? openImageViewer(previews.FRONT_DORM_IMG) : (!isWaitingForAdmin && frontInput.click())"
+          [class.has-image]="previews.FRONT_DORM_IMG">
 
-          <!-- เช็กทั้ง FRONT_DORM_IMG และ FRONT_DORM_IMAGE เพื่อให้แสดงรูปเดิมจาก DB ได้ -->
-          <img [src]="previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE || 'assets/img/placeholder.png'"
+          <img [src]="previews.FRONT_DORM_IMG || 'assets/img/placeholder.png'"
             class="preview-img">
 
           <div class="overlay" *ngIf="!isWaitingForAdmin">
             <ion-icon name="cloud-upload-outline"></ion-icon>
-            <span>{{ (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE) ? 'ดูรูปภาพ' : 'กดเพื่อเลือกรูป' }}</span>
+            <span>{{ previews.FRONT_DORM_IMG ? 'ดูรูปภาพ' : 'กดเพื่อเลือกรูป' }}</span>
           </div>
         </div>
 
         <ion-button expand="block" fill="outline" color="primary" (click)="!isWaitingForAdmin && frontInput.click()"
-          *ngIf="!isWaitingForAdmin && (previews.FRONT_DORM_IMG || previews.FRONT_DORM_IMAGE)"
+          *ngIf="!isWaitingForAdmin && previews.FRONT_DORM_IMG"
           style="margin-top: 10px;"><ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
           อัปโหลดรูปภาพใหม่</ion-button>
         <input #frontInput type="file" (change)="onFileSelect($event, 'FRONT_DORM_IMG')" accept="image/jpeg, image/png"

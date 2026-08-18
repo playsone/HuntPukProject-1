@@ -10,13 +10,13 @@
         <ion-icon [name]="isFavorite ? 'bookmark' : 'bookmark-outline'"></ion-icon>
       </div>
 
-      <img [src]="dormData.image || 'assets/dorm-placeholder.jpg'"
+      <img [src]="dormData.FRONT_DORM_IMAGE || dormData.image || 'assets/dorm-placeholder.jpg'"
            onerror="this.src='https://placehold.co/600x400?text=No+Image'"
-           (click)="viewImage(dormData.image || 'assets/dorm-placeholder.jpg')">
+           (click)="viewImage(dormData.FRONT_DORM_IMAGE || dormData.image || 'assets/dorm-placeholder.jpg')">
       <div class="hero-overlay"></div>
 
       <!-- ✅ ปุ่มขยายรูป — บอกผู้ใช้ว่ารูปนี้กดดูขยายได้ -->
-      <div class="hero-expand-hint" (click)="viewImage(dormData.image || 'assets/dorm-placeholder.jpg')">
+      <div class="hero-expand-hint" (click)="viewImage(dormData.FRONT_DORM_IMAGE || dormData.image || 'assets/dorm-placeholder.jpg')">
         <ion-icon name="expand-outline"></ion-icon>
       </div>
 

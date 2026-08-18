@@ -442,7 +442,7 @@ export class DormDetailPage implements OnInit, OnChanges {
       ? this.dormData.gallery
       : [];
 
-    const heroImg = this.dormData?.image || 'assets/dorm-placeholder.jpg';
+    const heroImg = this.dormData?.FRONT_DORM_IMAGE || this.dormData?.image || 'assets/dorm-placeholder.jpg';
 
     // รวมรูปหน้าหอ + แกลเลอรีเป็นชุดเดียว ไม่ซ้ำกัน เพื่อเลื่อนดูต่อเนื่องได้
     const allImages = [heroImg, ...gallery].filter((img, idx, arr) => img && arr.indexOf(img) === idx);
