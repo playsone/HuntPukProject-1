@@ -319,7 +319,7 @@ export class EditDormPage implements OnInit {
           if (this.zones.length === 0) {
             await this.loadInitialData();
           }
-          await this.loadDormData(this.dormId);
+          await this.loadDormData(this.dormId, false);
         }
       });
     });
@@ -442,7 +442,7 @@ export class EditDormPage implements OnInit {
     };
   }
 
-  async loadDormData(id: number) {
+  async loadDormData(id: number, showLoading: boolean = true) {
     const loading = await this.loadingCtrl.create({
       message: 'กำลังโหลดข้อมูล...',
     });
@@ -1035,7 +1035,39 @@ export class EditDormPage implements OnInit {
     this.formData.new_facilities.splice(index, 1);
   }
 
+  
+  validateForm(): boolean {
+    if (
+      !this.formData.name ||
+      !this.formData.address ||
+      !this.formData.lat ||
+      !this.formData.lng ||
+      !this.formData.zone_id
+    ) {
+      this.showToast('กรุณากรอกข้อมูลสำคัญให้ครบถ้วน', 'warning');
+      return false;
+    }
+
+    const requiredImages = [
+      { key: 'FRONT_DORM_IMG', name: 'รูปหน้าปกหอพัก' },
+      { key: 'BED_IMG', name: 'รูปเตียงนอน' },
+      { key: 'WALL_IMG', name: 'รูปผนังปลายเตียง' },
+      { key: 'CEILING_IMG', name: 'รูปเพดาน' },
+      { key: 'FLOOR_IMG', name: 'รูปฝั่งติดประตู' },
+      { key: 'BATHROOM_IMG', name: 'รูปห้องน้ำ' },
+    ];
+
+    for (const img of requiredImages) {
+      if (!this.previews[img.key]) {
+        this.showToast(`กรุณาใส่${img.name}ให้ครบถ้วน`, 'warning');
+        return false;
+      }
+    }
+    return true;
+  }
+
   async confirmSave() {
+    if (!this.validateForm()) return;
     if (this.isWaitingForAdmin && !this.isResubmitMode) {
       this.showToast(
         'กำลังรอแอดมินตรวจสอบ ไม่สามารถแก้ไขได้ในขณะนี้',

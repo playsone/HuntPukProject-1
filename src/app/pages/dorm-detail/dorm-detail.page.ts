@@ -184,6 +184,7 @@ export class DormDetailPage implements OnInit, OnChanges {
 
         // ✅ รวมรูปส่วนต่างๆ ของห้องพักเข้าไปใน gallery เพื่อให้แสดงผลในหน้า detail
         const roomImages = [
+          this.dormData.bed_img,
           this.dormData.ceiling_img, 
           this.dormData.wall_img, 
           this.dormData.floor_img, 
