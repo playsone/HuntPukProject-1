@@ -235,3 +235,7 @@
 .img-wrapper-mini:has(.status-badge.closed) img, .img-wrapper-mini:has(.status-badge.status-2) img {
   filter: grayscale(100%) brightness(80%);
 }
+
+.owner{
+  background-color: #12ea45 !important;
+}

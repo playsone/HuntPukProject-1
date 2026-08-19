@@ -102,7 +102,8 @@ export class DormPopularPage implements OnInit {
           return { 
             ...dorm, 
             scoreDisplay: (!isNaN(parsedScore)) ? parsedScore.toFixed(1) : '0.0',
-            isChecked: favoriteIds.includes(Number(dorm.DORM_ID || dorm.id))
+            isChecked: favoriteIds.includes(Number(dorm.DORM_ID || dorm.id)),
+            isOwner: this.currentUserId !== 0 && (Number(dorm.OWNER_ID || dorm.owner_id) === this.currentUserId)
           };
         });
         // Sort locally to ensure correct display
