@@ -32,7 +32,7 @@
       <div class="rank-grid">
         <div class="rank-item" *ngFor="let item of popularDorms; let i = index">
           
-          <div class="rank-wrapper" [class.Owner]="item.isOwner">
+          <div class="rank-wrapper" [class.owner]="item.isOwner">
             <div class="rank-badge" [ngClass]="{'rank-1': i === 0, 'normal-rank': i > 0}">
               อันดับที่ {{ i + 1 }}
             </div>
