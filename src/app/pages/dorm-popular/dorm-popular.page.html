@@ -30,14 +30,14 @@
       </div>
 
       <div class="rank-grid">
-        <div class="rank-item" *ngFor="let item of popularDorms; let i = index">
-          
-          <div class="rank-wrapper" [class.owner]="item.isOwner">
+        <div class="rank-item " *ngFor="let item of popularDorms; let i = index">
+  
+          <div class="rank-wrapper" >
             <div class="rank-badge" [ngClass]="{'rank-1': i === 0, 'normal-rank': i > 0}">
               อันดับที่ {{ i + 1 }}
             </div>
 
-            <div class="dorm-card" (click)="goToDetail(item, $event)">
+            <div class="dorm-card" (click)="goToDetail(item, $event)" [ngClass]="{'owner': item.USER_ID == currentUserId}">
                
                <div class="interest-tag" [class.active]="item.isChecked" (click)="toggleFavorite($event, item)">
                  <ion-icon [name]="item.isChecked ? 'bookmark' : 'bookmark-outline'"></ion-icon>

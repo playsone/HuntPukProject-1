@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController, AlertController, ModalController } from '@ionic/angular'; 
@@ -13,6 +13,7 @@ import {
 import { RequireLoginModalComponent } from '../../components/require-login-modal/require-login-modal.component';
 import { ActionConfirmModalComponent } from '../../components/action-confirm-modal/action-confirm-modal.component';
 import { ThaiDatePipe } from '../../pipes/thai-date-pipe';
+import { UserService } from '../../services/user';
 
 @Component({
   selector: 'app-dorm-popular',
@@ -28,6 +29,8 @@ export class DormPopularPage implements OnInit {
   currentUserId: number = 0;
   currentUser: any = null;
   dormStatusList: any[] = [];
+
+  userId = signal<number | null>(null);
   
   constructor(
     private dormService: DormitoryService,
@@ -35,7 +38,8 @@ export class DormPopularPage implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private userSv: UserService
   ) { 
     addIcons({ 
       arrowBack, star, trophy, bookmark, 'bookmark-outline': bookmarkOutline,
@@ -53,6 +57,7 @@ export class DormPopularPage implements OnInit {
     this.checkLoginStatus();
     this.fetchDormStatuses();
     this.fetchPopularDorms();
+
   }
 
   onSortChange() {
@@ -103,7 +108,6 @@ export class DormPopularPage implements OnInit {
             ...dorm, 
             scoreDisplay: (!isNaN(parsedScore)) ? parsedScore.toFixed(1) : '0.0',
             isChecked: favoriteIds.includes(Number(dorm.DORM_ID || dorm.id)),
-            isOwner: this.currentUserId !== 0 && (Number(dorm.OWNER_ID || dorm.owner_id) === this.currentUserId)
           };
         });
         // Sort locally to ensure correct display
