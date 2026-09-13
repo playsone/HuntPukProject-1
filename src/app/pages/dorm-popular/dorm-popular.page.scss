@@ -236,6 +236,15 @@
   filter: grayscale(100%) brightness(80%);
 }
 
-.owner{
-  background-color: #12ea45 !important;
+.owner {
+  .dorm-card {
+    background-color: #f0fff4 !important;
+    border: 2px solid #12ea45 !important;
+    box-shadow: 0 8px 25px rgba(18, 234, 69, 0.3) !important;
+  }
+  .rank-badge {
+    background-color: #12ea45 !important;
+    color: #111 !important;
+    border-color: #12ea45 !important;
+  }
 }
